@@ -1,0 +1,17 @@
+JagoClient
+
+an Internet Go Server Client and SGF viewer,
+programmed by and copyright belonging to
+Rene Grothmann.
+
+This program is freeware under the Gnu General Public License.
+
+The author is not resonsible in any way for the functionality of this
+program. You use the program entirely on your own risk.
+
+For the most recent version, have a look at
+
+"http://www.rene-grothmann.de/".
+
+In case of problems or bugs, send an Email to me. You find my current
+mail address on the page above.

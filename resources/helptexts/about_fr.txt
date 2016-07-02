@@ -1,0 +1,18 @@
+JagoClient
+
+un client pour jouer au go sur les serveurs Internet et 
+visualiser les fichiers SGF, programmer et appartenant (copyright) 
+à Rene Grothmann.
+
+Ce grogramme est un freeware  sous licence GPL 
+(Gnu General Public Licence)
+
+L'auteur n'est pas responsable des disfonctionnements du programmme.
+Vous l'utilisez à vos risques et périls.
+
+Pour une version récente, aller sur 
+
+"http://www.rene-grothmann.de/jago/".
+
+Traduction de l'aide en français par zebul666
+zebul666@hotmail.com

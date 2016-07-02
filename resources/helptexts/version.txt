@@ -1,0 +1,4 @@
+Version 6.0
+
+- Swing for most elements in JagoClient now.
+- Tried to solve disconnection problem.  
