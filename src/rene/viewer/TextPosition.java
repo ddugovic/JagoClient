@@ -3,10 +3,10 @@ package rene.viewer;
 import rene.util.list.ListElement;
 
 class TextPosition
-{	ListElement L;
+{	ListElement<Line> L;
 	int LCount;
 	int LPos;
-	public TextPosition (ListElement l, int lcount, int lpos)
+	public TextPosition (ListElement<Line> l, int lcount, int lpos)
 	{	L=l; LCount=lcount; LPos=lpos;
 	}
 	boolean equal (TextPosition p)

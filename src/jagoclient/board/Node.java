@@ -20,25 +20,25 @@ of the next expected move in the game tree),
 @see jagoclient.board.Change
 */
 
-class Node
-{	ListClass Actions; // actions and variations
+public class Node
+{	ListClass<Action> Actions; // actions and variations
 	int N; // next exptected number
 	boolean Main; // belongs to main variation
-	ListClass Changes;
+	ListClass<Change> Changes;
 	public int Pw,Pb; // changes in prisoners in this node
 	
 	/** initialize with the expected number */
 	public Node (int n)
-	{	Actions=new ListClass();
+	{	Actions=new ListClass<Action>();
 		N=n;
 		Main=false;
-		Changes=new ListClass();
+		Changes=new ListClass<Change>();
 		Pw=Pb=0;
 	}
 	
 	/** add an action (at end) */
 	public void addaction (Action a)
-	{	Actions.append(new ListElement(a));
+	{	Actions.append(a);
 	}
 
 	/** expand an action of the same type as a, else generate a new action */
@@ -67,11 +67,10 @@ class Node
 
 	/** find the list element containing the action of type s */
 	ListElement find (String s)
-	{	ListElement p=Actions.first();
-		while (p!=null)
+	{	
+		for (ListElement<Action> p : Actions)
 		{	Action a=(Action)p.content();
 			if (a.type().equals(s)) return p;
-			p=p.next();
 		}
 		return null;
 	}
@@ -91,19 +90,19 @@ class Node
 
 	/** add an action (at front) */
 	public void prependaction (Action a)
-	{	Actions.prepend(new ListElement(a));
+	{	Actions.prepend(a);
 	}
 	
 	/** 
 	Insert an action after p.
 	p <b>must</b> have content type action.
 	*/
-	public void insertaction (Action a, ListElement p)
-	{	Actions.insert(new ListElement(a),p);
+	public void insertaction (Action a, ListElement<Action> p)
+	{	Actions.insert(new ListElement<Action>(Actions, a), p);
 	}
 
 	/** remove an action */
-	public void removeaction (ListElement la)
+	public void removeaction (ListElement<Action> la)
 	{	Actions.remove(la);
 	}
 
@@ -113,22 +112,21 @@ class Node
 	Else add a new action in front (if it is true)
 	*/
 	public void setaction (String type, String arg, boolean front)
-	{	ListElement l=Actions.first();
-		while (l!=null)
-		{	Action a=(Action)l.content();
+	{	
+		for (ListElement<Action> l : Actions)
+		{	Action a=l.content();
 			if (a.type().equals(type))
 			{	if (arg.equals(""))
 				{	Actions.remove(l);
 					return;
 				}
 				else
-				{	ListElement la=a.arguments();
+				{	ListElement<String> la=a.arguments().first();
 					if (la!=null) la.content(arg);
 					else a.addargument(arg);
 				}
 				return;
 			}
-			l=l.next();
 		}
 		if (front) prependaction(new Action(type,arg));
 		else addaction(new Action(type,arg));
@@ -141,15 +139,14 @@ class Node
 
 	/** get the argument of this action (or "") */
 	public String getaction (String type)
-	{	ListElement l=Actions.first();
-		while (l!=null)
-		{	Action a=(Action)l.content();
+	{
+		for (ListElement<Action> l : Actions)
+		{	Action a=l.content();
 			if (a.type().equals(type))
-			{	ListElement la=a.arguments();
+			{	ListElement la=a.arguments().first();
 				if (la!=null) return (String)la.content();
 				else return "";
 			}
-			l=l.next();
 		}
 		return "";
 	}
@@ -160,12 +157,9 @@ class Node
 	*/
 	public void print (PrintWriter o)
 	{	o.print(";");
-		ListElement p=Actions.first();
-		Action a;
-		while (p!=null)
-		{	a=(Action)p.content();
+		for (ListElement<Action> p : Actions)
+		{	Action a=p.content();
 			a.print(o);
-			p=p.next();
 		}
 		o.println("");
 	}
@@ -173,14 +167,12 @@ class Node
 	public void print (XmlWriter xml, int size)
 	{	int count=0;
 		Action ra=null,a;
-		ListElement p=Actions.first();
-		while (p!=null)
-		{	a=(Action)p.content();
+		for (ListElement<Action> p : Actions)
+		{	a=p.content();
 			if (a.isRelevant())
 			{	count++;
 				ra=a;
 			}
-			p=p.next();
 		}
 		if (count==0 && !contains("C"))
 		{	xml.finishTagNewLine("Node");
@@ -203,12 +195,10 @@ class Node
 		if (contains("BL")) xml.printArg("blacktime",getaction("BL"));
 		if (contains("WL")) xml.printArg("whitetime",getaction("WL"));
 		xml.startTagEndNewLine();
-		p=Actions.first();
-		while (p!=null)
-		{	a=(Action)p.content();
+		for (ListElement<Action> p : Actions)
+		{	a=p.content();
 			a.print(xml,size,number);
 			if (a.type().equals("B") || a.type().equals("W")) number++;
-			p=p.next();
 		}
 		xml.endTagNewLine("Node");
 	}
@@ -220,12 +210,12 @@ class Node
 
 	/** add a new change to this node */
 	public void addchange (Change c)
-	{	Changes.append(new ListElement(c));
+	{	Changes.append(c);
 	}
 
 	/** clear the list of changes */
 	public void clearchanges ()
-	{	Changes.removeall();
+	{	Changes.clear();
 	}	
 
 	// modification methods:
@@ -256,10 +246,12 @@ class Node
 	}
 
 	// access methods:
-	public ListElement actions () { return Actions.first(); }
-	public ListElement lastaction () { return Actions.last(); }
-	public ListElement changes () { return Changes.first(); }
-	public ListElement lastchange () { return Changes.last(); }
+	public ListClass<Action> actions () { return Actions; }
+	@Deprecated
+	public ListElement<Action> lastaction () { return Actions.last(); }
+	public ListClass<Change> changes () { return Changes; }
+	@Deprecated
+	public ListElement<Change> lastchange () { return Changes.last(); }
 	public int number () { return N; }
 	public boolean main () { return Main; }
 }

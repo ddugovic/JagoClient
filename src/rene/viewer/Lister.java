@@ -142,40 +142,32 @@ public class Lister extends Viewer
 	}
 	public String[] getSelectedItems ()
 	{	int n=0;
-		ListElement le=TD.L.first();
-		while (le!=null)
-		{	Line l=(Line)le.content();
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (l.chosen()) n++;
-			le=le.next();
 		}
 		String s[]=new String[n];
 		n=0;
-		le=TD.L.first();
-		while (le!=null)
-		{	Line l=(Line)le.content();
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (l.chosen())
 				s[n++]=new String(l.a);
-			le=le.next();
 		}
 		return s;
 	}
 	public int[] getSelectedIndexes ()
 	{	int n=0;
-		ListElement le=TD.L.first();
-		while (le!=null)
-		{	Line l=(Line)le.content();
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (l.chosen()) n++;
-			le=le.next();
 		}
 		int s[]=new int[n];
 		n=0;
 		int i=0;
-		le=TD.L.first();
-		while (le!=null)
-		{	Line l=(Line)le.content();
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (l.chosen())
 				s[n++]=i;
-			le=le.next();
 			i++;
 		}
 		return s;
@@ -186,31 +178,29 @@ public class Lister extends Viewer
 		else return k[0];
 	}
 	public void select (int n)
-	{	ListElement le=TD.L.first();
+	{
 		int i=0;
-		while (le!=null)
-		{	Line l=(Line)le.content();
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (i==n)
 			{	l.chosen(true);
 				Chosen=le;
 				TD.repaint();
 				return;
 			}
-			le=le.next();
 			i++;
 		}
 	}
 	public void select (String s)
-	{	ListElement le=TD.L.first();
-		while (le!=null)
-		{	Line l=(Line)le.content();
+	{
+		for (ListElement<Line> le : TD.L)
+		{	Line l=le.content();
 			if (s.equals(l.a))
 			{	l.chosen(true);
 				Chosen=le;
 				TD.repaint();
 				return;
 			}
-			le=le.next();
 		}
 	}
 

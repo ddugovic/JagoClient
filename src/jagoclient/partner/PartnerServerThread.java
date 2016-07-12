@@ -93,22 +93,19 @@ class PartnerServerThread extends Thread
 	{	ListElement e=find(name,address);
 		if (e!=null) return; // we got that already
 		// append to my list of open servers
-		Global.OpenPartnerList.append(new ListElement(
-			new Partner(name,address,port,state)));
+		Global.OpenPartnerList.append(new Partner(name,address,port,state));
 		// return, if the server is private
 		if (state<Partner.PRIVATE) return;
 		// spread to all other open servers
-		ListElement pe=Global.PartnerList.first();
 		DatagramMessage d=new DatagramMessage();
 		d.add("spreadopen");
 		d.add(name);
 		d.add(address);
 		d.add(""+port);
 		d.add(""+(state<Partner.PUBLIC?Partner.PRIVATE:Partner.PUBLIC));
-		while (pe!=null)
-		{	Partner p=(Partner)pe.content();
+		for (ListElement<Partner> pe : Global.PartnerList)
+		{	Partner p=pe.content();
 			if (!p.Name.equals(name)) d.send(p.Server,p.Port+2);
-			pe=pe.next();
 		}
 	}
 	
@@ -124,14 +121,12 @@ class PartnerServerThread extends Thread
 			Global.OpenPartnerList.remove(e);
 			// spread the closing to all partners
 			DatagramMessage d=new DatagramMessage();
-			ListElement pe=Global.PartnerList.first();
 			d.add("spreadclose");
 			d.add(name);
 			d.add(address);
-			while (pe!=null)
-			{	Partner p=(Partner)pe.content();
+			for (ListElement<Partner> pe : Global.PartnerList)
+			{	Partner p=pe.content();
 				if (!p.Name.equals(name)) d.send(p.Server,p.Port+2);
-				pe=pe.next();
 			}
 		}
 	}
@@ -142,7 +137,7 @@ class PartnerServerThread extends Thread
 	the server is up to date about open servers.
 	*/	
 	void openinfo (String address, int port)
-	{	ListElement e=Global.OpenPartnerList.first();
+	{
 		DatagramMessage d;
 		int count=0;
 		d=new DatagramMessage();
@@ -156,11 +151,11 @@ class PartnerServerThread extends Thread
 		d.add(""+Global.getParameter("serverport",6970));
 		d.add(""+Partner.PRIVATE);
 		count++;
-		while (e!=null)
+		for (ListElement<Partner> e : Global.OpenPartnerList)
 		{	if (count==0)
 			{	d=new DatagramMessage();
 			}
-			Partner p=(Partner)e.content();
+			Partner p=e.content();
 			if (p.State>Partner.PRIVATE)
 			{	d.add("openinfo");
 				d.add(p.Name);
@@ -173,7 +168,6 @@ class PartnerServerThread extends Thread
 			{	d.send(address,port+2);
 				count=0;
 			}
-			e=e.next();
 		}
 		if (count>0) d.send(address,port+2);
 	}
@@ -194,22 +188,19 @@ class PartnerServerThread extends Thread
 			server=(String)v.elementAt(i); i++;
 			port=Integer.parseInt((String)v.elementAt(i)); i++;
 			state=Integer.parseInt((String)v.elementAt(i)); i++;
-			ListElement le=find(name,server);
+			ListElement<Partner> le=find(name,server);
 			if (le==null)
-			{	Global.OpenPartnerList.append(
-					new ListElement(new Partner(name,server,port,state)));
+			{	Global.OpenPartnerList.append(new Partner(name,server,port,state));
 			}
 		}
 		catch (Exception e) {}
 	}
 
-	ListElement find (String name, String address)
-	{	String n=name+address;
-		ListElement e=Global.OpenPartnerList.first();
-		while (e!=null)
-		{	Partner p=(Partner)e.content();
-			if ((p.Name+p.Server).equals(n)) return e;
-			e=e.next();
+	ListElement<Partner> find (String name, String server)
+	{	String address=name+server;
+		for (ListElement<Partner> e : Global.OpenPartnerList)
+		{	Partner p=e.content();
+			if ((p.Name+p.Server).equals(address)) return e;
 		}
 		return null;
 	}

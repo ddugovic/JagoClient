@@ -94,7 +94,8 @@ public class Go extends Applet implements DoActionListener, ActionListener
 {
 	int Test = 0;
 	java.awt.List L, PL;
-	ListClass ConnectionList, PartnerList;
+	ListClass<Connection> ConnectionList;
+	ListClass<Partner> PartnerList;
 	JButton CConnect, CEdit, CAdd, CDelete, PConnect, PEdit, PAdd, PDelete,
 		POpen;
 	static Go go;
@@ -191,7 +192,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					if (c.valid())
 					{
 						L.add(c.Name);
-						ConnectionList.append(new ListElement(c));
+						ConnectionList.append(c);
 					}
 					else break;
 				}
@@ -228,7 +229,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					if (cp.valid())
 					{
 						PL.add(cp.Name);
-						PartnerList.append(new ListElement(cp));
+						PartnerList.append(cp);
 					}
 					else break;
 				}
@@ -277,9 +278,8 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			Connection c;
 			String l;
 			ConnectionList = new ListClass();
-			ConnectionList.append(new ListElement(new Connection("[" + Server
-				+ "] [" + Server + "] [" + Port + "] [" + "] [" + "] ["
-				+ MoveStyle + "] [" + Encoding + "]")));
+			ConnectionList.append(new Connection("[" + Server + "] [" + Server +
+				"] [" + Port + "] [" + "] [" + "] [" + MoveStyle + "] [" + Encoding + "]"));
 			L.add(Server);
 			if (L.getItemCount() > 0) L.select(0);
 			p1.add("Center", L);
@@ -383,31 +383,27 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		}
 		else if ("DeleteServer".equals(o) && L.getSelectedItem() != null)
 		{
-			ListElement lc = ConnectionList.first();
-			Connection co;
-			while (lc != null)
+			for (ListElement<Connection> lc : ConnectionList)
 			{
-				co = (Connection)lc.content();
+				Connection co = lc.content();
 				if (co.Name.equals(L.getSelectedItem()))
 				{
 					ConnectionList.remove(lc);
+					break;
 				}
-				lc = lc.next();
 			}
 			updatelist();
 		}
 		else if ("DeletePartner".equals(o) && PL.getSelectedItem() != null)
 		{
-			ListElement lc = PartnerList.first();
-			Partner co;
-			while (lc != null)
+			for (ListElement<Partner> lc : PartnerList)
 			{
-				co = (Partner)lc.content();
+				Partner co = lc.content();
 				if (co.Name.equals(PL.getSelectedItem()))
 				{
 					PartnerList.remove(lc);
+					break;
 				}
-				lc = lc.next();
 			}
 			updateplist();
 		}
@@ -425,13 +421,10 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	/** search a specific connection by name */
 	public Connection find (String s)
 	{
-		ListElement lc = ConnectionList.first();
-		Connection c;
-		while (lc != null)
+		for (ListElement<Connection> lc : ConnectionList)
 		{
-			c = (Connection)lc.content();
+			Connection c = lc.content();
 			if (c.Name.equals(s)) return c;
-			lc = lc.next();
 		}
 		return null;
 	}
@@ -439,13 +432,10 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	/** find a specific partner server by name */
 	public Partner pfind (String s)
 	{
-		ListElement lc = PartnerList.first();
-		Partner c;
-		while (lc != null)
+		for (ListElement<Partner> lc : PartnerList)
 		{
-			c = (Partner)lc.content();
+			Partner c = lc.content();
 			if (c.Name.equals(s)) return c;
-			lc = lc.next();
 		}
 		return null;
 	}
@@ -553,14 +543,12 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			PrintWriter out = new PrintWriter(new FileOutputStream(Global
 				.home()
 				+ ".server.cfg"));
-			ListElement lc = ConnectionList.first();
 			L.removeAll();
-			while (lc != null)
+			for (ListElement<Connection> lc : ConnectionList)
 			{
-				Connection c = (Connection)lc.content();
+				Connection c = lc.content();
 				L.add(c.Name);
 				c.write(out);
-				lc = lc.next();
 			}
 			out.close();
 		}
@@ -581,14 +569,12 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			PrintWriter out = new PrintWriter(new FileOutputStream(Global
 				.home()
 				+ ".partner.cfg"));
-			ListElement lc = PartnerList.first();
 			PL.removeAll();
-			while (lc != null)
+			for (ListElement<Partner> lc : PartnerList)
 			{
-				Partner c = (Partner)lc.content();
+				Partner c = lc.content();
 				PL.add(c.Name);
 				c.write(out);
-				lc = lc.next();
 			}
 			out.close();
 		}

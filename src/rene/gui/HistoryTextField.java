@@ -19,22 +19,22 @@ from TextFieldAction.
 
 public class HistoryTextField extends TextFieldAction
     implements KeyListener,DoActionListener
-{	ListClass H;
+{	ListClass<String> H;
 	PopupMenu M=null;
 	boolean Trigger=false;
 	public int MaxLength=48;
 	
 	public HistoryTextField (DoActionListener l, String name)
 	{	super(l,name);
-	    H=new ListClass();
-		H.append(new ListElement(""));
+	    H=new ListClass<String>();
+		H.append("");
 		addKeyListener(this);
 	}
 	
 	public HistoryTextField (DoActionListener l, String name, int s)
 	{	super(l,name,s);
-	    H=new ListClass();
-		H.append(new ListElement(""));
+	    H=new ListClass<String>();
+		H.append("");
 		addKeyListener(this);
 	}
 	
@@ -75,7 +75,7 @@ public class HistoryTextField extends TextFieldAction
 		deleteFromHistory(s);
 		Last=s;
 		H.last().content(s);
-		H.append(new ListElement(""));
+		H.append("");
 		M=null;
 	}
 	
@@ -86,7 +86,7 @@ public class HistoryTextField extends TextFieldAction
 			ListElement next=e.next();
 			if (t.equals(s))
 			{	H.remove(e);
-				if (H.first()==null) H.append(new ListElement(""));
+				if (H.first()==null) H.append("");
 			}
 			e=next;
 		}
@@ -113,11 +113,11 @@ public class HistoryTextField extends TextFieldAction
 	public void loadHistory (String name)
 	{	int i=1;
 	    H=new ListClass();
-		H.append(new ListElement(""));
+		H.append("");
 		while (Global.haveParameter("history."+name+"."+i))
 		{	String s=Global.getParameter("history."+name+"."+i,"");
 			if (!s.equals("") && filterHistory(s)) 
-				H.prepend(new ListElement(s));
+				H.prepend(s);
 			i++;
 		}
 	}

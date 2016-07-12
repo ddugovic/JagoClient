@@ -26,12 +26,10 @@ public class LabelAction extends Action
 			o.print("LB");
 			char[] c=new char[1];
 			int i=0;
-			ListElement p=Arguments.first();
-			while (p!=null)
+			for (ListElement<String> p : Arguments)
 			{	c[0]=(char)('a'+i);
-				o.print("["+(String)(p.content())+":"+new String(c)+"]");
+				o.print("["+p.content()+":"+new String(c)+"]");
 				i++;
-				p=p.next();
 			}
 		}
 		else super.print(o);

@@ -82,7 +82,7 @@ public class PartnerFrame extends CloseFrame
 	public PartnerGoFrame PGF;
 	boolean Serving;
 	boolean Block;
-	ListClass Moves;
+	ListClass<PartnerMove> Moves;
 	String Dir;
 
 	public PartnerFrame (String name, boolean serving)
@@ -291,9 +291,8 @@ public class PartnerFrame extends CloseFrame
 				ExtraTime * 60, ExtraMoves, Handicap);
 			Out.println("@@start");
 			Block = false;
-			Moves = new ListClass();
-			Moves.append(new ListElement(new PartnerMove("board", C, Size,
-				TotalTime, ExtraTime, ExtraMoves, Handicap)));
+			Moves = new ListClass<PartnerMove>();
+			Moves.append(new PartnerMove("board", C, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
 		}
 		else if (s.startsWith("@@-board"))
 		{
@@ -326,15 +325,13 @@ public class PartnerFrame extends CloseFrame
 			{
 				if (PGF.maincolor() < 0) return;
 				PGF.black(i, j);
-				Moves.append(new ListElement(new PartnerMove("b", i, j, bt, bm,
-					wt, wm)));
+				Moves.append(new PartnerMove("b", i, j, bt, bm, wt, wm));
 			}
 			else
 			{
 				if (PGF.maincolor() > 0) return;
 				PGF.white(i, j);
-				Moves.append(new ListElement(new PartnerMove("w", i, j, bt, bm,
-					wt, wm)));
+				Moves.append(new PartnerMove("w", i, j, bt, bm, wt, wm));
 			}
 			PGF.settimes(bt, bm, wt, wm);
 			Out.println("@@!move " + color + " " + i + " " + j + " " + bt + " "
@@ -354,15 +351,13 @@ public class PartnerFrame extends CloseFrame
 			{
 				if (PGF.maincolor() < 0) return;
 				PGF.black(i, j);
-				Moves.append(new ListElement(new PartnerMove("b", i, j, bt, bm,
-					wt, wm)));
+				Moves.append(new PartnerMove("b", i, j, bt, bm, wt, wm));
 			}
 			else
 			{
 				if (PGF.maincolor() > 0) return;
 				PGF.white(i, j);
-				Moves.append(new ListElement(new PartnerMove("w", i, j, bt, bm,
-					wt, wm)));
+				Moves.append(new PartnerMove("w", i, j, bt, bm, wt, wm));
 			}
 			PGF.settimes(bt, bm, wt, wm);
 		}
@@ -376,8 +371,7 @@ public class PartnerFrame extends CloseFrame
 			Dump.println("Pass");
 			PGF.dopass();
 			PGF.settimes(bt, bm, wt, wm);
-			Moves.append(new ListElement(
-				new PartnerMove("pass", bt, bm, wt, wm)));
+			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
 			Out.println("@@!pass " + bt + " " + bm + " " + wt + " " + wm);
 		}
 		else if (s.startsWith("@@!pass"))
@@ -389,8 +383,7 @@ public class PartnerFrame extends CloseFrame
 			int wt = p.parseint(), wm = p.parseint();
 			Dump.println("Pass");
 			PGF.dopass();
-			Moves.append(new ListElement(
-				new PartnerMove("pass", bt, bm, wt, wm)));
+			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
 			PGF.settimes(bt, bm, wt, wm);
 		}
 		else if (s.startsWith("@@endgame"))
@@ -460,8 +453,8 @@ public class PartnerFrame extends CloseFrame
 		{
 			if (PGF == null) return;
 			PGF.undo(2);
-			Moves.remove(Moves.last());
-			Moves.remove(Moves.last());
+			Moves.removeLast();
+			Moves.removeLast();
 			PGF.addothertime(30);
 			Block = false;
 		}
@@ -566,8 +559,8 @@ public class PartnerFrame extends CloseFrame
 	{
 		Out.println("@@!undo");
 		PGF.undo(2);
-		Moves.remove(Moves.last());
-		Moves.remove(Moves.last());
+		Moves.removeLast();
+		Moves.removeLast();
 		Block = false;
 		PGF.addtime(30);
 	}
@@ -596,8 +589,7 @@ public class PartnerFrame extends CloseFrame
 		else Out.println("@@!board w" + " " + Size + " " + TotalTime + " "
 			+ ExtraTime + " " + ExtraMoves + " " + Handicap);
 		Moves = new ListClass();
-		Moves.append(new ListElement(new PartnerMove("board", C.equals("b")? -1
-			:1, Size, TotalTime, ExtraTime, ExtraMoves, Handicap)));
+		Moves.append(new PartnerMove("board", C.equals("b")? -1:1, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
 	}
 
 	public void declineboard ()
@@ -651,13 +643,11 @@ public class PartnerFrame extends CloseFrame
 			PrintWriter fo = new PrintWriter(new FileOutputStream(fd
 				.getDirectory()
 				+ fn), true);
-			ListElement lm = Moves.first();
-			while (lm != null)
+			for (ListElement<PartnerMove> lm : Moves)
 			{
-				PartnerMove m = (PartnerMove)lm.content();
+				PartnerMove m = lm.content();
 				fo.println(m.Type + " " + m.P1 + " " + m.P2 + " " + m.P3 + " "
 					+ m.P4 + " " + m.P5 + " " + m.P6);
-				lm = lm.next();
 			}
 			fo.close();
 		}
@@ -744,7 +734,6 @@ public class PartnerFrame extends CloseFrame
 			PGF.pass();
 			PGF.settimes(p1, p2, p3, p4);
 		}
-		Moves
-			.append(new ListElement(new PartnerMove(c, p1, p2, p3, p4, p5, p6)));
+		Moves.append(new PartnerMove(c, p1, p2, p3, p4, p5, p6));
 	}
 }

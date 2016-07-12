@@ -10,12 +10,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import rene.util.SimpleByteBuffer;
-import rene.util.SimpleStringBuffer;
 import rene.util.list.ListElement;
 
 public class XmlReader
 {	BufferedReader In;
-	SimpleStringBuffer buf=new SimpleStringBuffer(10000);
+	StringBuilder buf=new StringBuilder(10000);
 
 	public XmlReader ()
 	{	In=null;
@@ -272,7 +271,7 @@ public class XmlReader
 	*/
 	public String scanFor (char end)
 		throws XmlReaderException
-	{	buf.clear();
+	{	buf.setLength(0);
 		int c=read();
 		while (c!=end)
 		{	buf.append((char)c);
@@ -288,7 +287,7 @@ public class XmlReader
 	*/
 	public String scanFor (String s)
 		throws XmlReaderException
-	{	buf.clear();
+	{	buf.setLength(0);
 		while (!found(s))
 		{	int c=read();
 			if (c<0) return null;
@@ -304,7 +303,7 @@ public class XmlReader
 	*/
 	public String scanTagFor (char end)
 		throws XmlReaderException
-	{	buf.clear();
+	{	buf.setLength(0);
 		int c=read();
 		while (c!=end)
 		{	if (c=='\"')
@@ -340,7 +339,7 @@ public class XmlReader
 	*/
 	public String scanTagFor (String s)
 		throws XmlReaderException
-	{	buf.clear();
+	{	buf.setLength(0);
 		while (!found(s))
 		{	int c=read();
 			if (c<0) return null;
@@ -404,7 +403,7 @@ public class XmlReader
 		return true;
 	}
 	
-	public void exception (String s)
+	protected void exception (String s)
 		throws XmlReaderException
 	{	throw new XmlReaderException(s,Line,LinePos);
 	}

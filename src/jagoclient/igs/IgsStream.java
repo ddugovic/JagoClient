@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.function.Predicate;
 
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -36,7 +37,7 @@ public class IgsStream
 	int L;
 	int Number;
 	String Command;
-	ListClass DistributorList;
+	ListClass<Distributor> DistributorList;
 	PrintWriter Out;
 	BufferedReader In;
 	ConnectionFrame CF;
@@ -521,16 +522,13 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			ListElement l = DistributorList.first();
-			Distributor dis;
-			while (l != null)
+			for (ListElement<Distributor> l : DistributorList)
 			{
-				dis = (Distributor)l.content();
+				Distributor dis = (Distributor)l.content();
 				if (dis.number() == n)
 				{
 					if (dis.game() == g) return dis;
 				}
-				l = l.next();
 			}
 			return null;
 		}
@@ -540,13 +538,10 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			ListElement l = DistributorList.first();
-			Distributor dis;
-			while (l != null)
+			for (ListElement<Distributor> l : DistributorList)
 			{
-				dis = (Distributor)l.content();
+				Distributor dis = (Distributor)l.content();
 				if (dis.number() == n) return dis;
-				l = l.next();
 			}
 			return null;
 		}
@@ -559,7 +554,7 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			DistributorList.append(new ListElement(o));
+			DistributorList.append(o);
 		}
 	}
 
@@ -570,16 +565,13 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			ListElement l = DistributorList.first();
-			Distributor dis;
-			while (l != null)
+			for (ListElement<Distributor> l : DistributorList)
 			{
-				dis = (Distributor)l.content();
+				Distributor dis = (Distributor)l.content();
 				if (dis.number() == 15)
 				{
 					if (dis.game() == g) return true;
 				}
-				l = l.next();
 			}
 			return false;
 		}
@@ -591,13 +583,7 @@ public class IgsStream
 		{
 			synchronized (DistributorList)
 			{
-				ListElement l = DistributorList.first();
-				while (l != null)
-				{
-					if ((Distributor)l.content() == o)
-						DistributorList.remove(l);
-					l = l.next();
-				}
+				DistributorList.removeIf((ListElement<Distributor> t) -> (Distributor)t.content() == o);
 			}
 		}
 		catch (Exception e)
@@ -611,11 +597,9 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			ListElement l = DistributorList.first();
-			while (l != null)
+			for (ListElement<Distributor> l : DistributorList)
 			{
-				((Distributor)l.content()).remove();
-				l = l.next();
+				l.content().remove();
 			}
 		}
 	}

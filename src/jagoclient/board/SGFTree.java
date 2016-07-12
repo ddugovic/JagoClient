@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import rene.util.list.ListElement;
+import rene.util.list.Tree;
 import rene.util.parser.StringParser;
 import rene.util.xml.XmlReader;
 import rene.util.xml.XmlReaderException;
@@ -342,7 +343,7 @@ public class SGFTree
 		while (e.hasMoreElements())
 		{	tree=(XmlTree)e.nextElement();
 			if (tree.getTag().name().equals("BoardSize"))
-			{	tree=tree.xmlFirstContent();
+			{	tree=(XmlTree)tree.xmlFirstContent();
 				XmlTag tag=tree.getTag();
 				if (tag instanceof XmlTagText)
 				{	try
@@ -554,10 +555,10 @@ public class SGFTree
 		{	XmlTree tree=(XmlTree)e.nextElement();
 			XmlTag tag=tree.getTag();
 			if (tag.name().equals("P"))
-			{	if (!tree.haschildren()) s.append("\n");
+			{	if (tree.children().isEmpty()) s.append("\n");
 				else
-				{	XmlTree h=tree.xmlFirstContent();
-					String k=((XmlTagText)h.getTag()).getContent();
+				{	Tree<XmlTag> h=tree.xmlFirstContent();
+					String k=((XmlTagText)h.content()).getContent();
 					k=k.replace('\n',' ');
 					StringParser p=new StringParser(k);
 					Vector v=p.wraplines(1000);
@@ -679,10 +680,9 @@ public class SGFTree
 		{	p.node().print(o);
 			if (!p.haschildren()) break;
 			if (p.lastChild()!=p.firstChild())
-			{	ListElement e=p.children().first();
-				while (e!=null)
+			{
+				for (ListElement<Tree<Node>> e : p.children())
 				{	printtree((TreeNode)e.content(),o);
-					e=e.next();
 				}
 				break;
 			}

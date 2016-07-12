@@ -2,14 +2,13 @@ package jagoclient.igs.games;
 
 import jagoclient.Global;
 import rene.util.parser.StringParser;
-import rene.util.sort.SortObject;
 
 /**
 This is a SortObject for sorting games by W player rank.
 @see jagoclient.sort.Sorter
 */
 
-public class GamesObject implements SortObject
+public class GamesObject implements Comparable<GamesObject>
 {	String S;
 	int V;
 	String White,Black;
@@ -36,9 +35,9 @@ public class GamesObject implements SortObject
 		else V=0;
 	}
 	String game () { return S; }
-	public int compare (SortObject o)
-	{	GamesObject g=(GamesObject)o;
-		if (V<g.V) return 1;
+	@Override
+	public int compareTo (GamesObject g)
+	{	if (V<g.V) return 1;
 		else if (V>g.V) return -1;
 		else return 0;
 	}

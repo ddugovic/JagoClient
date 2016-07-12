@@ -1,6 +1,7 @@
 package jagoclient;
 
 import jagoclient.igs.MessageFilter;
+import jagoclient.partner.partner.Partner;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -51,8 +52,8 @@ public class Global extends rene.gui.Global
 	public static String Dir, Home;
 	public static Frame F;
 	public static MessageFilter MF = null;
-	public static ListClass PartnerList = null;
-	public static ListClass OpenPartnerList = null;
+	public static ListClass<Partner> PartnerList = null;
+	public static ListClass<Partner> OpenPartnerList = null;
 	public static boolean UseUrl = false;
 	public static boolean IsApplet = false;
 	public static URL Url;

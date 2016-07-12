@@ -26,13 +26,13 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import javax.swing.JTextField;
 
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
-import rene.util.sort.Sorter;
 import rene.viewer.Lister;
 import rene.viewer.SystemLister;
 
@@ -100,7 +100,7 @@ public class WhoFrame extends CloseFrame implements CloseListener
 	Lister T;
 	ConnectionFrame CF;
 	WhoDistributor GD;
-	ListClass L;
+	ListClass<String> L;
 	boolean SortName;
 	boolean Closed = false;
 	String Range;
@@ -416,7 +416,7 @@ public class WhoFrame extends CloseFrame implements CloseListener
 	 */
 	synchronized public void refresh ()
 	{
-		L = new ListClass();
+		L = new ListClass<String>();
 		T.setText(Global.resourceString("Loading"));
 		if (GD != null) GD.unchain();
 		GD = null;
@@ -433,7 +433,7 @@ public class WhoFrame extends CloseFrame implements CloseListener
 		if (GD != null) GD.unchain();
 		GD = null;
 		if (Closed) return;
-		ListElement p = L.first();
+		ListElement<String> p = L.first();
 		int i, n = 0;
 		while (p != null)
 		{
@@ -446,10 +446,10 @@ public class WhoFrame extends CloseFrame implements CloseListener
 			p = L.first();
 			for (i = 0; i < n; i++)
 			{
-				v[i] = new WhoObject((String)p.content(), SortName);
+				v[i] = new WhoObject(p.content(), SortName);
 				p = p.next();
 			}
-			Sorter.sort(v);
+			Arrays.sort(v);
 			T.setText("");
 			T.appendLine0(Global
 				.resourceString("_Info_______Name_______Idle___Rank"));
@@ -486,10 +486,10 @@ public class WhoFrame extends CloseFrame implements CloseListener
 		if (p.skip("****")) return;
 		p = new StringParser(s);
 		s = p.upto('|');
-		L.append(new ListElement(s));
+		L.append(s);
 		if ( !p.skip("| ")) return;
 		s = p.upto('|');
-		L.append(new ListElement(s));
+		L.append(s);
 	}
 
 	public void isClosed ()

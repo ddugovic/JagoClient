@@ -1,34 +1,24 @@
 package rene.util.xml;
 
-import rene.util.SimpleStringBuffer;
-
 public class XmlTranslator
-{	static SimpleStringBuffer H=new SimpleStringBuffer(10000);
+{	static StringBuilder H=new StringBuilder(10000);
 	static String toXml (String s)
 	{	int m=s.length();
-		H.clear();
-		for (int i=0; i<m; i++)
-		{	char c=s.charAt(i);
+		H.setLength(0);
+		for (char c : s.toCharArray())
 			switch(c)
-			{	case '<' : toH("&lt;"); break;
-				case '>' : toH("&gt;"); break;
-				case '&' : toH("&amp;"); break;
-				case '\'' : toH("&apos;"); break;
-				case '\"' : toH("&quot;"); break;
+			{	case '<' : H.append("&lt;"); break;
+				case '>' : H.append("&gt;"); break;
+				case '&' : H.append("&amp;"); break;
+				case '\'' : H.append("&apos;"); break;
+				case '\"' : H.append("&quot;"); break;
 				default : H.append(c);
 			}
-		}
 		return H.toString();
-	}
-	static void toH (String s)
-	{	int m=s.length();
-		for (int i=0; i<m; i++)
-		{	H.append(s.charAt(i));
-		}
 	}
 	static String toText (String s)
 	{	int m=s.length();
-		H.clear();
+		H.setLength(0);
 		for (int i=0; i<m; i++)
 		{	char c=s.charAt(i);
 			if (c=='&')

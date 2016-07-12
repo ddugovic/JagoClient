@@ -72,41 +72,37 @@ class SingleMessageFilter
 
 public class MessageFilter
 {
-	ListClass F;
+	ListClass<SingleMessageFilter> F;
 	public static final int BLOCK_COMPLETE = 2;
 	public static final int BLOCK_POPUP = 1;
 
 	public MessageFilter ()
 	{
-		F = new ListClass();
+		F = new ListClass<SingleMessageFilter>();
 		load();
 	}
 
 	public int blocks (String s)
 	{
-		ListElement e = F.first();
-		while (e != null)
+		for (ListElement<SingleMessageFilter> e : F)
 		{
-			SingleMessageFilter f = (SingleMessageFilter)e.content();
+			SingleMessageFilter f = e.content();
 			if ( !f.positive() && f.matches(s))
 			{
 				if (f.BlockComplete)
 					return BLOCK_COMPLETE;
 				else return BLOCK_POPUP;
 			}
-			e = e.next();
 		}
 		return 0;
 	}
 
 	public boolean posfilter (String s)
 	{
-		ListElement e = F.first();
-		while (e != null)
+		for (ListElement<SingleMessageFilter> e : F)
 		{
-			SingleMessageFilter f = (SingleMessageFilter)e.content();
+			SingleMessageFilter f = e.content();
 			if (f.positive() && f.matches(s)) { return true; }
-			e = e.next();
 		}
 		return false;
 	}
@@ -138,8 +134,8 @@ public class MessageFilter
 				if (contains == null) break;
 				String blockcomplete = in.readLine();
 				if (blockcomplete == null) break;
-				F.append(new ListElement(new SingleMessageFilter(name, start,
-					end, contains, blockcomplete.equals("true"), pos)));
+				F.append(new SingleMessageFilter(name, start, end, contains,
+					blockcomplete.equals("true"), pos));
 			}
 			in.close();
 		}
@@ -363,7 +359,7 @@ class SingleFilterEdit extends CloseDialog
 			MF.Positive = CB.getState();
 			if (isnew)
 			{
-				F.append(new ListElement(MF));
+				F.append(MF);
 			}
 			MFE.updatelist();
 		}

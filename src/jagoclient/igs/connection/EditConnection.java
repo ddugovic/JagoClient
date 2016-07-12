@@ -20,18 +20,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 public class EditConnection extends CloseDialog
 {
-	ListClass CList;
+	ListClass<Connection> CList;
 	Connection C;
 	JTextField Name, Server, Port, User, Password, Encoding;
 	Go G;
 	Choice MChoice;
 	Frame F;
 
-	public EditConnection (CloseFrame f, ListClass clist, Connection c, Go go)
+	public EditConnection (CloseFrame f, ListClass<Connection> clist, Connection c, Go go)
 	{
 		super(f, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -49,8 +48,7 @@ public class EditConnection extends CloseDialog
 		p1.add(new MyLabel(Global
 			.resourceString("User__empty_for_manual_login_")));
 		p1.add(User = new FormTextField("" + C.User));
-		p1
-			.add(new MyLabel(Global
+		p1.add(new MyLabel(Global
 				.resourceString("Password__empty_for_prompt_")));
 		p1.add(Password = new JPasswordField("" + C.Password));
 		p1.add(new MyLabel(Global
@@ -107,8 +105,7 @@ public class EditConnection extends CloseDialog
 			.resourceString("User__empty_for_manual_login_")));
 		p1.add(User = new FormTextField(Global
 			.resourceString("User_name__kingkong_")));
-		p1
-			.add(new MyLabel(Global
+		p1.add(new MyLabel(Global
 				.resourceString("Password__empty_for_prompt_")));
 		p1.add(Password = new JPasswordField(""));
 		p1.add(new MyLabel(Global
@@ -206,7 +203,7 @@ public class EditConnection extends CloseDialog
 				{
 					C.Name = C.Name + " DUP";
 				}
-				CList.append(new ListElement(C));
+				CList.append(C);
 				G.updatelist();
 				setVisible(false);
 				dispose();

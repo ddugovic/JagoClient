@@ -66,9 +66,9 @@ public class Server extends Thread
 	*/
 	public void open ()
 	{	if (Public)
-		{	ListElement pe=Global.PartnerList.first();
-			while (pe!=null)
-			{	Partner p=(Partner)pe.content();
+		{	
+			for (ListElement<Partner> pe : Global.PartnerList)
+			{	Partner p=pe.content();
 				if (p.State>0)
 				{	DatagramMessage d=new DatagramMessage();
 					d.add("open");
@@ -82,7 +82,6 @@ public class Server extends Thread
 					d.add(""+p.State);
 					d.send(p.Server,p.Port+2);
 				}
-				pe=pe.next();
 			}
 		}
 		Global.Busy=false;
@@ -93,7 +92,6 @@ public class Server extends Thread
 	*/
 	public void close ()
 	{	if (!Public) return;
-		ListElement pe=Global.PartnerList.first();
 		DatagramMessage d=new DatagramMessage();
 		d.add("close");
 		d.add(Global.getParameter("yourname","Unknown"));
@@ -102,10 +100,9 @@ public class Server extends Thread
 			d.add(s.substring(s.lastIndexOf('/')+1));
 		}
 		catch (Exception e) { d.add("Unknown Host"); }
-		while (pe!=null)
-		{	Partner p=(Partner)pe.content();
+		for (ListElement<Partner> pe : Global.PartnerList)
+		{	Partner p=pe.content();
 			if (p.State>0) d.send(p.Server,p.Port+2);
-			pe=pe.next();
 		}
 		Global.Busy=true;
 	}

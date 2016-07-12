@@ -8,33 +8,18 @@ import java.awt.Toolkit;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 
-class SoundElement extends ListElement
-{	Sound S;
-	public SoundElement (String name)
-	{	super(name);
-		S=new Sound(name);
-	}
-	public String name ()
-	{	return (String)content();
-	}
-	public void play ()
-	{	S.start();
-	}
-}
-
 /**
 This is a Sound class to play and store sounds from resources. The class
 keeps a list of loaded sounds.
 */
-
-public class SoundList implements Runnable
-{	ListClass SL;
+public class SoundList extends ListClass<Sound> implements Runnable
+{
 	Thread T;
 	boolean Busy;
 	String Name,Queued;
 	
 	public SoundList ()
-	{	SL=new ListClass();
+	{
 		T=new Thread(this);
 		T.start();
 		try { Thread.sleep(0); } catch (Exception e) {}
@@ -62,25 +47,24 @@ public class SoundList implements Runnable
 	static synchronized public void beep ()
 	{	Toolkit.getDefaultToolkit().beep();
 	}
-	public SoundElement find (String name)
-	{	SoundElement se=(SoundElement)SL.first();
-		while (se!=null)
-		{	if (se.name().equals(name))
-			{	return se;
+	public Sound find (String name)
+	{
+		for (ListElement<Sound> se : this)
+		{	if (se.content().getName().equals(name))
+			{	return se.content();
 			}
-			se=(SoundElement)se.next();
 		}
 		return null;
 	}
-	public SoundElement add (String name)
-	{	SoundElement e=new SoundElement(name);
-		SL.append(e);
+	public Sound append (String name)
+	{	Sound e=new Sound(name);
+		this.append(e);
 		return e;
 	}
 	public void playNow (String name)
-	{	SoundElement e=find(name);
-		if (e==null) e=add(name);
-		e.play();
+	{	Sound e=find(name);
+		if (e==null) e=append(name);
+		e.start();
 	}
 	public synchronized void play (String name)
 	{	if (busy())

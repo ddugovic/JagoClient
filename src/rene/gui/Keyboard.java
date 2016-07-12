@@ -19,6 +19,7 @@ import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -37,8 +38,8 @@ default local properties and the JE configuration.
 */
 
 public class Keyboard
-{	static Vector V;
-	static Hashtable Hmenu,Hcharkey;
+{	static Vector<KeyboardItem> V;
+	static Hashtable<String,KeyboardItem> Hmenu,Hcharkey;
 
 	static
 	{	makeKeys();
@@ -49,8 +50,8 @@ public class Keyboard
 	vector and two hash tables for easy access.
 	*/
 	public static void makeKeys ()
-	{	V=new Vector();
-		Hmenu=new Hashtable(); Hcharkey=new Hashtable();
+	{	V=new Vector<KeyboardItem>();
+		Hmenu=new Hashtable<String,KeyboardItem>(); Hcharkey=new Hashtable<String,KeyboardItem>();
 		// collect all predefined keys
 		Enumeration e=Global.names();
 		if (e==null) return;
@@ -86,9 +87,7 @@ public class Keyboard
 	Find a menu string in the key definitions
 	*/
 	public static KeyboardItem findMenu (String menu)
-	{	Object o=Hmenu.get(menu);
-		if (o==null) return null;
-		else return (KeyboardItem)o;
+	{	return Hmenu.get(menu);
 	}
 	
 	/**
@@ -112,9 +111,9 @@ public class Keyboard
 	menu entry.
 	*/	
 	public static String findKey (KeyEvent event, int type)
-	{	Object o=Hcharkey.get(toCharKey(event,type));
-		if (o==null) return "";
-		String s=((KeyboardItem)o).getMenuString();
+	{	KeyboardItem k=Hcharkey.get(toCharKey(event,type));
+		if (k==null) return "";
+		String s=k.getMenuString();
 		while (s.endsWith("*")) s=s.substring(0,s.length()-1);
 		return s;
 	}
@@ -135,11 +134,8 @@ public class Keyboard
 	Edit the translations.
 	*/
 	public static void edit (Frame f)
-	{	KeyboardItem keys[]=new KeyboardItem[V.size()];
-		V.copyInto(keys);
-		Sorter.sort(keys);
-		Vector v=new Vector();
-		for (int i=0; i<keys.length; i++) v.addElement(keys[i]);
+	{	Vector<KeyboardItem> v=new Vector<KeyboardItem>(V);
+		Collections.sort(v);
 		KeyboardPanel p=new KeyboardPanel();
 		ItemEditor d=new ItemEditor(f,p,v,"keyeditor",
 			Global.name("keyeditor.prompt"),true,false,true,

@@ -2,14 +2,13 @@ package jagoclient.igs.who;
 
 import jagoclient.Global;
 import rene.util.parser.StringParser;
-import rene.util.sort.SortObject;
 
 /**
 This is needed for the Sorter class.
 @see rene.util.sort.Sorter
 */
 
-public class WhoObject implements SortObject
+public class WhoObject implements Comparable<WhoObject>
 {	String S,Name,Stat;
 	public int V;
 	boolean SortName;
@@ -37,9 +36,9 @@ public class WhoObject implements SortObject
 		}
 	}
 	String who () { return S; }
-	public int compare (SortObject o)
-	{	WhoObject g=(WhoObject)o;
-		if (SortName)
+	@Override
+	public int compareTo (WhoObject g)
+	{	if (SortName)
 		{	return Name.compareTo(g.Name);
 		}
 		else

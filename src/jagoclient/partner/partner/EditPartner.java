@@ -19,18 +19,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 public class EditPartner extends CloseDialog
 {
-	ListClass PList;
+	ListClass<Partner> PList;
 	Partner C;
 	JTextField Name, Server, Port;
 	Go G;
 	Choice State;
 	Frame F;
 
-	public EditPartner (CloseFrame f, ListClass plist, Partner c, Go go)
+	public EditPartner (CloseFrame f, ListClass<Partner> plist, Partner c, Go go)
 	{
 		super(f, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -149,7 +148,7 @@ public class EditPartner extends CloseDialog
 				{
 					C.Name = C.Name + " DUP";
 				}
-				PList.append(new ListElement(C));
+				PList.append(C);
 				G.updateplist();
 				setVisible(false);
 				dispose();

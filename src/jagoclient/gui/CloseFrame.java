@@ -11,7 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.InputStream;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -24,12 +25,11 @@ import rene.util.list.ListElement;
 public class CloseFrame extends Frame implements WindowListener,
 	ActionListener, DoActionListener
 {
-	ListClass L;
+	ListClass<CloseListener> L = new ListClass<CloseListener>();
 
 	public CloseFrame (String s)
 	{
 		super("");
-		L = new ListClass();
 		addWindowListener(this);
 		setTitle(s);
 	}
@@ -87,44 +87,32 @@ public class CloseFrame extends Frame implements WindowListener,
 
 	public void addCloseListener (CloseListener cl)
 	{
-		L.append(new ListElement(cl));
+		L.add(new ListElement(L, cl));
 	}
 
 	public void inform ()
 	{
-		ListElement e = L.first();
-		while (e != null)
-		{
+		L.stream().forEach((e) -> {
 			try
 			{
-				((CloseListener)e.content()).isClosed();
+				e.content().isClosed();
 			}
 			catch (Exception ex)
 			{}
-			e = e.next();
-		}
+		});
 	}
 
 	public void removeCloseListener (CloseListener cl)
 	{
-		ListElement e = L.first();
-		while (e != null)
-		{
-			CloseListener l = (CloseListener)e.content();
-			if (l == cl)
-			{
-				L.remove(e);
-				break;
-			}
-			e = e.next();
-		}
+		L.removeIf((ListElement<CloseListener> t) -> t.content() == cl);
 	}
 
+	@Override
 	public void itemAction (String o, boolean flag)
 	{}
 
 	// the icon things
-	static Hashtable Icons = new Hashtable();
+	static Map<String, Image> Icons = new HashMap<String, Image>();
 
 	public void seticon (String file)
 	{

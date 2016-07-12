@@ -49,7 +49,7 @@ class ClipboardCopy extends Thread
 public class TextDisplay extends Canvas implements ClipboardOwner,
 	ComponentListener
 {
-	ListClass L;
+	ListClass<Line> L;
 	Font F = null;
 	FontMetrics FM;
 	Viewer V;
@@ -133,7 +133,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 	public synchronized void appendLine0 (String S, Color c)
 	{
 		Line l;
-		L.append(new ListElement(l = new Line(S, this, c)));
+		L.append(new ListElement<Line>(L, l = new Line(S, this, c)));
 		LineCount++;
 		if (LineCount == 1) TopLine = L.first();
 		LineFinished = true;
@@ -200,7 +200,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		if (LineFinished || L.last() == null)
 		{
 			Line l;
-			L.append(new ListElement(l = new Line(s, this, c)));
+			L.append(new ListElement<Line>(L, l = new Line(s, this, c)));
 			LineCount++;
 			if (LineCount == 1) TopLine = L.first();
 			if (TabWidth > 0) l.expandTabs(TabWidth);
@@ -457,11 +457,9 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 
 	public void unmark ()
 	{
-		ListElement e = L.first();
-		while (e != null)
+		for (ListElement<Line> e : L)
 		{
-			((Line)e.content()).block(0, Line.NONE);
-			e = e.next();
+			e.content().block(0, Line.NONE);
 		}
 		repaint();
 	}
@@ -481,7 +479,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 			P2 = Start;
 		}
 		else return;
-		ListElement e = P1.L;
+		ListElement<Line> e = P1.L;
 		while (e != null && e != P2.L)
 		{
 			((Line)e.content()).block(0, Line.NONE);
@@ -506,7 +504,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 			P2 = Start;
 		}
 		else return;
-		ListElement e = P1.L;
+		ListElement<Line> e = P1.L;
 		((Line)e.content()).block(P1.LPos, Line.START);
 		if (e != P2.L) e = e.next();
 		while (e != null && e != P2.L)
@@ -535,7 +533,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		}
 		else return;
 		String s = "";
-		ListElement e = P1.L;
+		ListElement<Line> e = P1.L;
 		while (e != null && e != P2.L)
 		{
 			s = s + ((Line)e.content()).getblock() + "\n";

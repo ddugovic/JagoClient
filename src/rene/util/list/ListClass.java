@@ -1,54 +1,38 @@
 package rene.util.list;
 
+import java.util.LinkedList;
+
 /**
- * A class for a list of things. The list is forward and backward chained.
+ * A linked list of ListElements which reference this; i.e., a tree.
  * 
  * @see rene.list.ListElement
  */
-
-public class ListClass
+public class ListClass<E> extends LinkedList<ListElement<E>>
 {
-	ListElement First, Last; // Pointer to start and end of list.
-
-	/**
-	 * Generate an empty list.
-	 */
-	public ListClass ()
-	{
-		First = null;
-		Last = null;
-	}
-
 	/**
 	 * Append a node to the list
+	 * @deprecated
 	 */
-	public void append (ListElement l)
+	public void append (ListElement<E> l)
 	{
-		if (Last == null)
-			init(l);
-		else
-		{
-			Last.next(l);
-			l.previous(Last);
-			Last = l;
-			l.next(null);
-			l.list(this);
-		}
+		super.addLast(l);
+	}
+	public void append (E content)
+	{
+		super.addLast(new ListElement<E>(this, content));
 	}
 
-	public void prepend (ListElement l)
-	// prepend a node to the list
+	/**
+	 * Prepend a node to the list
+	 * @deprecated
+	 */
+	public void prepend (ListElement<E> l)
 	{
-		if (First == null)
-			init(l);
-		else
-		{
-			First.previous(l);
-			l.next(First);
-			First = l;
-			l.previous(null);
-			l.list(this);
-		}
+		super.addFirst(l);
+	}
+	public void prepend (E content)
+	{
+		super.addFirst(new ListElement<E>(this, content));
 	}
 
 	/*
@@ -56,93 +40,27 @@ public class ListClass
 	 * 
 	 * @param after If null, it works like prepend.
 	 */
-	public void insert (ListElement l, ListElement after)
+	public void insert (ListElement<E> l, ListElement<E> after)
 	{
-		if (after == Last)
-			append(l);
-		else if (after == null)
-			prepend(l);
-		else
-		{
-			after.next().previous(l);
-			l.next(after.next());
-			after.next(l);
-			l.previous(after);
-			l.list(this);
-		}
-	}
-
-	/**
-	 * initialize the list with a single element.
-	 */
-	public void init (ListElement l)
-	{
-		Last = First = l;
-		l.previous(null);
-		l.next(null);
-		l.list(this);
-	}
-
-	/**
-	 * Remove a node from the list. The node really should be in the list, which
-	 * is not checked.
-	 */
-	public void remove (ListElement l)
-	{
-		if (First == l)
-		{
-			First = l.next();
-			if (First != null)
-				First.previous(null);
-			else Last = null;
-		}
-		else if (Last == l)
-		{
-			Last = l.previous();
-			if (Last != null)
-				Last.next(null);
-			else First = null;
-		}
-		else
-		{
-			l.previous().next(l.next());
-			l.next().previous(l.previous());
-		}
-		l.next(null);
-		l.previous(null);
-		l.list(null);
-	}
-
-	/**
-	 * Empty the list.
-	 */
-	public void removeall ()
-	{
-		First = null;
-		Last = null;
-	}
-
-	/** remove everything after e */
-	public void removeAfter (ListElement e)
-	{
-		e.next(null);
-		Last = e;
+		super.add(indexOf(after) + 1, l);
 	}
 
 	/**
 	 * @return First ListElement.
+	 * @deprecated
 	 */
-	public ListElement first ()
+	public ListElement<E> first ()
 	{
-		return First;
+		return super.peekFirst();
 	}
 
 	/**
 	 * @return Last ListElement.
+	 * @deprecated
 	 */
-	public ListElement last ()
+	public ListElement<E> last ()
 	{
-		return Last;
+		return super.peekLast();
 	}
 
 	/**
@@ -151,14 +69,11 @@ public class ListClass
 	@Override
 	public String toString ()
 	{
-		ListElement e = First;
-		String s = "";
-		while (e != null)
+		StringBuilder sb = new StringBuilder();
+		for (ListElement<E> e : this)
 		{
-			s = s + e.content().toString() + ", ";
-			e = e.next();
+			sb.append(e.content().toString() + ", ");
 		}
-		return s;
+		return sb.toString();
 	}
-
 }

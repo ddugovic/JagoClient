@@ -104,14 +104,12 @@ public class OpenPartnerFrame extends CloseFrame
 
 	public void refresh ()
 	{
-		ListClass PL = Global.OpenPartnerList;
+		ListClass<Partner> PL = Global.OpenPartnerList;
 		L.removeAll();
 		if (PL == null) return;
-		ListElement le = PL.first();
-		while (le != null)
+		for (ListElement<Partner> le : PL)
 		{
 			L.add(((Partner)le.content()).Name);
-			le = le.next();
 		}
 	}
 
@@ -126,9 +124,8 @@ public class OpenPartnerFrame extends CloseFrame
 
 	public void connect ()
 	{
-		ListElement le = Global.OpenPartnerList.first();
 		String s = L.getSelectedItem();
-		while (le != null)
+		for (ListElement<Partner> le : Global.OpenPartnerList)
 		{
 			Partner p = (Partner)le.content();
 			if (p.Name.equals(s))
@@ -140,7 +137,6 @@ public class OpenPartnerFrame extends CloseFrame
 				new ConnectPartner(p, cf);
 				return;
 			}
-			le = le.next();
 		}
 	}
 }

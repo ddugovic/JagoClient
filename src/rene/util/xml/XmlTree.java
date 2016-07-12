@@ -1,15 +1,13 @@
 package rene.util.xml;
 
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Vector;
-
 import rene.util.list.ListElement;
+
 import rene.util.list.Tree;
 import rene.util.parser.StringParser;
 
-public class XmlTree extends Tree
-	implements Enumeration<XmlTree>, Iterator<XmlTree>, Iterable<XmlTree>
+public class XmlTree extends Tree<XmlTag>
+	implements Enumeration<Tree<XmlTag>>
 {	public XmlTree (XmlTag t)
 	{	super(t);
 	}
@@ -18,14 +16,14 @@ public class XmlTree extends Tree
 	{	return (XmlTag)content();
 	}
 	
-	public XmlTree xmlFirstContent ()
-	{	if (firstchild()!=null) return (XmlTree)firstchild();
-		else return null;
+	public Tree<XmlTag> xmlFirstContent ()
+	{	if (children.isEmpty()) return null;
+		else return children.getFirst().content();
 	}
 	
 	public boolean isText ()
-	{	if (!haschildren()) return true;
-		if (firstchild()!=lastchild()) return false;
+	{	if (children.isEmpty()) return true;
+		if (children.getFirst()!=children.getLast()) return false;
 		XmlTree t=(XmlTree)firstchild();
 		XmlTag tag=t.getTag();
 		if (!(tag instanceof XmlTagText)) return false;
@@ -33,30 +31,32 @@ public class XmlTree extends Tree
 	}
 	
 	public String getText ()
-	{	if (!haschildren()) return "";
-		XmlTree t=(XmlTree)firstchild();
+	{	if (children.isEmpty()) return "";
+		XmlTree t=(XmlTree)children.getFirst().content();
 		XmlTag tag=t.getTag();
 		return ((XmlTagText)tag).getContent();
 	}
 	
-	ListElement Current;
-	
-	public Enumeration<XmlTree> getContent ()
-	{	Current=children().first();
+	ListElement<Tree<XmlTag>> Current;
+
+	public Enumeration<Tree<XmlTag>> getContent ()
+	{	Current=children().peekFirst();
 		return this;
 	}
-	
+
+	@Override
 	public boolean hasMoreElements ()
 	{	return Current!=null;
 	}
-	
-	public XmlTree nextElement ()
+
+	@Override
+	public Tree<XmlTag> nextElement ()
 	{	if (Current==null) return null;
-		XmlTree c=(XmlTree)(Current.content());
+		Tree<XmlTag> c=Current.content();
 		Current=Current.next();
 		return c;
 	}
-	
+
 	public boolean isTag (String s)
 	{	return getTag().name().equals(s);
 	}
@@ -64,56 +64,31 @@ public class XmlTree extends Tree
 	public String parseComment ()
 		throws XmlReaderException
 	{	StringBuffer s=new StringBuffer();
-		Enumeration e=getContent();
-		while (e.hasMoreElements())
-		{	XmlTree tree=(XmlTree)e.nextElement();
-			XmlTag tag=tree.getTag();
+		for (ListElement<Tree<XmlTag>> tree : children)
+		{
+			XmlTag tag=tree.content().content();
 			if (tag.name().equals("P"))
-			{	if (!tree.haschildren()) s.append("\n");
+			{	if (tree.content().children().isEmpty()) s.append("\n");
 				else
-				{	XmlTree h=tree.xmlFirstContent();
-					String k=((XmlTagText)h.getTag()).getContent();
+				{	Tree<XmlTag> h=tree.content().children().getFirst().content();
+					String k=((XmlTagText)h.content()).getContent();
 					k=k.replace('\n',' ');
 					StringParser p=new StringParser(k);
-					Vector v=p.wraplines(1000);
-					for (int i=0; i<v.size(); i++)
-					{	s.append((String)v.elementAt(i));
-						s.append("\n");
+					for (String l : p.wraplines(1000))
+					{	s.append(l).append("\n");
 					}
 				}
 			}
 			else if (tag instanceof XmlTagText)
 			{	String k=((XmlTagText)tag).getContent();
 				StringParser p=new StringParser(k);
-				Vector v=p.wraplines(1000);
-				for (int i=0; i<v.size(); i++)
-				{	s.append((String)v.elementAt(i));
-					s.append("\n");
-				}			
+				for (String l : p.wraplines(1000))
+				{	s.append(l).append("\n");
+				}
 			}
 			else
 				throw new XmlReaderException("<"+tag.name()+"> not proper here.");
 		}
 		return s.toString();
 	}
-	
-	public boolean hasNext()
-	{	return Current!=null;
-	}
-	
-	public XmlTree next()
-	{	if (Current==null) return null;
-		XmlTree c=(XmlTree)(Current.content());
-		Current=Current.next();
-		return c;
-	}
-	
-	public void remove()
-	{
-	}
-	
-	public Iterator iterator()
-	{	Current=children().first();
-		return this;
-	}	
 }

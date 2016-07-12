@@ -5,33 +5,30 @@ The nodes of a list.
 @see rene.list.ListClass
 */
 
-public class ListElement
-// A list node with pointers to previous and next element
+public class ListElement<C>
+// A list node with reference to ListClass container
 // and with a content of type Object.
-{	ListElement Next,Previous; // the chain pointers
-	Object Content; // the content of the node
-	ListClass L; // Belongs to this list
-	
-	public ListElement (Object content)
+{	protected C content; // the content of the node
+	protected ListClass<C> list; // Belongs to this list
+
+	public ListElement (ListClass<C> list, C content)
 	// get a new Element with the content and null pointers
-	{	Content=content;
-		Next=Previous=null;
-		L=null;
+	{	this.content=content;
+		this.list=list;
 	}
 
 	// access methods:
-	public Object content ()
-	{	return Content;
+	public C content ()
+	{	return content;
 	}
-	public ListElement next () { return Next; }
-	public ListElement previous () { return Previous; }
-	public void list (ListClass l) { L=l; }
+	@Deprecated
+	public ListElement<C> next () { return list.getLast()==this ? null : list.get(list.indexOf(this)+1); }
+	@Deprecated
+	public ListElement<C> previous () { return list.getFirst()==this ? null : list.get(list.indexOf(this)-1); }
 
 	// modifying methods:
-	public void content (Object o) { Content=o; }
-	public void next (ListElement o) { Next=o; }
-	public void previous (ListElement o) { Previous=o; }
-	public ListClass list () { return L; }
+	public void content (C content) { this.content=content; }
+	public void content (ListClass<C> list, C content) { this.list=list; content(content); }
 }
 
 

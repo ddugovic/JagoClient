@@ -3,7 +3,6 @@ package rene.gui;
 import java.util.StringTokenizer;
 
 import rene.dialogs.ItemEditorElement;
-import rene.util.sort.SortObject;
 
 /**
 A keyboard item. Can be constructed from a menu string (like
@@ -12,7 +11,7 @@ event, if it fits.
 */
 
 public class KeyboardItem
-	implements ItemEditorElement, SortObject
+	implements ItemEditorElement, Comparable<KeyboardItem>
 {	boolean Shift,Control,Alt;
 	String CharKey;
 	String MenuString,ActionName;
@@ -114,11 +113,9 @@ public class KeyboardItem
 	{	return MenuString;
 	}
 	
-	/**
-	Method of SortObject, necessary to sort the keys by name.
-	*/
-	public int compare (SortObject o)
-	{	return getName().compareTo(((KeyboardItem)o).getName());
+	@Override
+	public int compareTo (KeyboardItem o)
+	{	return getName().compareTo(o.getName());
 	}
 	
 	/**

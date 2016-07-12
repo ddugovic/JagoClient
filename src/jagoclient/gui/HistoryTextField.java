@@ -5,7 +5,8 @@ import java.awt.event.*;
 
 import jagoclient.Global;
 
-import rene.util.list.*;
+import rene.util.list.ListClass;
+import rene.util.list.ListElement;
 
 /**
 A TextField, which display the old input, when cursor up is
@@ -16,35 +17,33 @@ from TextFieldAction.
 
 public class HistoryTextField extends TextFieldAction
     implements KeyListener,DoActionListener
-{	ListClass H;
+{	ListClass<String> H;
 	PopupMenu M=null;
 	public HistoryTextField (DoActionListener l, String name)
 	{	super(l,name);
-	    H=new ListClass();
-		H.append(new ListElement(""));
+	    H=new ListClass<String>();
+		H.append("");
 		addKeyListener(this);
 	}
 	public HistoryTextField (DoActionListener l, String name, int s)
 	{	super(l,name,s);
-	    H=new ListClass();
-		H.append(new ListElement(""));
+	    H=new ListClass<String>();
+		H.append("");
 		addKeyListener(this);
 	}
+	@Override
 	public void keyPressed (KeyEvent ev)
 	{	switch (ev.getKeyCode())
 		{	case KeyEvent.VK_UP :
 			case KeyEvent.VK_DOWN : 
 				if (M==null)
 				{	M=new PopupMenu();
-					ListElement e=H.first();
-					while (e!=null)
-					{	String t=(String)e.content();
+					for (ListElement<String> e : H)
+					{	String t=e.content();
 						if (!t.equals(""))
-						{	MenuItem item=new MenuItemAction(this,
-								t,t);
+						{	MenuItem item=new MenuItemAction(this,t,t);
 							M.add(item);
 						}
-						e=e.next();
 					}
 					add(M);
 				}
@@ -53,7 +52,9 @@ public class HistoryTextField extends TextFieldAction
 			default : return;
 		}
 	}
+	@Override
 	public void keyReleased (KeyEvent e) {}
+	@Override
 	public void keyTyped (KeyEvent e) {}
 	String Last;
 	public void remember (String s)
@@ -61,20 +62,12 @@ public class HistoryTextField extends TextFieldAction
 		deleteFromHistory(s);
 		Last=s;
 		H.last().content(s);
-		H.append(new ListElement(""));
+		H.append("");
 		M=null;
 	}
 	public void deleteFromHistory (String s)
-	{	ListElement e=H.first();
-		while (e!=null)
-		{	String t=(String)e.content();
-			ListElement next=e.next();
-			if (t.equals(s))
-			{	H.remove(e);
-				if (H.first()==null) H.append(new ListElement(""));
-			}
-			e=next;
-		}
+	{
+		H.removeIf((ListElement<String> t) -> t.content().equals(s));
 	}
 	public void remember ()
 	{	remember(getText());
@@ -96,7 +89,7 @@ public class HistoryTextField extends TextFieldAction
 	{	int i=1;
 		while (Global.haveParameter("history."+name+"."+i))
 		{	String s=Global.getParameter("history."+name+"."+i,"");
-			if (!s.equals("")) H.prepend(new ListElement(s));
+			if (!s.equals("")) H.prepend(s);
 			i++;
 		}
 	}

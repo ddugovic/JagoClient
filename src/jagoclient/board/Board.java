@@ -900,14 +900,13 @@ public class Board extends Canvas implements MouseListener,
 		if (P.color(i, j) != 0) return;
 		synchronized (Pos)
 		{
-			ListElement la = Pos.node().actions();
-			while (la != null)
+			for (ListElement<Action> la : Pos.node().actions())
 			{
-				Action a = (Action)la.content();
+				Action a = la.content();
 				if (a.type().equals("B") || a.type().equals("W"))
 				{
 					undonode();
-					a.arguments().content(Field.string(i, j));
+					a.arguments().first().content(Field.string(i, j));
 					setnode();
 					break;
 				}
@@ -1301,22 +1300,20 @@ public class Board extends Canvas implements MouseListener,
 					update(i, j);
 				}
 			}
-		ListElement la = Pos.node().actions();
 		Action a;
 		String s;
 		String sc = "";
 		int let = 1;
-		while (la != null) // setup the marks and letters
+		for (ListElement<Action> la : Pos.node().actions()) // setup the marks and letters
 		{
-			a = (Action)la.content();
+			a = la.content();
 			if (a.type().equals("C"))
 			{
-				sc = (String)a.arguments().content();
+				sc = a.argument();
 			}
 			else if (a.type().equals("SQ") || a.type().equals("SL"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1326,14 +1323,12 @@ public class Board extends Canvas implements MouseListener,
 						P.marker(i, j, Field.SQUARE);
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
 			else if (a.type().equals("MA") || a.type().equals("M")
 				|| a.type().equals("TW") || a.type().equals("TB"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1343,13 +1338,11 @@ public class Board extends Canvas implements MouseListener,
 						P.marker(i, j, Field.CROSS);
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
 			else if (a.type().equals("TR"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1359,13 +1352,11 @@ public class Board extends Canvas implements MouseListener,
 						P.marker(i, j, Field.TRIANGLE);
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
 			else if (a.type().equals("CR"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1375,13 +1366,11 @@ public class Board extends Canvas implements MouseListener,
 						P.marker(i, j, Field.CIRCLE);
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
 			else if (a.type().equals("L"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1392,13 +1381,11 @@ public class Board extends Canvas implements MouseListener,
 						let++;
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
 			else if (a.type().equals("LB"))
 			{
-				ListElement larg = a.arguments();
-				while (larg != null)
+				for (ListElement<String> larg : a.arguments())
 				{
 					s = (String)larg.content();
 					i = Field.i(s);
@@ -1408,10 +1395,8 @@ public class Board extends Canvas implements MouseListener,
 						P.setlabel(i, j, s.substring(3));
 						update(i, j);
 					}
-					larg = larg.next();
 				}
 			}
-			la = la.next();
 		}
 		TreeNode p;
 		ListElement l = null;
@@ -1429,13 +1414,12 @@ public class Board extends Canvas implements MouseListener,
 			p = (TreeNode)l.content();
 			if (p != Pos)
 			{
-				la = p.node().actions();
-				while (la != null)
+				for (ListElement<Action> la : p.node().actions())
 				{
 					a = (Action)la.content();
 					if (a.type().equals("W") || a.type().equals("B"))
 					{
-						s = (String)a.arguments().content();
+						s = a.argument();
 						i = Field.i(s);
 						j = Field.j(s);
 						if (valid(i, j))
@@ -1445,7 +1429,6 @@ public class Board extends Canvas implements MouseListener,
 						}
 						break;
 					}
-					la = la.next();
 				}
 			}
 			l = l.next();
@@ -1459,35 +1442,12 @@ public class Board extends Canvas implements MouseListener,
 
 	public int siblings ()
 	{
-		ListElement l = Pos.listelement();
-		if (l == null) return 0;
-		while (l.previous() != null)
-			l = l.previous();
-		int count = 0;
-		while (l.next() != null)
-		{
-			l = l.next();
-			count++;
-		}
-		return count;
+		return Pos.parent().children().size()-1;
 	}
 
 	public int children ()
 	{
-		if ( !Pos.haschildren()) return 0;
-		TreeNode p = Pos.firstChild();
-		if (p == null) return 0;
-		ListElement l = p.listelement();
-		if (l == null) return 0;
-		while (l.previous() != null)
-			l = l.previous();
-		int count = 1;
-		while (l.next() != null)
-		{
-			l = l.next();
-			count++;
-		}
-		return count;
+		return Pos.children().size();
 	}
 
 	public void clearsend ()
@@ -1503,20 +1463,18 @@ public class Board extends Canvas implements MouseListener,
 	public void getinformation ()
 	// update the comment, when leaving the position
 	{
-		ListElement la = Pos.node().actions();
 		Action a;
 		clearsend();
-		while (la != null)
+		for (ListElement<Action> la : Pos.node().actions())
 		{
-			a = (Action)la.content();
+			a = la.content();
 			if (a.type().equals("C"))
 			{
 				if (GF.getComment().equals(""))
 					Pos.node().removeaction(la);
-				else a.arguments().content(GF.getComment());
+				else a.arguments().first().content(GF.getComment());
 				return;
 			}
-			la = la.next();
 		}
 		String s = GF.getComment();
 		if ( !s.equals(""))
@@ -1776,7 +1734,7 @@ public class Board extends Canvas implements MouseListener,
 	// interpret a set move action, update the last move marker,
 	// c being the color of the move.
 	{
-		String s = (String)a.arguments().content();
+		String s = a.argument();
 		int i = Field.i(s);
 		int j = Field.j(s);
 		if ( !valid(i, j)) return;
@@ -1798,8 +1756,7 @@ public class Board extends Canvas implements MouseListener,
 	// c being the color of the move.
 	{
 		int i, j;
-		ListElement larg = a.arguments();
-		while (larg != null)
+		for (ListElement<String> larg : a.arguments())
 		{
 			String s = (String)larg.content();
 			i = Field.i(s);
@@ -1810,7 +1767,6 @@ public class Board extends Canvas implements MouseListener,
 				P.color(i, j, c);
 				update(i, j);
 			}
-			larg = larg.next();
 		}
 	}
 
@@ -1818,8 +1774,7 @@ public class Board extends Canvas implements MouseListener,
 	// interpret a remove stone action
 	{
 		int i, j, r = 1;
-		ListElement larg = a.arguments();
-		while (larg != null)
+		for (ListElement<String> larg : a.arguments())
 		{
 			String s = (String)larg.content();
 			i = Field.i(s);
@@ -1840,7 +1795,6 @@ public class Board extends Canvas implements MouseListener,
 				P.color(i, j, 0);
 				update(i, j);
 			}
-			larg = larg.next();
 		}
 	}
 
@@ -1848,14 +1802,13 @@ public class Board extends Canvas implements MouseListener,
 	// interpret all actions of a node
 	{
 		Node n = Pos.node();
-		ListElement p = n.actions();
-		if (p == null) return;
+		if (n.actions().isEmpty()) return;
 		Action a;
 		String s;
 		int i, j;
-		while (p != null)
+		for (ListElement<Action> p : n.actions())
 		{
-			a = (Action)p.content();
+			a = p.content();
 			if (a.type().equals("SZ"))
 			{
 				if (Pos.parentPos() == null)
@@ -1877,12 +1830,10 @@ public class Board extends Canvas implements MouseListener,
 					{}
 				}
 			}
-			p = p.next();
 		}
 		n.clearchanges();
 		n.Pw = n.Pb = 0;
-		p = n.actions();
-		while (p != null)
+		for (ListElement<Action> p : n.actions())
 		{
 			a = (Action)p.content();
 			if (a.type().equals("B"))
@@ -1905,7 +1856,6 @@ public class Board extends Canvas implements MouseListener,
 			{
 				emptyaction(n, a);
 			}
-			p = p.next();
 		}
 	}
 
@@ -1914,19 +1864,18 @@ public class Board extends Canvas implements MouseListener,
 	// set move actions in the node
 	{
 		Node n = Pos.node();
-		ListElement l = n.actions();
 		Action a;
 		String s;
 		int i = lasti, j = lastj;
 		lasti = -1;
 		lastj = -1;
 		update(i, j);
-		while (l != null)
+		for (ListElement<Action> l : n.actions())
 		{
-			a = (Action)l.content();
+			a = l.content();
 			if (a.type().equals("B") || a.type().equals("W"))
 			{
-				s = (String)a.arguments().content();
+				s = a.argument();
 				i = Field.i(s);
 				j = Field.j(s);
 				if (valid(i, j))
@@ -1937,7 +1886,6 @@ public class Board extends Canvas implements MouseListener,
 					P.color( -P.color(i, j));
 				}
 			}
-			l = l.next();
 		}
 		number = n.number();
 	}
@@ -2558,21 +2506,13 @@ public class Board extends Canvas implements MouseListener,
 	{
 		getinformation();
 		undonode();
-		ListElement la = Pos.node().actions(), lan;
-		Action a;
-		while (la != null)
-		{
-			a = (Action)la.content();
-			lan = la.next();
-			if (a.type().equals("M") || a.type().equals("L")
+		Pos.node().actions().removeIf((ListElement<Action> t) -> {
+			Action a = t.content();
+			return (a.type().equals("M") || a.type().equals("L")
 				|| a.type().equals("MA") || a.type().equals("SQ")
 				|| a.type().equals("SL") || a.type().equals("CR")
-				|| a.type().equals("TR") || a.type().equals("LB"))
-			{
-				Pos.node().removeaction(la);
-			}
-			la = lan;
-		}
+				|| a.type().equals("TR") || a.type().equals("LB"));
+		});
 		setnode();
 		showinformation();
 		copy();
@@ -2581,22 +2521,13 @@ public class Board extends Canvas implements MouseListener,
 	public void clearremovals ()
 	// undo all removals in the current node
 	{
-		if (Pos.haschildren()) return;
+		if (!Pos.children().isEmpty()) return;
 		getinformation();
 		undonode();
-		ListElement la = Pos.node().actions(), lan;
-		Action a;
-		while (la != null)
-		{
-			a = (Action)la.content();
-			lan = la.next();
-			if (a.type().equals("AB") || a.type().equals("AW")
-				|| a.type().equals("AE"))
-			{
-				Pos.node().removeaction(la);
-			}
-			la = lan;
-		}
+		Pos.node().actions().removeIf((ListElement<Action> t) -> {
+			Action a = t.content();
+			return (a.type().equals("AB") || a.type().equals("AW") || a.type().equals("AE"));
+		});
 		setnode();
 		showinformation();
 		copy();
@@ -2847,18 +2778,17 @@ public class Board extends Canvas implements MouseListener,
 		while (p.haschildren())
 			p = p.firstChild();
 		if (Pos == p) getinformation();
-		ListElement la = p.node().actions();
 		Action a;
 		String Added = "";
 		ListElement larg;
 		outer: while (true)
 		{
-			while (la != null)
+			for (ListElement<Action> la : p.node().actions())
 			{
-				a = (Action)la.content();
+				a = la.content();
 				if (a.type().equals("C"))
 				{
-					larg = a.arguments();
+					larg = a.arguments().first();
 					if (((String)larg.content()).equals(""))
 					{
 						larg.content(s);
@@ -2871,7 +2801,6 @@ public class Board extends Canvas implements MouseListener,
 					}
 					break outer;
 				}
-				la = la.next();
 			}
 			p.addaction(new Action("C", s));
 			break;

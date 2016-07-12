@@ -4,16 +4,16 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
-This is a more effective replacement of the Vector class. It is based
-on a growing array. If an object is removed, it is replaced by null.
+This is a more efficient replacement of the Vector class, based on
+a growing array. When an object is removed, it is replaced by null.
 The class knows about the first null object (the gap). Searching for
 elements or other operations automatically compress the array by
 copying the elements upwards, but only as far as they need to go
 anyway.
 
-Accessing an element is very effective, at least the second time. If
-you want to make sure, it is always effective, compress first. The
-most effective way is to get the object array itself.
+Accessing an element is very efficient, at least the second time. If
+you want to ensure it is always efficient, compress first. The
+most efficient way is to get the object array itself.
 
 The objects can be enumerated. The object returned by nextElement()
 is found very rapidly. E.g. it can be deleted at once.

@@ -20,11 +20,11 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
-import rene.util.sort.Sorter;
 import rene.viewer.Lister;
 import rene.viewer.SystemLister;
 
@@ -44,7 +44,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 	Lister T;
 	ConnectionFrame CF;
 	GamesDistributor GD;
-	ListClass L;
+	ListClass<String> L;
 	boolean Closed = false;
 	int LNumber;
 
@@ -168,7 +168,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 	public synchronized void receive (String s)
 	{
 		if (Closed) return;
-		L.append(new ListElement(s));
+		L.append(s);
 		LNumber++;
 		if (LNumber == 1) T.setText(Global.resourceString("Receiving"));
 	}
@@ -197,7 +197,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 				v[i] = new GamesObject((String)p.content());
 				p = p.next();
 			}
-			Sorter.sort(v);
+			Arrays.sort(v);
 			T.setText("");
 			T.appendLine0(" " + (String)L.first().content());
 			Color FC = Color.green.darker().darker();

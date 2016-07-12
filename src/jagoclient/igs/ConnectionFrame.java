@@ -199,7 +199,7 @@ public class ConnectionFrame extends CloseFrame implements KeyListener
 	public int MoveStyle = Connection.MOVE;
 	JTextField WhoRange; // Kyu/Dan range for the who command.
 	String Waitfor; // Pop a a message, when this player connects.
-	ListClass OL; // List of Output-Listeners
+	ListClass<OutputListener> OL; // List of Output-Listeners
 	String Reply;
 
 	public boolean hasClosed = false; // note that the user closed the window
@@ -767,32 +767,28 @@ public class ConnectionFrame extends CloseFrame implements KeyListener
 	public void append (String s, Color c)
 	{
 		Output.append(s + "\n", c);
-		ListElement e = OL.first();
-		while (e != null)
+		for (ListElement<OutputListener> e : OL)
 		{
-			OutputListener ol = (OutputListener)e.content();
+			OutputListener ol = e.content();
 			ol.append(s, c);
-			e = e.next();
 		}
 	}
 
 	public void addOutputListener (OutputListener l)
 	{
-		OL.append(new ListElement(l));
+		OL.append(l);
 	}
 
 	public void removeOutputListener (OutputListener l)
 	{
-		ListElement e = OL.first();
-		while (e != null)
+		for (ListElement<OutputListener> e : OL)
 		{
-			OutputListener ol = (OutputListener)e.content();
+			OutputListener ol = e.content();
 			if (ol == l)
 			{
 				OL.remove(e);
 				return;
 			}
-			e = e.next();
 		}
 	}
 

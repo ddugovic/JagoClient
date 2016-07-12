@@ -14,7 +14,7 @@ Methods include the printing on a PrintWriter.
 */
 public class Action
 {	String Type; // the type
-	ListClass Arguments; // the list of argument strings
+	ListClass<String> Arguments; // the list of argument strings
 	
 	/**
 	Initialize with type only
@@ -35,30 +35,28 @@ public class Action
 	
 	public void addargument (String s)
 	// add an argument ot the list (at end)
-	{	Arguments.append(new ListElement(s));
+	{	Arguments.append(s);
 	}
 	
 	public void toggleargument (String s)
 	// add an argument ot the list (at end)
-	{	ListElement ap=Arguments.first();
-		while (ap!=null)
-		{	String t=(String)ap.content();
+	{
+		for (ListElement<String> ap : Arguments)
+		{	String t=ap.content();
 			if (t.equals(s))
 			{	Arguments.remove(ap);
 				return;
 			}
-			ap=ap.next();
 		}
-		Arguments.append(new ListElement(s));
+		Arguments.append(s);
 	}
 
 	/** Find an argument */	
 	public boolean contains (String s)
-	{	ListElement ap=Arguments.first();
-		while (ap!=null)
-		{	String t=(String)ap.content();
+	{
+		for (ListElement<String> ap : Arguments)
+		{	String t=ap.content();
 			if (t.equals(s)) return true;
-			ap=ap.next();
 		}
 		return false;
 	}
@@ -71,10 +69,9 @@ public class Action
 			return;
 		o.println();
 		o.print(Type);
-		ListElement ap=Arguments.first();
-		while (ap!=null)
+		for (ListElement<String> ap : Arguments)
 		{	o.print("[");
-			String s=(String)ap.content();
+			String s=ap.content();
 			StringParser p=new StringParser(s);
 			Vector v=p.wrapwords(60);
 			for (int i=0; i<v.size(); i++)
@@ -90,7 +87,6 @@ public class Action
 				o.print(s);
 			}
 			o.print("]");
-			ap=ap.next();
 		}
 	}
 	
@@ -172,10 +168,9 @@ public class Action
 		}
 		else
 		{	xml.startTag("SGF","type",Type);
-			ListElement ap=Arguments.first();
-			while (ap!=null)
+			for (ListElement<String> ap : Arguments)
 			{	xml.startTag("Arg");
-				String s=(String)ap.content();
+				String s=ap.content();
 				StringParser p=new StringParser(s);
 				Vector v=p.wrapwords(60);
 				for (int i=0; i<v.size(); i++)
@@ -183,7 +178,6 @@ public class Action
 					if (i>0) xml.println();
 					xml.print(s);
 				}
-				ap=ap.next();
 				xml.endTag("Arg");
 			}
 			xml.endTagNewLine("SGF");
@@ -243,34 +237,32 @@ public class Action
 	Print all arguments as field positions with the specified tag.
 	*/
 	public void printAllFields (XmlWriter xml, int size, String tag)
-	{	ListElement ap=Arguments.first();
-		while (ap!=null)
-		{	String s=(String)ap.content();
+	{
+		for (ListElement<String> ap : Arguments)
+		{	String s=ap.content();
 			xml.startTagStart(tag);
 			xml.printArg("at",getXMLMove(ap,size));
 			xml.finishTagNewLine();
-			ap=ap.next();
 		}
 	}
 	
 	public void printAllFields (XmlWriter xml, int size, String tag,
 		String argument, String value)
-	{	ListElement ap=Arguments.first();
-		while (ap!=null)
-		{	String s=(String)ap.content();
+	{
+		for (ListElement<String> ap : Arguments)
+		{	String s=ap.content();
 			xml.startTagStart(tag);
 			xml.printArg(argument,value);
 			xml.printArg("at",getXMLMove(ap,size));
 			xml.finishTagNewLine();
-			ap=ap.next();
 		}
 	}
 
 	public void printAllSpecialFields (XmlWriter xml, int size, String tag,
 		String argument)
-	{	ListElement ap=Arguments.first();
-		while (ap!=null)
-		{	String s=(String)ap.content();
+	{
+		for (ListElement<String> ap : Arguments)
+		{	String s=ap.content();
 			StringParser p=new StringParser(s);
 			s=p.parseword(':');
 			p.skip(":");
@@ -279,7 +271,6 @@ public class Action
 			xml.printArg(argument,value);
 			xml.printArg("at",getXMLMove(ap,size));
 			xml.finishTagNewLine();
-			ap=ap.next();
 		}
 	}
 
@@ -312,9 +303,9 @@ public class Action
 
 	// access methods:
 	public String type () { return Type; }
-	public ListElement arguments () { return Arguments.first(); }
+	public ListClass<String> arguments () { return Arguments; }
 	public String argument ()
 	{	if (arguments()==null) return "";
-		else return (String)arguments().content();
+		else return arguments().first().content();
 	}
 }

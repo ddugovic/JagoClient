@@ -9,7 +9,7 @@ the content type Node.
 @see jagoclient.board.Node
 */
 
-public class TreeNode extends Tree
+public class TreeNode extends Tree<Node>
 {	/** initialize with an empty node with the specified number */
 	public TreeNode (int number)
 	{	super(new Node(number));
@@ -50,6 +50,8 @@ public class TreeNode extends Tree
 	public void main (boolean flag) { node().main(flag); }
 	
 	public TreeNode parentPos () { return (TreeNode)parent(); }
+	@Deprecated
 	public TreeNode firstChild () { return (TreeNode)firstchild(); }
+	@Deprecated
 	public TreeNode lastChild () { return (TreeNode)lastchild(); }
 }
