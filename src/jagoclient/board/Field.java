@@ -1,5 +1,6 @@
 package jagoclient.board;
 
+import rene.util.list.Tree;
 
 // ************** Field **************
 
@@ -18,7 +19,7 @@ a group of stones or a territory.
 public class Field
 {	int C; // the state of the field (-1,0,1), 1 is black
 	boolean Mark; // for several purposes (see Position.markgroup)
-	TreeNode T; // Tree that starts this variation
+	Tree<Node> T; // Tree that starts this variation
 	int Letter; // Letter to be displayed
 	String LabelLetter; // Strings from the LB tag.
 	boolean HaveLabel; // flag to indicate there is a label
@@ -92,7 +93,7 @@ public class Field
 
 	// modifiers:
 	void mark (boolean f) { Mark=f; } // set Mark
-	void tree (TreeNode t) { T=t; } // set Tree
+	void tree (Tree<Node> t) { T=t; } // set Tree
 	void marker (int f) { Marker=f; }
 	void letter (int l) { Letter=l; }
 	void territory (int c) { Territory=c; }
@@ -103,7 +104,7 @@ public class Field
 	// access functions:
 	boolean mark () { return Mark; } // ask Mark
 	int marker () { return Marker; }
-	TreeNode tree () { return T; }
+	Tree<Node> tree () { return T; }
 	int letter () { return Letter; }
 	int territory () { return Territory; }
 	boolean havelabel () { return HaveLabel; }

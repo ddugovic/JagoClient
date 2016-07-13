@@ -1,5 +1,7 @@
 package jagoclient.board;
 
+import rene.util.list.Tree;
+
 
 /**
 Store a complete game position.
@@ -190,7 +192,6 @@ public class Position
 	void clearlabel (int i, int j) { F[i][j].clearlabel(); }
 
 	// Interfact to variation trees
-	TreeNode tree (int i, int j) { return F[i][j].tree(); }
-	void tree (int i, int j, TreeNode t) { F[i][j].tree(t); }
+	Tree<Node> tree (int i, int j) { return F[i][j].tree(); }
+	void tree (int i, int j, Tree<Node> t) { F[i][j].tree(t); }
 }
-

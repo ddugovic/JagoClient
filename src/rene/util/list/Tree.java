@@ -57,9 +57,9 @@ public class Tree<E>
 	@Deprecated
 	public boolean haschildren () { return !children.isEmpty(); }
 	@Deprecated
-	public Tree<E> firstchild () { return (Tree)children.first().content(); }
+	public Tree<E> firstchild () { return (Tree<E>)children.first().content(); }
 	@Deprecated
-	public Tree<E> lastchild () { return (Tree)children.last().content(); }
+	public Tree<E> lastchild () { return (Tree<E>)children.last().content(); }
 	public Tree<E> parent () { return parent; }
 	public ListClass<Tree<E>> children () { return children; }
 	public E content () { return content; }

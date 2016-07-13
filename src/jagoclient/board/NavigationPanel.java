@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import rene.util.list.Tree;
+
 public class NavigationPanel extends MyPanel
 {
 	Board B;
@@ -36,10 +38,10 @@ public class NavigationPanel extends MyPanel
 		h = getSize().height;
 		g.setColor(BoardColor);
 		g.fillRect(0, 0, w, h);
-		TreeNode Pos = B.Pos;
+		Tree<Node> Pos = B.Pos;
 		Parents.addElement(Pos);
-		TreeNode ParentPos = Pos.parentPos();
-		TreeNode StartPos = Pos;
+		Tree<Node> ParentPos = Pos.parent();
+		Tree<Node> StartPos = Pos;
 		int x = size * 2, y = size * 3;
 		if (ParentPos != null)
 		{
@@ -47,12 +49,12 @@ public class NavigationPanel extends MyPanel
 			currentline++;
 			for (int i = 0; i < h / (3 * size) / 3; i++)
 			{
-				if (ParentPos.parentPos() == null) break;
-				ParentPos = ParentPos.parentPos();
+				if (ParentPos.parent() == null) break;
+				ParentPos = ParentPos.parent();
 				Parents.addElement(ParentPos);
 				currentline++;
 			}
-			if (ParentPos.parentPos() != null)
+			if (ParentPos.parent() != null)
 			{
 				g.setColor(Color.black);
 				g.drawLine(size * 2, size * 2, size * 2, size);
@@ -73,7 +75,7 @@ public class NavigationPanel extends MyPanel
 		}
 	}
 
-	public int paint (Graphics g, TreeNode pos, int x, int y, TreeNode current,
+	public int paint (Graphics g, Tree<Node> pos, int x, int y, Tree<Node> current,
 		int line, int currentline)
 	{
 		if ( !Overflow && x > w)
@@ -92,7 +94,7 @@ public class NavigationPanel extends MyPanel
 				return x;
 			}
 		}
-		else if (pos.node().main())
+		else if (pos.content().main())
 		{
 			g.setColor(BoardColor);
 			g.fillRect(x - size, y - size, size * 2, size * 2);
@@ -112,7 +114,7 @@ public class NavigationPanel extends MyPanel
 			return x;
 
 		}
-		TreeNode p = pos.firstChild();
+		Tree<Node> p = pos.firstchild();
 		if (Overflow && !inParents(pos))
 		{
 			g.setColor(Color.black);
@@ -156,7 +158,7 @@ public class NavigationPanel extends MyPanel
 		return x;
 	}
 
-	boolean inParents (TreeNode pos)
+	boolean inParents (Tree<Node> pos)
 	{
 		Enumeration e = Parents.elements();
 		while (e.hasMoreElements())

@@ -18,7 +18,7 @@ public class ConnectedBoard extends Board
 	}
 
 	public synchronized void setmouse (int i, int j, int c)	
-	{	if (Pos.isMain() && CGF.wantsmove()) return;
+	{	if (Pos.content().main() && CGF.wantsmove()) return;
 		super.setmouse(i,j,c);
 	}
 
@@ -32,7 +32,7 @@ public class ConnectedBoard extends Board
 		if (P.color(i,j)!=0) return;
 		if (captured==1 && capturei==i && capturej==j &&
 			GF.getParameter("preventko",true)) return;
-		if (Pos.isMain() && CGF.wantsmove())
+		if (Pos.content().main() && CGF.wantsmove())
 		{	if (CGF.moveset(i,j))
 			{	sendi=i; sendj=j;
 				update(i,j); copy();
@@ -61,7 +61,7 @@ public class ConnectedBoard extends Board
 	Take back the last move.
 	*/
 	public synchronized void undo ()
-	{	if (Pos.isMain()
+	{	if (Pos.content().main()
 			&& CGF.wantsmove())
 		{	if (!Pos.haschildren())
 			{	if (State!=1 && State!=2) clearremovals();
@@ -77,8 +77,8 @@ public class ConnectedBoard extends Board
 	*/
 	public synchronized void pass ()
 	{	if (Pos.haschildren()) return;
-		if (GF.blocked() && Pos.isMain()) return;
-		if (Pos.isMain() && CGF.wantsmove())
+		if (GF.blocked() && Pos.content().main()) return;
+		if (Pos.content().main() && CGF.wantsmove())
 		{	CGF.movepass(); return;
 		}
 		super.pass();
@@ -89,7 +89,7 @@ public class ConnectedBoard extends Board
 	Will not be possible, if the GoFrame wants moves.
 	*/
 	public synchronized void insertnode ()
-	{	if (Pos.isLastMain() && CGF.wantsmove()) return;
+	{	if (!Pos.haschildren() && Pos.content().main() && CGF.wantsmove()) return;
 		super.insertnode();
 	}
 	

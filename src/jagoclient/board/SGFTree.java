@@ -29,7 +29,7 @@ public class SGFTree
 	/** initlialize with a specific Node */
 	public SGFTree (Node n)
 	{	History=new TreeNode(n);
-		History.node().main(true);
+		History.content().main(true);
 	}
 	
 	/** return the top node of this game tree */
@@ -78,7 +78,7 @@ public class SGFTree
 	// read a node assuming that ; has been found
 	// return the character, which did not fit into node properties,
 	// usually ;, ( or )
-	char readnode (TreeNode p, BufferedReader in) throws IOException
+	char readnode (Tree<Node> p, BufferedReader in) throws IOException
 	{	boolean sgf=GF.getParameter("sgfcomments",false);
 		char c=readnext(in);
 		Action a;
@@ -138,7 +138,7 @@ public class SGFTree
 		{	p.addchild(newp=new TreeNode(n));
 			n.main(p);
 			p=newp;
-			if (p.parentPos()!=null && p!=p.parentPos().firstChild())
+			if (p.parent()!=null && p!=p.parent().firstchild())
 				((Node)p.content()).number(2);
 		}
 		return c;
@@ -186,13 +186,13 @@ public class SGFTree
 	Read the nodes belonging to a tree.
 	this assumes that ( has been found.
 	*/
-	void readnodes (TreeNode p, BufferedReader in)
+	void readnodes (Tree<Node> p, BufferedReader in)
 		throws IOException
 	{	char c=readnext(in);
 		while (true)
 		{	if (c==';')
 			{	c=readnode(p,in);
-				if (p.haschildren()) p=p.lastChild();
+				if (p.haschildren()) p=p.lastchild();
 				continue;
 			}
 			else if (c=='(')
@@ -674,19 +674,19 @@ public class SGFTree
 	Print the tree to the specified PrintWriter.
 	@param p the subtree to be printed
 	*/
-	void printtree (TreeNode p, PrintWriter o)
+	void printtree (Tree<Node> p, PrintWriter o)
 	{	o.println("(");
 	    while (true)
-		{	p.node().print(o);
+		{	p.content().print(o);
 			if (!p.haschildren()) break;
-			if (p.lastChild()!=p.firstChild())
+			if (p.lastchild()!=p.firstchild())
 			{
 				for (ListElement<Tree<Node>> e : p.children())
 				{	printtree((TreeNode)e.content(),o);
 				}
 				break;
 			}
-			p=p.firstChild();
+			p=p.firstchild();
 		}
 		o.println(")");
 	}
@@ -695,9 +695,9 @@ public class SGFTree
 	Print the tree to the specified PrintWriter.
 	@param p the subtree to be printed
 	*/
-	void printtree (TreeNode p, XmlWriter xml, int size, boolean top)
+	void printtree (Tree<Node> p, XmlWriter xml, int size, boolean top)
 	{	if (top)
-		{	String s=p.getaction("GN");
+		{	String s=p.content().getaction("GN");
 			if (s!=null && !s.equals(""))
 				xml.startTagNewLine("GoGame","name",s);
 			else
@@ -721,12 +721,12 @@ public class SGFTree
 		else xml.startTagNewLine("Variation");
 		if (top) xml.startTagNewLine("Nodes");
 		while (true)
-		{	p.node().print(xml,size);
+		{	p.content().print(xml,size);
 			if (!p.haschildren()) break;
-			if (p.lastChild()!=p.firstChild())
+			if (p.lastchild()!=p.firstchild())
 			{	ListElement e=p.children().first();
-				p=p.firstChild();
-				p.node().print(xml,size);
+				p=p.firstchild();
+				p.content().print(xml,size);
 				e=e.next();
 				while (e!=null)
 				{	printtree((TreeNode)e.content(),xml,size,false);
@@ -734,23 +734,23 @@ public class SGFTree
 				}
 				if (!p.haschildren()) break;
 			}
-			p=p.firstChild();
+			p=p.firstchild();
 		}
 		if (top) xml.endTagNewLine("Nodes");
 		if (top) xml.endTagNewLine("GoGame");
 		else xml.endTagNewLine("Variation");
 	}
 
-	public void printInformation (XmlWriter xml, TreeNode p,
+	public void printInformation (XmlWriter xml, Tree<Node> p,
 		String tag, String xmltag)
-	{	String s=p.getaction(tag);
+	{	String s=p.content().getaction(tag);
 		if (s!=null && !s.equals(""))
 			xml.printTagNewLine(xmltag,s);
 	}
 
-	public void printInformationText (XmlWriter xml, TreeNode p,
+	public void printInformationText (XmlWriter xml, Tree<Node> p,
 		String tag, String xmltag)
-	{	String s=p.getaction(tag);
+	{	String s=p.content().getaction(tag);
 		if (s!=null && !s.equals(""))
 		{	xml.startTagNewLine(xmltag);
 			xml.printParagraphs(s,60);
