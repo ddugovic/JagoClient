@@ -11,10 +11,11 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rene.dialogs.Warning;
 import rene.util.FileName;
-import rene.util.parser.StringParser;
 
 /**
  * The Global class.
@@ -46,8 +47,7 @@ public class Global
 	{
 		try
 		{
-			InputStream in = new Object().getClass().getResourceAsStream(
-				"/regular.ttf");
+			InputStream in = new Object().getClass().getResourceAsStream("/regular.ttf");
 			Font f = Font.createFont(Font.TRUETYPE_FONT, in);
 			in.close();
 			FixedFont = f.deriveFont((float)defsize);
@@ -60,8 +60,7 @@ public class Global
 		{}
 	}
 
-	static public Font createfont (String name, String def, int defsize,
-		boolean bold)
+	static public Font createfont (String name, String def, int defsize, boolean bold)
 	{
 		String fontname = getParameter(name + ".name", def);
 		String mode = getParameter(name + ".mode", "plain");
@@ -95,8 +94,7 @@ public class Global
 			Background = getParameter("color.background", Color.gray.brighter());
 		else Background = SystemColor.window;
 		if (haveParameter("color.control"))
-			ControlBackground = getParameter("color.control", Color.gray
-				.brighter());
+			ControlBackground = getParameter("color.control", Color.gray.brighter());
 		else ControlBackground = SystemColor.control;
 	}
 
@@ -318,11 +316,12 @@ public class Global
 		if (pos > 0) s = s.substring(0, pos);
 		try
 		{
-			return new Double(s).doubleValue();
+			return Double.parseDouble(s);
 		}
 		catch (Exception e)
-		{}
-		return 0;
+		{
+			return 0;
+		}
 	}
 
 	public static synchronized void setParameter (String key, String value)
@@ -343,12 +342,13 @@ public class Global
 		{
 			try
 			{
-				double x = new Double(getParameter(key, "")).doubleValue();
+				double x = Double.parseDouble(getParameter(key, ""));
 				return (int)x;
 			}
 			catch (Exception ex)
-			{}
-			return def;
+			{
+				return def;
+			}
 		}
 	}
 
@@ -361,7 +361,7 @@ public class Global
 	{
 		try
 		{
-			return new Double(getParameter(key, "")).doubleValue();
+			return Double.parseDouble(getParameter(key, ""));
 		}
 		catch (Exception e)
 		{
@@ -374,24 +374,29 @@ public class Global
 		setParameter(key, "" + value);
 	}
 
-	static public synchronized Color getParameter (String key, Color c)
+	public static Pattern PATTERN_COLOR = Pattern.compile("#(\\p{XDigit}{2}){3}");
+	public static Pattern PATTERN_INTEGER = Pattern.compile("-?\\d+");
+	public static synchronized Color getParameter (String key, Color c)
 	{
 		String s = getParameter(key, "");
 		if (s.equals("")) return c;
 		int red = 0, green = 0, blue = 0;
-		if (s.startsWith("#") && s.length() == 7)
+		Matcher matcher = PATTERN_COLOR.matcher(s);
+		if (matcher.matches())
 		{
-			red = Integer.parseInt(s.substring(1, 3), 16);
-			green = Integer.parseInt(s.substring(3, 5), 16);
-			blue = Integer.parseInt(s.substring(5, 7), 16);
+			red = Integer.parseInt(matcher.group(1), 16);
+			green = Integer.parseInt(matcher.group(2), 16);
+			blue = Integer.parseInt(matcher.group(3), 16);
 		}
 		else
 		{
-			StringParser p = new StringParser(s);
-			p.replace(',', ' ');
-			red = p.parseint();
-			green = p.parseint();
-			blue = p.parseint();
+			matcher = PATTERN_INTEGER.matcher(s);
+			if (matcher.find())
+				red = Integer.parseInt(matcher.group());
+			if (matcher.find())
+				green = Integer.parseInt(matcher.group());
+			if (matcher.find())
+				blue = Integer.parseInt(matcher.group());
 		}
 		try
 		{
@@ -403,30 +408,30 @@ public class Global
 		}
 	}
 
-	static public synchronized Color getParameter (String key, int red,
-		int green, int blue)
+	static public synchronized Color getParameter (String key, int red, int green, int blue)
 	{
 		String s = getParameter(key, "");
 		if (s.equals("")) return new Color(red, green, blue);
-		StringParser p = new StringParser(s);
-		p.replace(',', ' ');
-		red = p.parseint();
-		green = p.parseint();
-		blue = p.parseint();
+		Matcher matcher = PATTERN_INTEGER.matcher(s);
+		if (matcher.find())
+			red = Integer.parseInt(matcher.group());
+		if (matcher.find())
+			green = Integer.parseInt(matcher.group());
+		if (matcher.find())
+			blue = Integer.parseInt(matcher.group());
 		try
 		{
 			return new Color(red, green, blue);
 		}
 		catch (RuntimeException e)
 		{
-			return Color.black;
+			return Color.BLACK;
 		}
 	}
 
 	public static synchronized void setParameter (String key, Color c)
 	{
-		setParameter(key, "" + c.getRed() + "," + c.getGreen() + ","
-			+ c.getBlue());
+		setParameter(key, "" + c.getRed() + "," + c.getGreen() + "," + c.getBlue());
 	}
 
 	/**
@@ -539,7 +544,7 @@ public class Global
 		return FileName.canonical(dir);
 	}
 
-	public static Object ExitBlock = new Object();
+	public static final Object ExitBlock = new Object();
 
 	public static synchronized void exit (int i)
 	{
