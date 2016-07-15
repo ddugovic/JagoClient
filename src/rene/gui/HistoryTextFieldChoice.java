@@ -8,8 +8,7 @@ import rene.util.MyVector;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 
-public class HistoryTextFieldChoice extends MyChoice
-	implements ItemListener
+public class HistoryTextFieldChoice extends MyChoice implements ItemListener
 {	HistoryTextField T;
 	DoActionListener AL;
 	MyVector V=new MyVector();
@@ -24,6 +23,7 @@ public class HistoryTextFieldChoice extends MyChoice
 	{	AL=al;
 	}
 	
+	@Override
 	public void itemStateChanged (ItemEvent e)
 	{	int n=getSelectedIndex();
 		String s=(String)V.elementAt(n);

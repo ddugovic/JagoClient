@@ -5,9 +5,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
-A TextField with a modifyable background and font.
-*/
-
+ * A TextField with a customizable background and font.
+ */
 public class MyTextField extends TextField
 	implements FocusListener
 {	public MyTextField (String s, int n)

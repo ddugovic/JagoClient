@@ -2,6 +2,8 @@ package jagoclient.gui;
 
 import javax.swing.JButton;
 
+import rene.gui.DoActionListener;
+
 /**
  * Similar to ChoiceAction but for buttons.
  * 

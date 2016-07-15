@@ -3,6 +3,8 @@ package jagoclient.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import rene.gui.DoActionListener;
+
 public class ActionTranslator implements ActionListener
 {   String Name;
     DoActionListener C;

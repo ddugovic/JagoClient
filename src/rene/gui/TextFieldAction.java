@@ -5,12 +5,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
-A TextField with a modifyable background and font. This is used in
-DoActionListener interfaces.
-*/
-
-public class TextFieldAction extends TextField
-	implements FocusListener
+ * A TextField with a customizable background and font. This is used in
+ * DoActionListener interfaces.
+ */
+public class TextFieldAction extends TextField implements FocusListener
 {	protected ActionTranslator T;
 	String S;
 	public TextFieldAction (DoActionListener t, String name, String s)

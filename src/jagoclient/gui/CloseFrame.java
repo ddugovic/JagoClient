@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import rene.gui.DoActionListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 
@@ -22,8 +23,7 @@ import rene.util.list.ListElement;
  * event handling is simplified with the DoActionListnener interface. There is
  * also a method for setting the icon of this window.
  */
-public class CloseFrame extends Frame implements WindowListener,
-	ActionListener, DoActionListener
+public class CloseFrame extends Frame implements WindowListener, ActionListener, DoActionListener
 {
 	ListClass<CloseListener> L = new ListClass<CloseListener>();
 
@@ -106,10 +106,6 @@ public class CloseFrame extends Frame implements WindowListener,
 	{
 		L.removeIf((ListElement<CloseListener> t) -> t.content() == cl);
 	}
-
-	@Override
-	public void itemAction (String o, boolean flag)
-	{}
 
 	// the icon things
 	static Map<String, Image> Icons = new HashMap<String, Image>();

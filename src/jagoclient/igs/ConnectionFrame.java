@@ -41,6 +41,7 @@ import java.net.Socket;
 
 import javax.swing.JTextField;
 
+import rene.gui.DoItemListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.viewer.SystemViewer;
@@ -177,7 +178,7 @@ class RefreshWriter extends PrintWriter
  * send commands to the server and buttons to call who, games etc.
  */
 
-public class ConnectionFrame extends CloseFrame implements KeyListener
+public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyListener
 {
 	GridBagLayout girdbag;
 	Viewer Output;

@@ -3,7 +3,6 @@ package jagoclient.dialogs;
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseDialog;
-import jagoclient.gui.DoActionListener;
 import jagoclient.gui.IntField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -18,8 +17,9 @@ import java.awt.Scrollbar;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-class ColorScrollbar extends Panel implements AdjustmentListener,
-	DoActionListener
+import rene.gui.DoActionListener;
+
+class ColorScrollbar extends Panel implements AdjustmentListener, DoActionListener
 {
 	public int Value;
 	ColorEdit CE;

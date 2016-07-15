@@ -4,11 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * A MenuItem with modifyable font.
+ * A MenuItem with customizable font.
  * <p>
  * This it to be used in DoActionListener interfaces.
  */
-
 class MenuItemActionTranslator implements ActionListener
 {
 	String S;

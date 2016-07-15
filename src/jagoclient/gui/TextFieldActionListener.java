@@ -3,6 +3,8 @@ package jagoclient.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import rene.gui.DoActionListener;
+
 /**
  * This is a callback class to act as an ActionListener, which calls back a
  * DoActionListener on any action passing the string name to its doAction

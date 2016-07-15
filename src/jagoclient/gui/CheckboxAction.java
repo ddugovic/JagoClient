@@ -5,12 +5,14 @@ import java.awt.event.*;
 
 import jagoclient.Global;
 
+import rene.gui.DoItemListener;
+
 class CheckboxActionTranslator implements ItemListener
-{   DoActionListener C;
+{   DoItemListener C;
     String S;
     public Checkbox CB;
     public CheckboxActionTranslator
-        (Checkbox cb, DoActionListener c, String s)
+        (Checkbox cb, DoItemListener c, String s)
     {   C=c; S=s; CB=cb;
     }
     public void itemStateChanged (ItemEvent e)
@@ -24,13 +26,13 @@ Similar to ChoiceAction, but for checkboxes.
 */
 
 public class CheckboxAction extends Checkbox
-{   public CheckboxAction (DoActionListener c, String s)
+{   public CheckboxAction (DoItemListener c, String s)
     {   super(s);
-        addItemListener(new CheckboxActionTranslator(this,c,s));
         setFont(Global.SansSerif);
+        if (c!=null) addItemListener(new CheckboxActionTranslator(this,c,s));
    }
-    public CheckboxAction (DoActionListener c, String s, String h)
+    public CheckboxAction (DoItemListener c, String s, String h)
     {   super(s);
-        addItemListener(new CheckboxActionTranslator(this,c,h));
+        if (c!=null) addItemListener(new CheckboxActionTranslator(this,c,h));
     }
 }

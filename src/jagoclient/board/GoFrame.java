@@ -63,6 +63,7 @@ import java.net.URL;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.gui.DoItemListener;
 import rene.gui.IconBar;
 import rene.gui.IconBarListener;
 import rene.util.FileName;
@@ -281,7 +282,7 @@ class SizeQuestion extends GetParameter
  * Ask the user for permission to close the board frame.
  */
 
-class TextMarkQuestion extends CloseDialog
+class TextMarkQuestion extends CloseDialog implements DoItemListener
 {
 	GoFrame G;
 	JTextField T;
@@ -573,7 +574,7 @@ class AskInsertQuestion extends Question
 // board. For Partner of IGS games there is the ConnectedGoFrame child, which
 // uses another menu structure.
 // Furthermore, it has methods to handle lots of user actions.
-public class GoFrame extends CloseFrame implements FilenameFilter, KeyListener,
+public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilter, KeyListener,
 	BoardInterface, ClipboardOwner, IconBarListener
 {
 	public OutputLabel L, Lm; // For board informations

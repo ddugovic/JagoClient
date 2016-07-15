@@ -21,6 +21,8 @@ import java.awt.GridLayout;
 
 import javax.swing.JTextField;
 
+import rene.gui.DoItemListener;
+
 /**
  * A canvas to display a sample of the chosen font. The samples is drawn from
  * the GetFontSize dialog.
@@ -57,7 +59,7 @@ class ExampleCanvas extends Canvas
  * @see Question
  */
 
-public class GetFontSize extends CloseDialog
+public class GetFontSize extends CloseDialog implements DoItemListener
 {
 	String FontTag, SizeTag;
 	JTextField FontName;

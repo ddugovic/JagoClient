@@ -2,6 +2,8 @@ package jagoclient.gui;
 
 import javax.swing.JTextField;
 
+import rene.gui.DoActionListener;
+
 /**
  * A TextField. The background and the font are set from global properties. The
  * class uses a TextFieldActionListener to listen to returns and notify the

@@ -4,6 +4,8 @@ import jagoclient.Global;
 
 import java.awt.MenuItem;
 
+import rene.gui.DoActionListener;
+
 /**
 A menu item with a specified font.
 */

@@ -14,6 +14,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 
+import rene.gui.DoActionListener;
+
 /**
  * A dialog, which can be closed by clicking on the close window field (a cross
  * on the top right corner in Windows 95). This dialog does also simplify event

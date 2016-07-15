@@ -4,12 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
-A text Button with a midifyable Font. The button
-may also be triggered by a keyboard return.
-<P>
-This button class is used in DoActionListener interfaces.
-*/
-
+ * A text Button with a customizable Font. The button may also be triggered
+ * by a keyboard return.
+ * <P>
+ * This button class is used in DoActionListener interfaces.
+ */
 public class ButtonAction extends Button
 {   DoActionListener C;
     String Name;

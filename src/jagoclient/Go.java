@@ -12,7 +12,6 @@ import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CardPanel;
 import jagoclient.gui.CloseFrame;
-import jagoclient.gui.DoActionListener;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 import jagoclient.igs.Connect;
@@ -40,6 +39,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import rene.gui.DoActionListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 

@@ -11,6 +11,8 @@ import java.awt.Panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import rene.gui.DoActionListener;
+
 /**
  * A lightweight button for the navigation buttons (reacts quicker).
  */

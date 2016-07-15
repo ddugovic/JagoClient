@@ -111,9 +111,6 @@ public class CloseDialog extends Dialog implements WindowListener,
 		InfoDialog id = new InfoDialog(F);
 	}
 
-	public void itemAction (String o, boolean flag)
-	{}
-
 	public void keyPressed (KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE && escape()) doclose();

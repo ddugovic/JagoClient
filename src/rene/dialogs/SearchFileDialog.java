@@ -126,8 +126,7 @@ public class SearchFileDialog extends CloseDialog
 		Panel south=new MyPanel();
 		south.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		if (!modify.equals(""))
-		{	south.add(Mod=
-				new CheckboxAction(this,modify,""));
+		{	south.add(Mod=new CheckboxAction(null,modify,""));
 			Mod.setState(modifystate);
 		}
 		south.add(ActionButton=

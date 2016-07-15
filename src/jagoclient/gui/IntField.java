@@ -1,5 +1,7 @@
 package jagoclient.gui;
 
+import rene.gui.DoActionListener;
+
 /**
  * A TextField, which holds an integer number with minimal and maximal range.
  */

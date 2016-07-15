@@ -18,6 +18,7 @@ import rene.gui.ButtonAction;
 import rene.gui.CheckboxAction;
 import rene.gui.ChoiceAction;
 import rene.gui.CloseDialog;
+import rene.gui.DoItemListener;
 import rene.gui.Global;
 import rene.gui.IntField;
 import rene.gui.MyLabel;
@@ -58,7 +59,7 @@ class ExampleCanvas extends Canvas
  * stored as a Global Parameter.
  */
 
-public class FontEditor extends CloseDialog
+public class FontEditor extends CloseDialog implements DoItemListener
 {
 	String FontTag;
 	TextField FontName;

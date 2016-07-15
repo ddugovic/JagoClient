@@ -56,7 +56,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 	int Leading, Height, Ascent, Descent;
 	int LineCount, TopLineCount;
 	int PageSize;
-	ListElement TopLine;
+	ListElement<Line> TopLine;
 	Image I;
 	Graphics2D IG;
 	int W, H;
@@ -70,7 +70,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 
 	public TextDisplay (Viewer v)
 	{
-		L = new ListClass();
+		L = new ListClass<Line>();
 		F = null;
 		V = v;
 		LineCount = 0;
@@ -133,7 +133,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 	public synchronized void appendLine0 (String S, Color c)
 	{
 		Line l;
-		L.append(new ListElement<Line>(L, l = new Line(S, this, c)));
+		L.append(l = new Line(S, this, c));
 		LineCount++;
 		if (LineCount == 1) TopLine = L.first();
 		LineFinished = true;
@@ -200,7 +200,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		if (LineFinished || L.last() == null)
 		{
 			Line l;
-			L.append(new ListElement<Line>(L, l = new Line(s, this, c)));
+			L.append(l = new Line(s, this, c));
 			LineCount++;
 			if (LineCount == 1) TopLine = L.first();
 			if (TabWidth > 0) l.expandTabs(TabWidth);
@@ -253,7 +253,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 	{
 		if (F == null) init(getFont());
 		makeimage();
-		ListElement e = TopLine;
+		ListElement<Line> e = TopLine;
 		antialias(true);
 		int h = Leading + Ascent;
 		int totalh = getSize().height - Descent;
@@ -263,7 +263,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		int lines = 0;
 		while (lines < PageSize && e != null)
 		{
-			Line l = (Line)e.content();
+			Line l = e.content();
 			l.draw(IG, 2, h);
 			h += Leading + Height;
 			e = e.next();
@@ -553,9 +553,9 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 
 	TextPosition lastpos ()
 	{
-		ListElement e = L.last();
+		ListElement<Line> e = L.last();
 		if (e == null) return null;
-		Line l = (Line)e.content();
+		Line l = e.content();
 		return new TextPosition(e, LineCount, l.length());
 	}
 

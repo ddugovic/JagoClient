@@ -5,11 +5,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 class CheckboxActionTranslator implements ItemListener
-{   DoActionListener C;
+{   DoItemListener C;
     String S;
     public Checkbox CB;
     public CheckboxActionTranslator
-        (Checkbox cb, DoActionListener c, String s)
+        (Checkbox cb, DoItemListener c, String s)
     {   C=c; S=s; CB=cb;
     }
     public void itemStateChanged (ItemEvent e)
@@ -18,20 +18,19 @@ class CheckboxActionTranslator implements ItemListener
 }
 
 /**
-A Checkbox with modifyable font.
-<p>
-To be used in DoActionListener interfaces.
-*/
-
+ * A Checkbox with customizable font.
+ * <p>
+ * To be used in DoActionListener interfaces.
+ */
 public class CheckboxAction extends Checkbox
-{   public CheckboxAction (DoActionListener c, String s)
+{   public CheckboxAction (DoItemListener c, String s)
     {   super(s);
     	if (Global.NormalFont!=null) setFont(Global.NormalFont);
-        addItemListener(new CheckboxActionTranslator(this,c,s));
+        if (c!=null) addItemListener(new CheckboxActionTranslator(this,c,s));
     }
-    public CheckboxAction (DoActionListener c, String s, String h)
+    public CheckboxAction (DoItemListener c, String s, String h)
     {   super(s);
     	if (Global.NormalFont!=null) setFont(Global.NormalFont);
-        addItemListener(new CheckboxActionTranslator(this,c,h));
+        if (c!=null) addItemListener(new CheckboxActionTranslator(this,c,h));
     }
 }

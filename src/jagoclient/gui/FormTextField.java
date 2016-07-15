@@ -2,6 +2,8 @@ package jagoclient.gui;
 
 import jagoclient.Global;
 
+import rene.gui.DoActionListener;
+
 /**
 A text field, which can transfer focus to the next text field,
 when return is pressed.

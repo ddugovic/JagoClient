@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import javax.swing.JTextField;
 
+import rene.gui.DoItemListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
@@ -93,7 +94,7 @@ class EditButtons extends CloseDialog
  * name.
  */
 
-public class WhoFrame extends CloseFrame implements CloseListener
+public class WhoFrame extends CloseFrame implements CloseListener, DoItemListener
 {
 	IgsStream In;
 	PrintWriter Out;

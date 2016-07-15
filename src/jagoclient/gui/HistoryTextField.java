@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import jagoclient.Global;
 
+import rene.gui.DoActionListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 

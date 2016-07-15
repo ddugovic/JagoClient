@@ -35,6 +35,8 @@ import java.util.Locale;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.gui.DoItemListener;
+
 /**
  * Get the port for the partner server.
  */
@@ -315,7 +317,7 @@ class BackgroundColorEdit extends ColorEdit
  * this frame later.
  */
 
-public class MainFrame extends CloseFrame
+public class MainFrame extends CloseFrame implements DoItemListener
 {
 	CheckboxMenuItem StartPublicServer, TimerInTitle, BigTimer,
 		ExtraInformation, ExtraSendField, DoSound, SimpleSound, BeepOnly,
@@ -334,8 +336,7 @@ public class MainFrame extends CloseFrame
 		setMenuBar(menu);
 		// Actions
 		Menu local = new MyMenu(Global.resourceString("Actions"));
-		local
-			.add(new MenuItemAction(this, Global.resourceString("Local_Board")));
+		local.add(new MenuItemAction(this, Global.resourceString("Local_Board")));
 		local.addSeparator();
 		local.add(new MenuItemAction(this, Global.resourceString("Play_Go")));
 		local.addSeparator();

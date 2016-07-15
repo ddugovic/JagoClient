@@ -79,7 +79,7 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 		center.add(HandicapField = new IntField(this, "Handicap", Global
 			.getParameter("gmphandicap", 9)));
 		center.add(new MyLabel(Global.resourceString("Play_White")));
-		center.add(White = new CheckboxAction(this, ""));
+		center.add(White = new CheckboxAction(null, ""));
 		White.setState(Global.getParameter("gmpwhite", true));
 		add("Center", new Panel3D(center));
 		MyPanel south = new MyPanel();

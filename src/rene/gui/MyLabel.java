@@ -5,9 +5,8 @@ import java.awt.Graphics;
 import java.awt.Label;
 
 /**
-A Label with a midifyable Font.
-*/
-
+ * A Label with a customizable Font.
+ */
 public class MyLabel extends Label
 {   public MyLabel (String s)
     {   super(s);
