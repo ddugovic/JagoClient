@@ -2,6 +2,7 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.dialogs.Help;
+import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseFrame;
 import jagoclient.gui.CloseListener;
@@ -19,6 +20,7 @@ import java.awt.MenuItem;
 import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -71,7 +73,14 @@ public class ChannelDialog extends CloseFrame implements CloseListener,
 	{
 		if (Global.resourceString("Channels").equals(o))
 		{
-			new Help("channels");
+			try
+			{
+				new Help("channels").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else if ("Answer".equals(o))
 		{

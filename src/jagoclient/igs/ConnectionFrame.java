@@ -6,7 +6,6 @@ import jagoclient.Global;
 import jagoclient.dialogs.GetParameter;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
-import jagoclient.dialogs.Question;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
 import jagoclient.gui.CloseFrame;
@@ -25,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -41,6 +41,7 @@ import java.net.Socket;
 
 import javax.swing.JTextField;
 
+import rene.dialogs.Question;
 import rene.gui.DoItemListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -72,7 +73,7 @@ class GetWaitfor extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String s)
+	public boolean tell (Frame f, String s)
 	{
 		CF.Waitfor = s;
 		return true;
@@ -94,7 +95,7 @@ class GetReply extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String s)
+	public boolean tell (Frame f, String s)
 	{
 		CF.Reply = s;
 		Global.setParameter("autoreply", s);
@@ -449,161 +450,168 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 	@Override
 	public void doAction (String o)
 	{
-		if (Global.resourceString("Close").equals(o))
+		try
 		{
-			if (close()) doclose();
-		}
-		else if (Global.resourceString("Clear").equals(o))
-		{
-			Output.setText("");
-		}
-		else if (Global.resourceString("Save").equals(o))
-		{
-			FileDialog fd = new FileDialog(this, Global
-				.resourceString("Save_Game"), FileDialog.SAVE);
-			if ( !Dir.equals("")) fd.setDirectory(Dir);
-			fd.setFile("*.txt");
-			fd.setVisible(true);
-			String fn = fd.getFile();
-			if (fn == null) return;
-			Dir = fd.getDirectory();
-			try
+			if (Global.resourceString("Close").equals(o))
 			{
-				PrintWriter fo;
-				if (Encoding.equals(""))
-					fo = new PrintWriter(new OutputStreamWriter(
-						new FileOutputStream(fd.getDirectory() + fn)), true);
-				else fo = new PrintWriter(new OutputStreamWriter(
-					new FileOutputStream(fd.getDirectory() + fn), Encoding),
-					true);
-				Output.save(fo);
-				fo.close();
+				if (close()) doclose();
 			}
-			catch (IOException ex)
+			else if (Global.resourceString("Clear").equals(o))
 			{
-				System.err.println(Global.resourceString("Error_on__") + fn);
+				Output.setText("");
 			}
-		}
-		else if (Global.resourceString("Who").equals(o))
-		{
-			goclient();
-			if (Global.getParameter("whowindow", true))
+			else if (Global.resourceString("Save").equals(o))
 			{
-				if (Who != null)
+				FileDialog fd = new FileDialog(this, Global
+					.resourceString("Save_Game"), FileDialog.SAVE);
+				if ( !Dir.equals("")) fd.setDirectory(Dir);
+				fd.setFile("*.txt");
+				fd.setVisible(true);
+				String fn = fd.getFile();
+				if (fn == null) return;
+				Dir = fd.getDirectory();
+				try
 				{
+					PrintWriter fo;
+					if (Encoding.equals(""))
+						fo = new PrintWriter(new OutputStreamWriter(
+							new FileOutputStream(fd.getDirectory() + fn)), true);
+					else fo = new PrintWriter(new OutputStreamWriter(
+						new FileOutputStream(fd.getDirectory() + fn), Encoding),
+						true);
+					Output.save(fo);
+					fo.close();
+				}
+				catch (IOException ex)
+				{
+					System.err.println(Global.resourceString("Error_on__") + fn);
+				}
+			}
+			else if (Global.resourceString("Who").equals(o))
+			{
+				goclient();
+				if (Global.getParameter("whowindow", true))
+				{
+					if (Who != null)
+					{
+						Who.refresh();
+						Who.requestFocus();
+						return;
+					}
+					Who = new WhoFrame(this, Out, In, WhoRange.getText());
+					Global.setwindow(Who, "who", 300, 400);
+					Who.setVisible(true);
 					Who.refresh();
-					Who.requestFocus();
-					return;
 				}
-				Who = new WhoFrame(this, Out, In, WhoRange.getText());
-				Global.setwindow(Who, "who", 300, 400);
-				Who.setVisible(true);
-				Who.refresh();
-			}
-			else
-			{
-				if (WhoRange.getText().equals(""))
-					command("who");
-				else command("who " + WhoRange.getText());
-			}
-		}
-		else if (Global.resourceString("Games").equals(o))
-		{
-			goclient();
-			if (Global.getParameter("gameswindow", true))
-			{
-				if (Games != null)
+				else
 				{
+					if (WhoRange.getText().equals(""))
+						command("who");
+					else command("who " + WhoRange.getText());
+				}
+			}
+			else if (Global.resourceString("Games").equals(o))
+			{
+				goclient();
+				if (Global.getParameter("gameswindow", true))
+				{
+					if (Games != null)
+					{
+						Games.refresh();
+						Games.requestFocus();
+						return;
+					}
+					Games = new GamesFrame(this, Out, In);
+					Global.setwindow(Games, "games", 500, 400);
+					Games.setVisible(true);
 					Games.refresh();
-					Games.requestFocus();
+				}
+				else
+				{
+					command("games");
+				}
+			}
+			else if (Global.resourceString("Peek").equals(o))
+			{
+				goclient();
+				int n;
+				try
+				{
+					n = Integer.parseInt(Game.getText());
+					peek(n);
+				}
+				catch (NumberFormatException ex)
+				{
 					return;
 				}
-				Games = new GamesFrame(this, Out, In);
-				Global.setwindow(Games, "games", 500, 400);
-				Games.setVisible(true);
-				Games.refresh();
 			}
-			else
+			else if (Global.resourceString("Status").equals(o))
 			{
-				command("games");
+				goclient();
+				int n;
+				try
+				{
+					n = Integer.parseInt(Game.getText());
+					status(n);
+				}
+				catch (NumberFormatException ex)
+				{
+					return;
+				}
 			}
-		}
-		else if (Global.resourceString("Peek").equals(o))
-		{
-			goclient();
-			int n;
-			try
+			else if (Global.resourceString("Observe").equals(o))
 			{
-				n = Integer.parseInt(Game.getText());
-				peek(n);
+				goclient();
+				int n;
+				try
+				{
+					n = Integer.parseInt(Game.getText());
+					observe(n);
+				}
+				catch (NumberFormatException ex)
+				{
+					return;
+				}
 			}
-			catch (NumberFormatException ex)
+			else if (Global.resourceString("Terminal_Window").equals(o))
 			{
-				return;
+				new Help("terminal").display();
 			}
-		}
-		else if (Global.resourceString("Status").equals(o))
-		{
-			goclient();
-			int n;
-			try
+			else if (Global.resourceString("Server_Help").equals(o))
 			{
-				n = Integer.parseInt(Game.getText());
-				status(n);
+				new Help("server").display();
 			}
-			catch (NumberFormatException ex)
+			else if (Global.resourceString("Channels").equals(o))
 			{
-				return;
+				new Help("channels").display();
 			}
-		}
-		else if (Global.resourceString("Observe").equals(o))
-		{
-			goclient();
-			int n;
-			try
+			else if (Global.resourceString("Observing_Playing").equals(o))
 			{
-				n = Integer.parseInt(Game.getText());
-				observe(n);
+				new Help("obsplay").display();
 			}
-			catch (NumberFormatException ex)
+			else if (Global.resourceString("Teaching").equals(o))
 			{
-				return;
+				new Help("teaching").display();
 			}
+			else if ("Input".equals(o))
+			{
+				String os = Input.getText();
+				command(os);
+			}
+			else if (Global.resourceString("Wait_for_Player").equals(o))
+			{
+				new GetWaitfor(this);
+			}
+			else if (Global.resourceString("Set_Reply").equals(o))
+			{
+				new GetReply(this);
+			}
+			else super.doAction(o);
 		}
-		else if (Global.resourceString("Terminal_Window").equals(o))
+		catch (IOException ex)
 		{
-			new Help("terminal");
+			new Message(Global.frame(), ex.getMessage());
 		}
-		else if (Global.resourceString("Server_Help").equals(o))
-		{
-			new Help("server");
-		}
-		else if (Global.resourceString("Channels").equals(o))
-		{
-			new Help("channels");
-		}
-		else if (Global.resourceString("Observing_Playing").equals(o))
-		{
-			new Help("obsplay");
-		}
-		else if (Global.resourceString("Teaching").equals(o))
-		{
-			new Help("teaching");
-		}
-		else if ("Input".equals(o))
-		{
-			String os = Input.getText();
-			command(os);
-		}
-		else if (Global.resourceString("Wait_for_Player").equals(o))
-		{
-			new GetWaitfor(this);
-		}
-		else if (Global.resourceString("Set_Reply").equals(o))
-		{
-			new GetReply(this);
-		}
-		else super.doAction(o);
 	}
 
 	@Override

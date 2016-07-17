@@ -7,7 +7,6 @@ import jagoclient.dialogs.GetFontSize;
 import jagoclient.dialogs.GetParameter;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
-import jagoclient.dialogs.Question;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxAction;
 import jagoclient.gui.CheckboxMenuItemAction;
@@ -63,6 +62,7 @@ import java.net.URL;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.dialogs.Question;
 import rene.gui.DoItemListener;
 import rene.gui.IconBar;
 import rene.gui.IconBarListener;
@@ -162,11 +162,11 @@ class GetEncoding extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String S)
+	public boolean tell (Frame f, String s)
 	{
-		if (S.equals(""))
+		if (s.equals(""))
 			Global.removeParameter("encoding");
-		else Global.setParameter("encoding", S);
+		else Global.setParameter("encoding", s);
 		return true;
 	}
 }
@@ -249,7 +249,7 @@ class CloseQuestion extends Question
 }
 
 
-class SizeQuestion extends GetParameter
+class SizeQuestion extends GetParameter<GoFrame>
 // Ask the board size.
 {
 	public SizeQuestion (GoFrame g)
@@ -260,7 +260,7 @@ class SizeQuestion extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String s)
+	public boolean tell (GoFrame f, String s)
 	{
 		int n;
 		try
@@ -272,7 +272,7 @@ class SizeQuestion extends GetParameter
 		{
 			return false;
 		}
-		((GoFrame)o).doboardsize(n);
+		f.doboardsize(n);
 		return true;
 	}
 }
@@ -363,7 +363,7 @@ class TextMarkQuestion extends CloseDialog implements DoItemListener
  * // Get/Set the name of the current node
  */
 
-class NodeNameEdit extends GetParameter
+class NodeNameEdit extends GetParameter<GoFrame>
 {
 	public NodeNameEdit (GoFrame g, String s)
 	{
@@ -374,9 +374,9 @@ class NodeNameEdit extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String s)
+	public boolean tell (GoFrame f, String s)
 	{
-		((GoFrame)o).setname(s);
+		f.setname(s);
 		return true;
 	}
 }
@@ -1002,179 +1002,170 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	@Override
 	public void doAction (String o)
 	{
-		if (Global.resourceString("Undo").equals(o))
+		try
 		{
-			B.undo();
-		}
-		else if (Global.resourceString("Close").equals(o))
-		{
-			close();
-		}
-		else if (Global.resourceString("Board_size").equals(o))
-		{
-			boardsize();
-		}
-		else if ("<".equals(o))
-		{
-			B.back();
-		}
-		else if (">".equals(o))
-		{
-			B.forward();
-		}
-		else if (">>".equals(o))
-		{
-			B.fastforward();
-		}
-		else if ("<<".equals(o))
-		{
-			B.fastback();
-		}
-		else if ("I<<".equals(o))
-		{
-			B.allback();
-		}
-		else if (">>I".equals(o))
-		{
-			B.allforward();
-		}
-		else if ("<V".equals(o))
-		{
-			B.varleft();
-		}
-		else if ("V>".equals(o))
-		{
-			B.varright();
-		}
-		else if ("V".equals(o))
-		{
-			B.varup();
-		}
-		else if ("**".equals(o))
-		{
-			B.varmaindown();
-		}
-		else if ("*".equals(o))
-		{
-			B.varmain();
-		}
-		else if (Global.resourceString("Pass").equals(o))
-		{
-			B.pass();
-			notepass();
-		}
-		else if (Global.resourceString("Resume_playing").equals(o))
-		{
-			B.resume();
-		}
-		else if (Global.resourceString("Clear_all_marks").equals(o))
-		{
-			B.clearmarks();
-		}
-		else if (Global.resourceString("Undo_Adding_Removing").equals(o))
-		{
-			B.clearremovals();
-		}
-		else if (Global.resourceString("Remove_groups").equals(o))
-		{
-			B.score();
-		}
-		else if (Global.resourceString("Score").equals(o))
-		{
-			String s = B.done();
-			if (s != null) new Message(this, s);
-		}
-		else if (Global.resourceString("Local_Count").equals(o))
-		{
-			new Message(this, B.docount());
-		}
-		else if (Global.resourceString("New").equals(o))
-		{
-			B.deltree();
-			B.copy();
-			setTitle(DefaultTitle);
-		}
-		else if (Global.resourceString("Mail").equals(o)) // mail the game
-		{
-			ByteArrayOutputStream ba = new ByteArrayOutputStream(50000);
-			try
+			if (Global.resourceString("Undo").equals(o))
 			{
-				if (Global.getParameter("xml", false))
-				{
-					PrintWriter po = new PrintWriter(new OutputStreamWriter(ba,
-						"UTF8"), true);
-					B.saveXML(po, "utf-8");
-					po.close();
-				}
-				else
-				{
-					PrintWriter po = new PrintWriter(ba, true);
-					B.save(po);
-					po.close();
-				}
+				B.undo();
 			}
-			catch (Exception ex)
-			{}
-			new MailDialog(this, ba.toString());
-			return;
-		}
-		else if (Global.resourceString("Ascii_Mail").equals(o))
-		// ascii dump of the game
-		{
-			ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
-			PrintWriter po = new PrintWriter(ba, true);
-			try
+			else if (Global.resourceString("Close").equals(o))
 			{
-				B.asciisave(po);
+				close();
 			}
-			catch (Exception ex)
-			{}
-			new MailDialog(this, ba.toString());
-			return;
-		}
-		else if (Global.resourceString("Print").equals(o)) // print the game
-		{
-			B.print(Global.frame());
-		}
-		else if (Global.resourceString("Save").equals(o)) // save the game
-		{ // File dialog handling
-			FileDialog fd = new FileDialog(this, Global.resourceString("Save"),
-				FileDialog.SAVE);
-			if ( !Dir.equals("")) fd.setDirectory(Dir);
-			String s = B.firstnode().getaction("GN");
-			if (s != null && !s.equals(""))
-				fd.setFile(s
-					+ "."
-					+ Global.getParameter("extension", Global.getParameter(
-						"xml", false)?"xml":"sgf"));
-			else fd.setFile("*."
-				+ Global.getParameter("extension", Global.getParameter("xml",
-					false)?"xml":"sgf"));
-			fd.setFilenameFilter(this);
-			center(fd);
-			fd.setVisible(true);
-			String fn = fd.getFile();
-			if (fn == null) return;
-			setGameTitle(FileName.purefilename(fn));
-			Dir = fd.getDirectory();
-			try
-			// print out using the board class
+			else if (Global.resourceString("Board_size").equals(o))
 			{
-				PrintWriter fo;
-				if (Global.getParameter("xml", false))
+				boardsize();
+			}
+			else if ("<".equals(o))
+			{
+				B.back();
+			}
+			else if (">".equals(o))
+			{
+				B.forward();
+			}
+			else if (">>".equals(o))
+			{
+				B.fastforward();
+			}
+			else if ("<<".equals(o))
+			{
+				B.fastback();
+			}
+			else if ("I<<".equals(o))
+			{
+				B.allback();
+			}
+			else if (">>I".equals(o))
+			{
+				B.allforward();
+			}
+			else if ("<V".equals(o))
+			{
+				B.varleft();
+			}
+			else if ("V>".equals(o))
+			{
+				B.varright();
+			}
+			else if ("V".equals(o))
+			{
+				B.varup();
+			}
+			else if ("**".equals(o))
+			{
+				B.varmaindown();
+			}
+			else if ("*".equals(o))
+			{
+				B.varmain();
+			}
+			else if (Global.resourceString("Pass").equals(o))
+			{
+				B.pass();
+				notepass();
+			}
+			else if (Global.resourceString("Resume_playing").equals(o))
+			{
+				B.resume();
+			}
+			else if (Global.resourceString("Clear_all_marks").equals(o))
+			{
+				B.clearmarks();
+			}
+			else if (Global.resourceString("Undo_Adding_Removing").equals(o))
+			{
+				B.clearremovals();
+			}
+			else if (Global.resourceString("Remove_groups").equals(o))
+			{
+				B.score();
+			}
+			else if (Global.resourceString("Score").equals(o))
+			{
+				String s = B.done();
+				if (s != null) new Message(this, s);
+			}
+			else if (Global.resourceString("Local_Count").equals(o))
+			{
+				new Message(this, B.docount());
+			}
+			else if (Global.resourceString("New").equals(o))
+			{
+				B.deltree();
+				B.copy();
+				setTitle(DefaultTitle);
+			}
+			else if (Global.resourceString("Mail").equals(o)) // mail the game
+			{
+				ByteArrayOutputStream ba = new ByteArrayOutputStream(50000);
+				try
 				{
-					if (Global.isApplet())
+					if (Global.getParameter("xml", false))
 					{
-						fo = new PrintWriter(new OutputStreamWriter(
-							new FileOutputStream(fd.getDirectory() + fn),
-							"UTF8"));
-						B.saveXML(fo, "utf-8");
+						PrintWriter po = new PrintWriter(new OutputStreamWriter(ba,
+							"UTF8"), true);
+						B.saveXML(po, "utf-8");
+						po.close();
 					}
 					else
 					{
-						String Encoding = Global.getParameter("encoding",
-							System.getProperty("file.encoding")).toUpperCase();
-						if (Encoding.equals(""))
+						PrintWriter po = new PrintWriter(ba, true);
+						B.save(po);
+						po.close();
+					}
+				}
+				catch (Exception ex)
+				{}
+				new MailDialog(this, ba.toString());
+				return;
+			}
+			else if (Global.resourceString("Ascii_Mail").equals(o))
+			// ascii dump of the game
+			{
+				ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
+				PrintWriter po = new PrintWriter(ba, true);
+				try
+				{
+					B.asciisave(po);
+				}
+				catch (Exception ex)
+				{}
+				new MailDialog(this, ba.toString());
+				return;
+			}
+			else if (Global.resourceString("Print").equals(o)) // print the game
+			{
+				B.print(Global.frame());
+			}
+			else if (Global.resourceString("Save").equals(o)) // save the game
+			{ // File dialog handling
+				FileDialog fd = new FileDialog(this, Global.resourceString("Save"),
+					FileDialog.SAVE);
+				if ( !Dir.equals("")) fd.setDirectory(Dir);
+				String s = B.firstnode().getaction("GN");
+				if (s != null && !s.equals(""))
+					fd.setFile(s
+						+ "."
+						+ Global.getParameter("extension", Global.getParameter(
+							"xml", false)?"xml":"sgf"));
+				else fd.setFile("*."
+					+ Global.getParameter("extension", Global.getParameter("xml",
+						false)?"xml":"sgf"));
+				fd.setFilenameFilter(this);
+				center(fd);
+				fd.setVisible(true);
+				String fn = fd.getFile();
+				if (fn == null) return;
+				setGameTitle(FileName.purefilename(fn));
+				Dir = fd.getDirectory();
+				try
+				// print out using the board class
+				{
+					PrintWriter fo;
+					if (Global.getParameter("xml", false))
+					{
+						if (Global.isApplet())
 						{
 							fo = new PrintWriter(new OutputStreamWriter(
 								new FileOutputStream(fd.getDirectory() + fn),
@@ -1183,410 +1174,426 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 						}
 						else
 						{
-							String XMLEncoding = "";
-							if (Encoding.equals("CP1252")
-								|| Encoding.equals("ISO8859_1"))
+							String Encoding = Global.getParameter("encoding",
+								System.getProperty("file.encoding")).toUpperCase();
+							if (Encoding.equals(""))
 							{
-								Encoding = "ISO8859_1";
-								XMLEncoding = "iso-8859-1";
+								fo = new PrintWriter(new OutputStreamWriter(
+									new FileOutputStream(fd.getDirectory() + fn),
+									"UTF8"));
+								B.saveXML(fo, "utf-8");
 							}
 							else
 							{
-								Encoding = "UTF8";
-								XMLEncoding = "utf-8";
+								String XMLEncoding = "";
+								if (Encoding.equals("CP1252")
+									|| Encoding.equals("ISO8859_1"))
+								{
+									Encoding = "ISO8859_1";
+									XMLEncoding = "iso-8859-1";
+								}
+								else
+								{
+									Encoding = "UTF8";
+									XMLEncoding = "utf-8";
+								}
+								FileOutputStream fos = new FileOutputStream(fd
+									.getDirectory()
+									+ fn);
+								try
+								{
+									fo = new PrintWriter(new OutputStreamWriter(
+										fos, Encoding));
+								}
+								catch (Exception e)
+								{
+									Encoding = "UTF8";
+									XMLEncoding = "utf-8";
+									fo = new PrintWriter(new OutputStreamWriter(
+										fos, Encoding));
+								}
+								B.saveXML(fo, XMLEncoding);
 							}
-							FileOutputStream fos = new FileOutputStream(fd
-								.getDirectory()
-								+ fn);
-							try
-							{
-								fo = new PrintWriter(new OutputStreamWriter(
-									fos, Encoding));
-							}
-							catch (Exception e)
-							{
-								Encoding = "UTF8";
-								XMLEncoding = "utf-8";
-								fo = new PrintWriter(new OutputStreamWriter(
-									fos, Encoding));
-							}
-							B.saveXML(fo, XMLEncoding);
 						}
-					}
-				}
-				else
-				{
-					if (Global.isApplet())
-						fo = new PrintWriter(new OutputStreamWriter(
-							new FileOutputStream(fd.getDirectory() + fn),
-							Global.getParameter("encoding", "ASCII")));
-					else fo = new PrintWriter(new OutputStreamWriter(
-						new FileOutputStream(fd.getDirectory() + fn), Global
-							.getParameter("encoding", System
-								.getProperty("file.encoding"))));
-					B.save(fo);
-				}
-				fo.close();
-			}
-			catch (IOException ex)
-			{
-				new Message(this, Global.resourceString("Write_error_") + "\n"
-					+ ex.toString());
-				return;
-			}
-		}
-		else if (Global.resourceString("Save_Position").equals(o)) // save the
-		// position
-		{ // File dialog handling
-			FileDialog fd = new FileDialog(this, Global
-				.resourceString("Save Position"), FileDialog.SAVE);
-			if ( !Dir.equals("")) fd.setDirectory(Dir);
-			String s = B.firstnode().getaction("GN");
-			if (s != null && !s.equals(""))
-				fd.setFile(s
-					+ "."
-					+ Global.getParameter("extension", Global.getParameter(
-						"xml", false)?"xml":"sgf"));
-			else fd.setFile("*."
-				+ Global.getParameter("extension", Global.getParameter("xml",
-					false)?"xml":"sgf"));
-			fd.setFilenameFilter(this);
-			center(fd);
-			fd.setVisible(true);
-			String fn = fd.getFile();
-			if (fn == null) return;
-			Dir = fd.getDirectory();
-			try
-			// print out using the board class
-			{
-				PrintWriter fo;
-				if (Global.getParameter("xml", false))
-				{
-					if (Global.isApplet())
-					{
-						fo = new PrintWriter(new OutputStreamWriter(
-							new FileOutputStream(fd.getDirectory() + fn),
-							"UTF8"));
-						B.saveXML(fo, "utf-8");
 					}
 					else
 					{
-						String Encoding = Global.getParameter("encoding",
-							System.getProperty("file.encoding")).toUpperCase();
-						if (Encoding.equals(""))
+						if (Global.isApplet())
+							fo = new PrintWriter(new OutputStreamWriter(
+								new FileOutputStream(fd.getDirectory() + fn),
+								Global.getParameter("encoding", "ASCII")));
+						else fo = new PrintWriter(new OutputStreamWriter(
+							new FileOutputStream(fd.getDirectory() + fn), Global
+								.getParameter("encoding", System
+									.getProperty("file.encoding"))));
+						B.save(fo);
+					}
+					fo.close();
+				}
+				catch (IOException ex)
+				{
+					new Message(this, Global.resourceString("Write_error_") + "\n"
+						+ ex.toString());
+					return;
+				}
+			}
+			else if (Global.resourceString("Save_Position").equals(o)) // save the
+			// position
+			{ // File dialog handling
+				FileDialog fd = new FileDialog(this, Global
+					.resourceString("Save Position"), FileDialog.SAVE);
+				if ( !Dir.equals("")) fd.setDirectory(Dir);
+				String s = B.firstnode().getaction("GN");
+				if (s != null && !s.equals(""))
+					fd.setFile(s
+						+ "."
+						+ Global.getParameter("extension", Global.getParameter(
+							"xml", false)?"xml":"sgf"));
+				else fd.setFile("*."
+					+ Global.getParameter("extension", Global.getParameter("xml",
+						false)?"xml":"sgf"));
+				fd.setFilenameFilter(this);
+				center(fd);
+				fd.setVisible(true);
+				String fn = fd.getFile();
+				if (fn == null) return;
+				Dir = fd.getDirectory();
+				try
+				// print out using the board class
+				{
+					PrintWriter fo;
+					if (Global.getParameter("xml", false))
+					{
+						if (Global.isApplet())
 						{
 							fo = new PrintWriter(new OutputStreamWriter(
 								new FileOutputStream(fd.getDirectory() + fn),
 								"UTF8"));
-							B.saveXMLPos(fo, "utf-8");
+							B.saveXML(fo, "utf-8");
 						}
 						else
 						{
-							String XMLEncoding = "";
-							if (Encoding.equals("CP1252")
-								|| Encoding.equals("ISO8859_1"))
+							String Encoding = Global.getParameter("encoding",
+								System.getProperty("file.encoding")).toUpperCase();
+							if (Encoding.equals(""))
 							{
-								Encoding = "ISO8859_1";
-								XMLEncoding = "iso-8859-1";
+								fo = new PrintWriter(new OutputStreamWriter(
+									new FileOutputStream(fd.getDirectory() + fn),
+									"UTF8"));
+								B.saveXMLPos(fo, "utf-8");
 							}
 							else
 							{
-								Encoding = "UTF8";
-								XMLEncoding = "utf-8";
+								String XMLEncoding = "";
+								if (Encoding.equals("CP1252")
+									|| Encoding.equals("ISO8859_1"))
+								{
+									Encoding = "ISO8859_1";
+									XMLEncoding = "iso-8859-1";
+								}
+								else
+								{
+									Encoding = "UTF8";
+									XMLEncoding = "utf-8";
+								}
+								FileOutputStream fos = new FileOutputStream(fd
+									.getDirectory()
+									+ fn);
+								try
+								{
+									fo = new PrintWriter(new OutputStreamWriter(
+										fos, Encoding));
+								}
+								catch (Exception e)
+								{
+									Encoding = "UTF8";
+									XMLEncoding = "utf-8";
+									fo = new PrintWriter(new OutputStreamWriter(
+										fos, Encoding));
+								}
+								B.saveXMLPos(fo, XMLEncoding);
 							}
-							FileOutputStream fos = new FileOutputStream(fd
-								.getDirectory()
-								+ fn);
-							try
-							{
-								fo = new PrintWriter(new OutputStreamWriter(
-									fos, Encoding));
-							}
-							catch (Exception e)
-							{
-								Encoding = "UTF8";
-								XMLEncoding = "utf-8";
-								fo = new PrintWriter(new OutputStreamWriter(
-									fos, Encoding));
-							}
-							B.saveXMLPos(fo, XMLEncoding);
 						}
 					}
-				}
-				else
-				{
-					if (Global.isApplet())
-						fo = new PrintWriter(new OutputStreamWriter(
-							new FileOutputStream(fd.getDirectory() + fn),
-							Global.getParameter("encoding", "ASCII")));
-					else fo = new PrintWriter(new OutputStreamWriter(
-						new FileOutputStream(fd.getDirectory() + fn), Global
-							.getParameter("encoding", System
-								.getProperty("file.encoding"))));
-					B.savePos(fo);
-				}
-				fo.close();
-			}
-			catch (IOException ex)
-			{
-				new Message(this, Global.resourceString("Write_error_") + "\n"
-					+ ex.toString());
-				return;
-			}
-		}
-		else if (Global.resourceString("Save_Bitmap").equals(o)) // save the
-		// game
-		{ // File dialog handling
-			FileDialog fd = new FileDialog(this, Global
-				.resourceString("Save_Bitmap"), FileDialog.SAVE);
-			if ( !Dir.equals("")) fd.setDirectory(Dir);
-			String s = B.firstnode().getaction("GN");
-			if (s != null && !s.equals(""))
-				fd.setFile(s + "." + Global.getParameter("extension", "bmp"));
-			else fd.setFile("*." + Global.getParameter("extension", "bmp"));
-			fd.setFilenameFilter(this);
-			center(fd);
-			fd.setVisible(true);
-			String fn = fd.getFile();
-			if (fn == null) return;
-			Dir = fd.getDirectory();
-			try
-			// print out using the board class
-			{
-				BMPFile F = new BMPFile();
-				Dimension d = B.getBoardImageSize();
-				F.saveBitmap(fd.getDirectory() + fn, B.getBoardImage(),
-					d.width, d.height);
-			}
-			catch (Exception ex)
-			{
-				new Message(this, Global.resourceString("Write_error_") + "\n"
-					+ ex.toString());
-				return;
-			}
-		}
-		else if (Global.resourceString("Load").equals(o)) // load a game
-		{ // File dialog handling
-			FileDialog fd = new FileDialog(this, Global
-				.resourceString("Load_Game"), FileDialog.LOAD);
-			if ( !Dir.equals("")) fd.setDirectory(Dir);
-			fd.setFilenameFilter(this);
-			fd.setFile("*."
-				+ Global.getParameter("extension", Global.getParameter("xml",
-					false)?"xml":"sgf"));
-			center(fd);
-			fd.setVisible(true);
-			String fn = fd.getFile();
-			if (fn == null) return;
-			Dir = fd.getDirectory();
-			try
-			// print out using the board class
-			{
-				if (Global.getParameter("xml", false))
-				{
-					InputStream in = new FileInputStream(fd.getDirectory() + fn);
-					try
+					else
 					{
-						B.loadXml(new XmlReader(in));
+						if (Global.isApplet())
+							fo = new PrintWriter(new OutputStreamWriter(
+								new FileOutputStream(fd.getDirectory() + fn),
+								Global.getParameter("encoding", "ASCII")));
+						else fo = new PrintWriter(new OutputStreamWriter(
+							new FileOutputStream(fd.getDirectory() + fn), Global
+								.getParameter("encoding", System
+									.getProperty("file.encoding"))));
+						B.savePos(fo);
 					}
-					catch (XmlReaderException e)
-					{
-						new Message(this, "Error in file!\n" + e.getText());
-					}
-					in.close();
+					fo.close();
 				}
-				else
+				catch (IOException ex)
 				{
-					BufferedReader fi;
-					if (Global.isApplet())
-						fi = new BufferedReader(new InputStreamReader(
+					new Message(this, Global.resourceString("Write_error_") + "\n"
+						+ ex.toString());
+					return;
+				}
+			}
+			else if (Global.resourceString("Save_Bitmap").equals(o)) // save the
+			// game
+			{ // File dialog handling
+				FileDialog fd = new FileDialog(this, Global
+					.resourceString("Save_Bitmap"), FileDialog.SAVE);
+				if ( !Dir.equals("")) fd.setDirectory(Dir);
+				String s = B.firstnode().getaction("GN");
+				if (s != null && !s.equals(""))
+					fd.setFile(s + "." + Global.getParameter("extension", "bmp"));
+				else fd.setFile("*." + Global.getParameter("extension", "bmp"));
+				fd.setFilenameFilter(this);
+				center(fd);
+				fd.setVisible(true);
+				String fn = fd.getFile();
+				if (fn == null) return;
+				Dir = fd.getDirectory();
+				try
+				// print out using the board class
+				{
+					BMPFile F = new BMPFile();
+					Dimension d = B.getBoardImageSize();
+					F.saveBitmap(fd.getDirectory() + fn, B.getBoardImage(),
+						d.width, d.height);
+				}
+				catch (Exception ex)
+				{
+					new Message(this, Global.resourceString("Write_error_") + "\n"
+						+ ex.toString());
+					return;
+				}
+			}
+			else if (Global.resourceString("Load").equals(o)) // load a game
+			{ // File dialog handling
+				FileDialog fd = new FileDialog(this, Global
+					.resourceString("Load_Game"), FileDialog.LOAD);
+				if ( !Dir.equals("")) fd.setDirectory(Dir);
+				fd.setFilenameFilter(this);
+				fd.setFile("*."
+					+ Global.getParameter("extension", Global.getParameter("xml",
+						false)?"xml":"sgf"));
+				center(fd);
+				fd.setVisible(true);
+				String fn = fd.getFile();
+				if (fn == null) return;
+				Dir = fd.getDirectory();
+				try
+				// print out using the board class
+				{
+					if (Global.getParameter("xml", false))
+					{
+						InputStream in = new FileInputStream(fd.getDirectory() + fn);
+						try
+						{
+							B.loadXml(new XmlReader(in));
+						}
+						catch (XmlReaderException e)
+						{
+							new Message(this, "Error in file!\n" + e.getText());
+						}
+						in.close();
+					}
+					else
+					{
+						BufferedReader fi;
+						if (Global.isApplet())
+							fi = new BufferedReader(new InputStreamReader(
+								new FileInputStream(fd.getDirectory() + fn), Global
+									.getParameter("encoding", "")));
+						else fi = new BufferedReader(new InputStreamReader(
 							new FileInputStream(fd.getDirectory() + fn), Global
-								.getParameter("encoding", "")));
-					else fi = new BufferedReader(new InputStreamReader(
-						new FileInputStream(fd.getDirectory() + fn), Global
-							.getParameter("encoding", System
-								.getProperty("file.encoding"))));
-					try
-					{
-						B.load(fi);
+								.getParameter("encoding", System
+									.getProperty("file.encoding"))));
+						try
+						{
+							B.load(fi);
+						}
+						catch (IOException e)
+						{
+							new Message(this, "Error in file!");
+						}
+						fi.close();
 					}
-					catch (IOException e)
-					{
-						new Message(this, "Error in file!");
-					}
-					fi.close();
 				}
+				catch (IOException ex)
+				{
+					new Message(this, Global.resourceString("Read_error_") + "\n"
+						+ ex.toString());
+					return;
+				}
+				String s = B.firstnode().getaction("GN");
+				if (s != null && !s.equals(""))
+					setTitle(s);
+				else
+				{
+					B.firstnode().setaction("GN", FileName.purefilename(fn));
+					setTitle(FileName.purefilename(fn));
+				}
+				if (fn.toLowerCase().indexOf("kogo") >= 0)
+					B.setVariationStyle(false, false);
 			}
-			catch (IOException ex)
+			else if (Global.resourceString("Load_from_Clipboard").equals(o))
 			{
-				new Message(this, Global.resourceString("Read_error_") + "\n"
-					+ ex.toString());
-				return;
+				loadClipboard();
 			}
-			String s = B.firstnode().getaction("GN");
-			if (s != null && !s.equals(""))
-				setTitle(s);
-			else
+			else if (Global.resourceString("Copy_to_Clipboard").equals(o))
 			{
-				B.firstnode().setaction("GN", FileName.purefilename(fn));
-				setTitle(FileName.purefilename(fn));
+				saveClipboard();
 			}
-			if (fn.toLowerCase().indexOf("kogo") >= 0)
-				B.setVariationStyle(false, false);
+			else if (Global.resourceString("Board_Window").equals(o))
+			{
+				new Help("board").display();
+			}
+			else if (Global.resourceString("Making_Moves").equals(o))
+			{
+				new Help("moves").display();
+			}
+			else if (Global.resourceString("Keyboard_Shortcuts").equals(o))
+			{
+				new Help("keyboard").display();
+			}
+			else if (Global.resourceString("Playing_Games").equals(o))
+			{
+				new Help("playing").display();
+			}
+			else if (Global.resourceString("About_Variations").equals(o))
+			{
+				new Help("variations").display();
+			}
+			else if (Global.resourceString("Mailing_Games").equals(o))
+			{
+				new Help("mail").display();
+			}
+			else if (Global.resourceString("Insert_Node").equals(o))
+			{
+				B.insertnode();
+			}
+			else if (Global.resourceString("Insert_Variation").equals(o))
+			{
+				B.insertvariation();
+			}
+			else if (Global.resourceString("Game_Information").equals(o))
+			{
+				new EditInformation(this, B.firstnode());
+			}
+			else if (Global.resourceString("Game_Copyright").equals(o))
+			{
+				new EditCopyright(this, B.firstnode());
+			}
+			else if (Global.resourceString("Prisoner_Count").equals(o))
+			{
+				String s = Global.resourceString("Black__") + B.Pw
+					+ Global.resourceString("__White__") + B.Pb + "\n"
+					+ Global.resourceString("Komi") + " " + B.getKomi();
+				new Message(this, s);
+			}
+			else if (Global.resourceString("Board_Color").equals(o))
+			{
+				new BoardColorEdit(this, "boardcolor", BoardColor);
+			}
+			else if (Global.resourceString("Black_Color").equals(o))
+			{
+				new BoardColorEdit(this, "blackcolor", BlackColor);
+			}
+			else if (Global.resourceString("Black_Sparkle_Color").equals(o))
+			{
+				new BoardColorEdit(this, "blacksparklecolor", BlackSparkleColor);
+			}
+			else if (Global.resourceString("White_Color").equals(o))
+			{
+				new BoardColorEdit(this, "whitecolor", WhiteColor);
+			}
+			else if (Global.resourceString("White_Sparkle_Color").equals(o))
+			{
+				new BoardColorEdit(this, "whitesparklecolor", WhiteSparkleColor);
+			}
+			else if (Global.resourceString("Label_Color").equals(o))
+			{
+				new BoardColorEdit(this, "labelcolor", LabelColor);
+			}
+			else if (Global.resourceString("Marker_Color").equals(o))
+			{
+				new BoardColorEdit(this, "markercolor", MarkerColor);
+			}
+			else if (Global.resourceString("Board_Font").equals(o))
+			{
+				new BoardGetFontSize(this, "boardfontname", Global.getParameter(
+					"boardfontname", "SansSerif"), "boardfontsize", Global
+					.getParameter("boardfontsize", 10), true).setVisible(true);
+				updateall();
+			}
+			else if (Global.resourceString("Normal_Font").equals(o))
+			{
+				new BoardGetFontSize(this, "sansserif", Global.getParameter(
+					"sansserif", "SansSerif"), "ssfontsize", Global.getParameter(
+					"ssfontsize", 11), true).setVisible(true);
+				updateall();
+			}
+			else if (Global.resourceString("Fixed_Font").equals(o))
+			{
+				new BoardGetFontSize(this, "monospaced", Global.getParameter(
+					"monospaced", "Monospaced"), "msfontsize", Global.getParameter(
+					"msfontsize", 11), true).setVisible(true);
+				updateall();
+			}
+			else if (Global.resourceString("Last_50").equals(o))
+			{
+				B.lastrange(50);
+			}
+			else if (Global.resourceString("Last_100").equals(o))
+			{
+				B.lastrange(100);
+			}
+			else if (Global.resourceString("Node_Name").equals(o))
+			{
+				callInsert();
+			}
+			else if (Global.resourceString("Goto_Next_Name").equals(o))
+			{
+				B.gotonext();
+			}
+			else if (Global.resourceString("Goto_Previous_Name").equals(o))
+			{
+				B.gotoprevious();
+			}
+			else if (Global.resourceString("Next_Game").equals(o))
+			{
+				B.gotonextmain();
+			}
+			else if (Global.resourceString("Previous_Game").equals(o))
+			{
+				B.gotopreviousmain();
+			}
+			else if (Global.resourceString("Add_Game").equals(o))
+			{
+				B.addnewgame();
+			}
+			else if (Global.resourceString("Remove_Game").equals(o))
+			{
+				B.removegame();
+			}
+			else if (Global.resourceString("Set_Encoding").equals(o))
+			{
+				new GetEncoding(this);
+			}
+			else if (Global.resourceString("Search_Again").equals(o))
+			{
+				search();
+			}
+			else if (Global.resourceString("Search").equals(o))
+			{
+				new GetSearchString(this);
+			}
+			else super.doAction(o);
 		}
-		else if (Global.resourceString("Load_from_Clipboard").equals(o))
+		catch (IOException ex)
 		{
-			loadClipboard();
+			new Message(Global.frame(), ex.getMessage());
 		}
-		else if (Global.resourceString("Copy_to_Clipboard").equals(o))
-		{
-			saveClipboard();
-		}
-		else if (Global.resourceString("Board_Window").equals(o))
-		{
-			new Help("board");
-		}
-		else if (Global.resourceString("Making_Moves").equals(o))
-		{
-			new Help("moves");
-		}
-		else if (Global.resourceString("Keyboard_Shortcuts").equals(o))
-		{
-			new Help("keyboard");
-		}
-		else if (Global.resourceString("Playing_Games").equals(o))
-		{
-			new Help("playing");
-		}
-		else if (Global.resourceString("About_Variations").equals(o))
-		{
-			new Help("variations");
-		}
-		else if (Global.resourceString("Mailing_Games").equals(o))
-		{
-			new Help("mail");
-		}
-		else if (Global.resourceString("Insert_Node").equals(o))
-		{
-			B.insertnode();
-		}
-		else if (Global.resourceString("Insert_Variation").equals(o))
-		{
-			B.insertvariation();
-		}
-		else if (Global.resourceString("Game_Information").equals(o))
-		{
-			new EditInformation(this, B.firstnode());
-		}
-		else if (Global.resourceString("Game_Copyright").equals(o))
-		{
-			new EditCopyright(this, B.firstnode());
-		}
-		else if (Global.resourceString("Prisoner_Count").equals(o))
-		{
-			String s = Global.resourceString("Black__") + B.Pw
-				+ Global.resourceString("__White__") + B.Pb + "\n"
-				+ Global.resourceString("Komi") + " " + B.getKomi();
-			new Message(this, s);
-		}
-		else if (Global.resourceString("Board_Color").equals(o))
-		{
-			new BoardColorEdit(this, "boardcolor", BoardColor);
-		}
-		else if (Global.resourceString("Black_Color").equals(o))
-		{
-			new BoardColorEdit(this, "blackcolor", BlackColor);
-		}
-		else if (Global.resourceString("Black_Sparkle_Color").equals(o))
-		{
-			new BoardColorEdit(this, "blacksparklecolor", BlackSparkleColor);
-		}
-		else if (Global.resourceString("White_Color").equals(o))
-		{
-			new BoardColorEdit(this, "whitecolor", WhiteColor);
-		}
-		else if (Global.resourceString("White_Sparkle_Color").equals(o))
-		{
-			new BoardColorEdit(this, "whitesparklecolor", WhiteSparkleColor);
-		}
-		else if (Global.resourceString("Label_Color").equals(o))
-		{
-			new BoardColorEdit(this, "labelcolor", LabelColor);
-		}
-		else if (Global.resourceString("Marker_Color").equals(o))
-		{
-			new BoardColorEdit(this, "markercolor", MarkerColor);
-		}
-		else if (Global.resourceString("Board_Font").equals(o))
-		{
-			new BoardGetFontSize(this, "boardfontname", Global.getParameter(
-				"boardfontname", "SansSerif"), "boardfontsize", Global
-				.getParameter("boardfontsize", 10), true).setVisible(true);
-			updateall();
-		}
-		else if (Global.resourceString("Normal_Font").equals(o))
-		{
-			new BoardGetFontSize(this, "sansserif", Global.getParameter(
-				"sansserif", "SansSerif"), "ssfontsize", Global.getParameter(
-				"ssfontsize", 11), true).setVisible(true);
-			updateall();
-		}
-		else if (Global.resourceString("Fixed_Font").equals(o))
-		{
-			new BoardGetFontSize(this, "monospaced", Global.getParameter(
-				"monospaced", "Monospaced"), "msfontsize", Global.getParameter(
-				"msfontsize", 11), true).setVisible(true);
-			updateall();
-		}
-		else if (Global.resourceString("Last_50").equals(o))
-		{
-			B.lastrange(50);
-		}
-		else if (Global.resourceString("Last_100").equals(o))
-		{
-			B.lastrange(100);
-		}
-		else if (Global.resourceString("Node_Name").equals(o))
-		{
-			callInsert();
-		}
-		else if (Global.resourceString("Goto_Next_Name").equals(o))
-		{
-			B.gotonext();
-		}
-		else if (Global.resourceString("Goto_Previous_Name").equals(o))
-		{
-			B.gotoprevious();
-		}
-		else if (Global.resourceString("Next_Game").equals(o))
-		{
-			B.gotonextmain();
-		}
-		else if (Global.resourceString("Previous_Game").equals(o))
-		{
-			B.gotopreviousmain();
-		}
-		else if (Global.resourceString("Add_Game").equals(o))
-		{
-			B.addnewgame();
-		}
-		else if (Global.resourceString("Remove_Game").equals(o))
-		{
-			B.removegame();
-		}
-		else if (Global.resourceString("Set_Encoding").equals(o))
-		{
-			new GetEncoding(this);
-		}
-		else if (Global.resourceString("Search_Again").equals(o))
-		{
-			search();
-		}
-		else if (Global.resourceString("Search").equals(o))
-		{
-			new GetSearchString(this);
-		}
-		else super.doAction(o);
 	}
 
 	public void center (FileDialog d)

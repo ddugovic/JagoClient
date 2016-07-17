@@ -52,7 +52,7 @@ public class KeyboardItem
 		CharKey="";
 		StringTokenizer t=new StringTokenizer(key,".");
 		while (t.hasMoreTokens())
-		{	String token=(String)t.nextToken();
+		{	String token=t.nextToken();
 			if (t.hasMoreTokens())
 			{	if (token.equals("control")) Control=true;
 				else if (token.equals("shift")) Shift=true;

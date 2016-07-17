@@ -2,6 +2,7 @@ package jagoclient.igs.games;
 
 import jagoclient.Global;
 import jagoclient.dialogs.Help;
+import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseFrame;
 import jagoclient.gui.CloseListener;
@@ -19,6 +20,7 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
@@ -64,8 +66,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 			.resourceString("About_this_Window")));
 		mb.add(help);
 		setLayout(new BorderLayout());
-		T = Global.getParameter("systemlister", false)?new SystemLister()
-			:new Lister();
+		T = Global.getParameter("systemlister", false)?new SystemLister():new Lister();
 		T.setFont(Global.Monospaced);
 		T.setText(Global.resourceString("Loading"));
 		add("Center", T);
@@ -135,7 +136,14 @@ public class GamesFrame extends CloseFrame implements CloseListener
 		}
 		else if (Global.resourceString("About_this_Window").equals(o))
 		{
-			new Help("games");
+			try
+			{
+				new Help("games").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else super.doAction(o);
 	}
@@ -199,7 +207,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 			}
 			Arrays.sort(v);
 			T.setText("");
-			T.appendLine0(" " + (String)L.first().content());
+			T.appendLine0(" " + L.first().content());
 			Color FC = Color.green.darker().darker();
 			for (i = 0; i < n - 1; i++)
 			{

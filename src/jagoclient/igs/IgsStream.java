@@ -37,7 +37,7 @@ public class IgsStream
 	int L;
 	int Number;
 	String Command;
-	ListClass<Distributor> DistributorList;
+	final ListClass<Distributor> DistributorList;
 	PrintWriter Out;
 	BufferedReader In;
 	ConnectionFrame CF;
@@ -58,7 +58,7 @@ public class IgsStream
 		L = 0;
 		Number = 0;
 		Dump.println("--> IgsStream opened");
-		DistributorList = new ListClass();
+		DistributorList = new ListClass<Distributor>();
 		C = new char[linesize];
 		initstream(in);
 	}
@@ -524,7 +524,7 @@ public class IgsStream
 		{
 			for (ListElement<Distributor> l : DistributorList)
 			{
-				Distributor dis = (Distributor)l.content();
+				Distributor dis = l.content();
 				if (dis.number() == n)
 				{
 					if (dis.game() == g) return dis;
@@ -540,7 +540,7 @@ public class IgsStream
 		{
 			for (ListElement<Distributor> l : DistributorList)
 			{
-				Distributor dis = (Distributor)l.content();
+				Distributor dis = l.content();
 				if (dis.number() == n) return dis;
 			}
 			return null;
@@ -567,7 +567,7 @@ public class IgsStream
 		{
 			for (ListElement<Distributor> l : DistributorList)
 			{
-				Distributor dis = (Distributor)l.content();
+				Distributor dis = l.content();
 				if (dis.number() == 15)
 				{
 					if (dis.game() == g) return true;
@@ -583,7 +583,7 @@ public class IgsStream
 		{
 			synchronized (DistributorList)
 			{
-				DistributorList.removeIf((ListElement<Distributor> t) -> (Distributor)t.content() == o);
+				DistributorList.removeIf((ListElement<Distributor> t) -> t.content() == o);
 			}
 		}
 		catch (Exception e)

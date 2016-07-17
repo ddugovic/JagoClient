@@ -5,7 +5,6 @@ import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
-import jagoclient.dialogs.Question;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseFrame;
 import jagoclient.gui.HistoryTextField;
@@ -31,6 +30,7 @@ import java.net.Socket;
 
 import javax.swing.JPanel;
 
+import rene.dialogs.Question;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
@@ -216,7 +216,14 @@ public class PartnerFrame extends CloseFrame
 		}
 		else if (Global.resourceString("Partner_Connection").equals(o))
 		{
-			new Help("partner");
+			try
+			{
+				new Help("partner").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else super.doAction(o);
 	}

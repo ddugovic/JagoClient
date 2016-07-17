@@ -51,7 +51,7 @@ public class ConnectedBoard extends Board
 	public synchronized void removegroup (int i0, int j0)
 	{	if (Pos.haschildren()) return;
 		if (P.color(i0,j0)==0) return;
-		if (CGF.wantsmove() && ((Node)Pos.content()).main())
+		if (CGF.wantsmove() && Pos.content().main())
 		{	CGF.moveset(i0,j0);
 		}
 		super.removegroup(i0,j0);

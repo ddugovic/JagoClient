@@ -65,7 +65,7 @@ class GetPassword extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String s)
+	public boolean tell (Frame f, String s)
 	{
 		Password = s;
 		return true;
@@ -316,7 +316,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 						+ c.Name + Global.resourceString("_as_") + c.User,
 						c.Encoding);
 					Global.setwindow(cf, "connection", 500, 400);
-					new Connect(c, GP.Password, cf);
+					new Thread(new Connect(c, GP.Password, cf)).start();
 				}
 				else
 				{ // create a connection frame and connect via
@@ -326,7 +326,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 						+ c.Name + Global.resourceString("_as_") + c.User,
 						c.Encoding);
 					Global.setwindow(cf, "connection", 500, 400);
-					new Connect(c, cf);
+					new Thread(new Connect(c, cf)).start();
 				}
 				return;
 			}

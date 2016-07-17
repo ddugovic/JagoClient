@@ -1,7 +1,8 @@
 package jagoclient.partner;
 
 import jagoclient.Global;
-import jagoclient.dialogs.Question;
+
+import rene.dialogs.Question;
 
 /**
 Question to undo a move, or decline the undo request.

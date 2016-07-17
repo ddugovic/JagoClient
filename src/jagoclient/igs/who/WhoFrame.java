@@ -2,6 +2,7 @@ package jagoclient.igs.who;
 
 import jagoclient.Global;
 import jagoclient.dialogs.Help;
+import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
 import jagoclient.gui.CloseDialog;
@@ -25,6 +26,7 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
@@ -175,8 +177,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 		m.add(help);
 		setMenuBar(m);
 		setLayout(new BorderLayout());
-		T = Global.getParameter("systemlister", false)?new SystemLister()
-			:new Lister();
+		T = Global.getParameter("systemlister", false)?new SystemLister():new Lister();
 		T.setFont(Global.Monospaced);
 		T.setText(Global.resourceString("Loading"));
 		add("Center", T);
@@ -329,7 +330,14 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 		}
 		else if (Global.resourceString("About_this_Window").equals(o))
 		{
-			new Help("who");
+			try
+			{
+				new Help("who").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else if (o.equals(Global.resourceString("Edit_Buttons")))
 		{
@@ -470,7 +478,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 			p = L.first();
 			while (p != null)
 			{
-				T.appendLine((String)p.content());
+				T.appendLine(p.content());
 				p = p.next();
 			}
 			T.doUpdate(false);

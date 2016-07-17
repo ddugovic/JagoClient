@@ -23,7 +23,7 @@ public class ExtendedViewer extends Viewer
 	PopupMenu PM;
 	int X,Y;
 	Panel P3D;
-	MyVector V; // Vector of lines
+	MyVector<String> V; // Vector of lines
 	StringBuffer B; // Buffer for last line
 	boolean Changed=false;
 	
@@ -305,9 +305,9 @@ public class ExtendedViewer extends Viewer
 	public synchronized void resized ()
 	{	if (TD.getSize().width<=0) return;
 		TD.setText("");
-		Enumeration e=V.elements();
+		Enumeration<String> e=V.elements();
 		while (e.hasMoreElements())
-		{	String s=(String)e.nextElement();
+		{	String s=e.nextElement();
 			doAppend(s);
 		}
 		TD.repaint();

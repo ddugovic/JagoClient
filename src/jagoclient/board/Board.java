@@ -1316,7 +1316,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1331,7 +1331,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1345,7 +1345,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1359,7 +1359,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1373,7 +1373,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1388,7 +1388,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<String> larg : a.arguments())
 				{
-					s = (String)larg.content();
+					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j) && s.length() >= 4 && s.charAt(2) == ':')
@@ -1417,7 +1417,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<Action> la : p.content().actions())
 				{
-					a = (Action)la.content();
+					a = la.content();
 					if (a.type().equals("W") || a.type().equals("B"))
 					{
 						s = a.argument();
@@ -1759,7 +1759,7 @@ public class Board extends Canvas implements MouseListener,
 		int i, j;
 		for (ListElement<String> larg : a.arguments())
 		{
-			String s = (String)larg.content();
+			String s = larg.content();
 			i = Field.i(s);
 			j = Field.j(s);
 			if (valid(i, j))
@@ -1777,7 +1777,7 @@ public class Board extends Canvas implements MouseListener,
 		int i, j, r = 1;
 		for (ListElement<String> larg : a.arguments())
 		{
-			String s = (String)larg.content();
+			String s = larg.content();
 			i = Field.i(s);
 			j = Field.j(s);
 			if (valid(i, j))
@@ -1836,7 +1836,7 @@ public class Board extends Canvas implements MouseListener,
 		n.Pw = n.Pb = 0;
 		for (ListElement<Action> p : n.actions())
 		{
-			a = (Action)p.content();
+			a = p.content();
 			if (a.type().equals("B"))
 			{
 				setaction(n, a, 1);
@@ -1987,7 +1987,7 @@ public class Board extends Canvas implements MouseListener,
 		ListElement<Tree<Node>> l = p.listelement();
 		if (l == null) return null;
 		if (l.next() == null) return null;
-		return (Tree<Node>)l.next().content();
+		return l.next().content();
 	}
 
 	public void territory (int i, int j)

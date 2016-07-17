@@ -11,17 +11,15 @@ a ConnectionFrame to display the connection on success.
 If it fails, it will display an error message for 10 seconds.
 */
 
-public class Connect extends Thread
+public class Connect implements Runnable
 {	Connection C;
 	ConnectionFrame CF;
 	String S;
 	public Connect (Connection c, ConnectionFrame cf)
 	{	C=c; CF=cf; S="";
-		start();
 	}
 	public Connect (Connection c, String s, ConnectionFrame cf)
 	{	C=c; CF=cf; S=s;
-		start();
 	}
 	public void run ()
 	{	C.Trying=true;
@@ -34,7 +32,7 @@ public class Connect extends Thread
 			{	CF.setVisible(false); CF.dispose();
 				new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!");
 				try
-				{	sleep(10000);
+				{	Thread.sleep(10000);
 				}
 				catch (Exception e)
 				{	C.Trying=false;	
@@ -46,7 +44,7 @@ public class Connect extends Thread
 		{	CF.setVisible(false); CF.dispose();
 			new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!");
 			try
-			{	sleep(10000);
+			{	Thread.sleep(10000);
 			}
 			catch (Exception e)
 			{	C.Trying=false;	

@@ -8,6 +8,9 @@ import jagoclient.gui.Panel3D;
 
 import java.awt.Frame;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
@@ -22,59 +25,37 @@ import rene.viewer.Viewer;
 public class HelpDialog extends CloseDialog
 {
 	Viewer V; // The viewer
-	Frame F;
 
 	/**
 	 * Display the help from subject.txt,Global.url()/subject.txt or from the
 	 * ressource /subject.txt.
 	 */
-	public HelpDialog (Frame f, String subject)
+	public HelpDialog (Frame f, String subject) throws IOException
 	{
 		super(f, Global.resourceString("Help"), true);
-		F = f;
-		V = Global.getParameter("systemviewer", false)?new SystemViewer()
-			:new Viewer();
+		V = Global.getParameter("systemviewer", false)? new SystemViewer() : new Viewer();
 		V.setFont(Global.Monospaced);
-		try
+		String s;
+		try (InputStream is = Global.class.getResourceAsStream("/helptexts/" +
+				subject + Global.resourceString("HELP_SUFFIX") + ".txt");
+			BufferedReader in = new BufferedReader(new InputStreamReader(is)))
 		{
-			BufferedReader in;
-			String s;
-			try
-			{
-				in = Global.getStream("helptexts/" + subject
-					+ Global.resourceString("HELP_SUFFIX") + ".txt");
-				s = in.readLine();
-			}
-			catch (Exception e)
-			{
-				try
-				{
-					in = Global.getStream(subject
-						+ Global.resourceString("HELP_SUFFIX") + ".txt");
-					s = in.readLine();
-				}
-				catch (Exception ex)
-				{
-					in = Global.getStream("helptexts/" + subject
-						+ ".txt");
-					s = in.readLine();
-				}
-			}
-			while (s != null)
-			{
+			while ((s = in.readLine()) != null)
 				V.appendLine(s);
-				s = in.readLine();
-			}
-			in.close();
 		}
-		catch (Exception e)
+		catch (IOException ex) // Fall back to default help file
 		{
-			new Message(Global.frame(), Global
-				.resourceString("Could_not_find_the_help_file_"));
-			doclose();
-			return;
+			try (InputStream is = Global.class.getResourceAsStream("/helptexts/" + subject + ".txt");
+				BufferedReader in = new BufferedReader(new InputStreamReader(is)))
+			{
+				while ((s = in.readLine()) != null)
+					V.appendLine(s);
+			}
+			catch (IOException ex2)
+			{
+				throw new IOException(Global.resourceString("Could_not_find_the_help_file_"), ex2);
+			}
 		}
-		display();
 	}
 
 	public void doclose ()
@@ -83,7 +64,7 @@ public class HelpDialog extends CloseDialog
 		dispose();
 	}
 
-	void display ()
+	public void display ()
 	{
 		Global.setwindow(this, "help", 500, 400);
 		add("Center", V);

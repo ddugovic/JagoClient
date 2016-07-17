@@ -11,7 +11,7 @@ import java.awt.image.ImageObserver;
 import java.awt.image.MemoryImageSource;
 
 /**
-This is used to create an image of the empty bard at startup or when
+This is used to create an image of the empty board at startup or when
 a board is needed (request from Board via WoodPaint).
 @see jagoclient.board.WoodPaint
 */

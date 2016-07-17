@@ -65,7 +65,7 @@ public class Action
 	// print the action
 	{	if (Arguments.first()==null ||
 			(Arguments.first()==Arguments.last() &&
-			((String)Arguments.first().content()).equals("")))
+			Arguments.first().content().equals("")))
 			return;
 		o.println();
 		o.print(Type);

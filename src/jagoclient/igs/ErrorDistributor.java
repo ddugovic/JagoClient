@@ -20,10 +20,10 @@ public class ErrorDistributor extends Distributor
 		(ConnectionFrame cf, IgsStream in, PrintWriter out)
 	{	super(in,5,0,false);
 		CF=cf; Out=out;
-		S=new String("");
+		S="";
 	}
 	public void send (String C)
-	{	if (S.equals("")) S=S+C;
+	{	if (S.isEmpty()) S=S+C;
 		else S=S+"\n"+C;
 	}
 	public void allsended ()

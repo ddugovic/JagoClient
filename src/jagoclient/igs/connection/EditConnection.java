@@ -3,6 +3,7 @@ package jagoclient.igs.connection;
 import jagoclient.Global;
 import jagoclient.Go;
 import jagoclient.dialogs.HelpDialog;
+import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseDialog;
 import jagoclient.gui.CloseFrame;
@@ -14,6 +15,7 @@ import jagoclient.gui.Panel3D;
 import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -216,7 +218,14 @@ public class EditConnection extends CloseDialog
 		}
 		else if (Global.resourceString("Help").equals(o))
 		{
-			new HelpDialog(F, "configure");
+			try
+			{
+				new HelpDialog(F, "configure").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else super.doAction(o);
 	}

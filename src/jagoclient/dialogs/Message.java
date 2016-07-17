@@ -24,8 +24,7 @@ public class Message extends CloseDialog
 	{
 		super(f, Global.resourceString("Message"), false);
 		add("Center",
-			T = Global.getParameter("systemviewer", false)?new SystemViewer()
-				:new Viewer());
+			T = Global.getParameter("systemviewer", false)?new SystemViewer():new Viewer());
 		T.setFont(Global.Monospaced);
 		MyPanel p = new MyPanel();
 		p.add(new ButtonAction(this, Global.resourceString("OK")));

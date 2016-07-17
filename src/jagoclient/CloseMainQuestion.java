@@ -1,7 +1,8 @@
 package jagoclient;
 
-import jagoclient.dialogs.Question;
 import jagoclient.gui.CloseFrame;
+
+import rene.dialogs.Question;
 
 public class CloseMainQuestion extends Question
 {	MainFrame G;

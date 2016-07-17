@@ -232,7 +232,7 @@ public class MyVector <klasse>
 	to determine the true length of the array. Do not change objects
 	beyond the size! Do not set objects to null!
 	*/
-	public Object[] getArray ()
+	public klasse[] toArray ()
 	{	compress();
 		return O;
 	}
@@ -240,7 +240,7 @@ public class MyVector <klasse>
 	/**
 	Copy the array into an object array of at least the same size.
 	*/
-	public void copyInto (Object o[])
+	public void toArray (klasse o[])
 	{	compress();
 		System.arraycopy(O,0,o,0,ON);
 	}
@@ -248,7 +248,7 @@ public class MyVector <klasse>
 	/**
 	Test for equality with another vector, using equals.
 	*/
-	public boolean equals (MyVector V)
+	public boolean equals (MyVector<klasse> V)
 	{	if (V.ON!=ON) return false;
 		V.compress(); compress();
 		for (int i=0; i<ON; i++)
@@ -260,7 +260,7 @@ public class MyVector <klasse>
 	/**
 	Test for equality with another vector, using object equality.
 	*/
-	public boolean equalsIdentical (MyVector V)
+	public boolean equalsIdentical (MyVector<klasse> V)
 	{	if (V.ON!=ON) return false;
 		V.compress(); compress();
 		for (int i=0; i<ON; i++)
@@ -280,7 +280,7 @@ public class MyVector <klasse>
 	}
 	
 	public static void main (String args[])
-	{	MyVector V=new MyVector();
+	{	MyVector<String> V=new MyVector<String>();
 		for (int i=1; i<=10; i++)
 			V.addElement("Element "+i);
 		for (int i=4; i<=9; i++)
@@ -292,9 +292,9 @@ public class MyVector <klasse>
 		for (int i=11; i<=20; i++)
 			V.addElement("Element "+i);
 		System.out.println(V.ON+" elements, "+V.OLast+" used ,"+V.Gap+" gap.");
-		Enumeration E=V.elements();
+		Enumeration<String> E=V.elements();
 		while (E.hasMoreElements())
-		{	System.out.println((String)E.nextElement());
+		{	System.out.println(E.nextElement());
 		}
 		System.out.println(V.ON+" elements, "+V.OLast+" used, "+V.Gap+" gap.");
 	}

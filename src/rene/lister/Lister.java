@@ -127,7 +127,7 @@ public class Lister
 	 */
 	public int getSelectedIndex ()
 	{	if (L.Selected.size()>0) 
-			return ((Integer)L.Selected.elementAt(0)).intValue();
+			return (L.Selected.elementAt(0));
 		else
 			return -1;
 	}
@@ -145,7 +145,7 @@ public class Lister
 	public int[] getSelectedIndices ()
 	{	int k[]=new int[L.Selected.size()];
 		for (int i=0; i<k.length; i++)
-			k[i]=((Integer)L.Selected.elementAt(i)).intValue();
+			k[i]=(L.Selected.elementAt(i));
 		return k;
 	}
 	

@@ -69,7 +69,7 @@ public class Node
 	ListElement find (String s)
 	{	
 		for (ListElement<Action> p : Actions)
-		{	Action a=(Action)p.content();
+		{	Action a=p.content();
 			if (a.type().equals(s)) return p;
 		}
 		return null;

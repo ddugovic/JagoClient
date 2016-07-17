@@ -207,7 +207,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		}
 		else
 		{
-			((Line)L.last().content()).append(s);
+			L.last().content().append(s);
 		}
 	}
 
@@ -482,10 +482,10 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		ListElement<Line> e = P1.L;
 		while (e != null && e != P2.L)
 		{
-			((Line)e.content()).block(0, Line.NONE);
+			e.content().block(0, Line.NONE);
 			e = e.next();
 		}
-		if (e != null) ((Line)e.content()).block(0, Line.NONE);
+		if (e != null) e.content().block(0, Line.NONE);
 		repaint();
 	}
 
@@ -505,14 +505,14 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		}
 		else return;
 		ListElement<Line> e = P1.L;
-		((Line)e.content()).block(P1.LPos, Line.START);
+		e.content().block(P1.LPos, Line.START);
 		if (e != P2.L) e = e.next();
 		while (e != null && e != P2.L)
 		{
-			((Line)e.content()).block(0, Line.FULL);
+			e.content().block(0, Line.FULL);
 			e = e.next();
 		}
-		if (e != null) ((Line)e.content()).block(P2.LPos, Line.END);
+		if (e != null) e.content().block(P2.LPos, Line.END);
 		repaint();
 		requestFocus();
 	}
@@ -536,10 +536,10 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 		ListElement<Line> e = P1.L;
 		while (e != null && e != P2.L)
 		{
-			s = s + ((Line)e.content()).getblock() + "\n";
+			s = s + e.content().getblock() + "\n";
 			e = e.next();
 		}
-		if (e != null) s = s + ((Line)e.content()).getblock();
+		if (e != null) s = s + e.content().getblock();
 		new ClipboardCopy(this, this, s);
 	}
 

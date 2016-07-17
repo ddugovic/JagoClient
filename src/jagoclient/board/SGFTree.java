@@ -82,7 +82,7 @@ public class SGFTree
 	{	boolean sgf=GF.getParameter("sgfcomments",false);
 		char c=readnext(in);
 		Action a;
-		Node n=new Node(((Node)p.content()).number());
+		Node n=new Node(p.content().number());
 		String s;
 		loop: while (true) // read all actions
 		{	BufferN=0;
@@ -132,14 +132,14 @@ public class SGFTree
 		// append node
 		n.main(p);
 		TreeNode newp;
-		if (((Node)p.content()).actions()==null)
+		if (p.content().actions()==null)
 			p.content(n);
 		else
 		{	p.addchild(newp=new TreeNode(n));
 			n.main(p);
 			p=newp;
 			if (p.parent()!=null && p!=p.parent().firstchild())
-				((Node)p.content()).number(2);
+				p.content().number(2);
 		}
 		return c;
 	}
@@ -374,7 +374,7 @@ public class SGFTree
 			{	return readnodes(tree.getContent(),p,father,main,number);
 			}
 			else if (tag.name().equals("Node"))
-			{	if (p!=null) number=((Node)p.content()).number();
+			{	if (p!=null) number=p.content().number();
 				Node n=readnode(number,tree);
 				n.main(main);
 				TreeNode newp=new TreeNode(n);
@@ -383,7 +383,7 @@ public class SGFTree
 				p=newp;
 			}
 			else if (tag.name().equals("White"))
-			{	if (p!=null) number=((Node)p.content()).number();
+			{	if (p!=null) number=p.content().number();
 				Node n=new Node(number);
 				try
 				{	n.addaction(new Action("W",xmlToSgf(tree)));
@@ -403,7 +403,7 @@ public class SGFTree
 				p=newp;
 			}
 			else if (tag.name().equals("Black"))
-			{	if (p!=null) number=((Node)p.content()).number();
+			{	if (p!=null) number=p.content().number();
 				Node n=new Node(number);
 				try
 				{	n.addaction(new Action("B",xmlToSgf(tree)));
@@ -429,7 +429,7 @@ public class SGFTree
 					p=new TreeNode(n);
 					ret=p;					
 				}
-				Node n=(Node)p.content();
+				Node n=p.content();
 				n.addaction(new Action("C",parseComment(tree)));
 			}
 			else if (tag.name().equals("Variation"))

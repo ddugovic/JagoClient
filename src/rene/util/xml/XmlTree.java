@@ -13,7 +13,7 @@ public class XmlTree extends Tree<XmlTag>
 	}
 	
 	public XmlTag getTag ()
-	{	return (XmlTag)content();
+	{	return content();
 	}
 	
 	public Tree<XmlTag> xmlFirstContent ()

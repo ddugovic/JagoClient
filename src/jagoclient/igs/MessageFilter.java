@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.function.Predicate;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -183,7 +184,7 @@ public class MessageFilter
 
 class MessageFilterEdit extends CloseFrame
 {
-	ListClass F;
+	ListClass<SingleMessageFilter> F;
 	java.awt.List L;
 
 	public MessageFilterEdit (ListClass f)
@@ -265,18 +266,8 @@ class MessageFilterEdit extends CloseFrame
 	{
 		String s = L.getSelectedItem();
 		if (s == null) return;
-		ListElement e = F.first();
-		while (e != null)
-		{
-			SingleMessageFilter f = (SingleMessageFilter)e.content();
-			if (f.Name.equals(s))
-			{
-				F.remove(e);
-				updatelist();
-				return;
-			}
-			e = e.next();
-		}
+		if (F.removeIf((ListElement<SingleMessageFilter> e) -> e.content().Name.equals(s)))
+			updatelist();
 	}
 
 	void updatelist ()

@@ -1,86 +1,80 @@
 package rene.dialogs;
 
+import jagoclient.Global;
+import jagoclient.gui.ButtonAction;
+import jagoclient.gui.CloseDialog;
+import jagoclient.gui.MyLabel;
+import jagoclient.gui.MyPanel;
+
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.Panel;
 import java.awt.event.ActionListener;
 
-import rene.gui.ButtonAction;
-import rene.gui.CloseDialog;
-import rene.gui.Global;
-import rene.gui.MyLabel;
-import rene.gui.MyPanel;
-
 /**
-This is a simple yes/no question. May be used as modal or non-modal
-dialog. Modal Question dialogs must be overriden to do something
-sensible with the tell method. In any case setVible(true) must be
-called in the calling program.
-<p>
-The static YesString and NoString may be overriden for foreign
-languages.
-*/
+ * The Question dialog displays a question and yes/no buttons. It can be modal
+ * or non-modal. If the dialog is used modal, there is no need to subclass it.
+ * The result can be asked after the show method returns (which must be called
+ * from the creating method). If the dialog is non-modal, it should be
+ * subclassed and the tell method needs to be redefined to do something useful.
+ */
 
-public class Question extends CloseDialog 
-    implements ActionListener
-{	public int Result;
+public class Question extends CloseDialog implements ActionListener
+{
 	Object O;
 	Frame F;
-	public static int NO=0,YES=1,ABORT=-1;
-	public Question (Frame f, String c, String title, Object o, 
-		boolean abort, boolean flag)
-	{	super(f,title,flag);
-		F=f;
-		Panel pc=new MyPanel();
-		FlowLayout fl=new FlowLayout();
+	public boolean Result = false;
+
+	/**
+	 * @param o
+	 *            an object to be passed to the tell method (may be null)
+	 * @param flag
+	 *            determines, if the dialog is modal or not
+	 */
+	public Question (Frame f, String c, String title, Object o, boolean flag)
+	{
+		super(f, title, flag);
+		F = f;
+		MyPanel pc = new MyPanel();
+		FlowLayout fl = new FlowLayout();
 		pc.setLayout(fl);
 		fl.setAlignment(FlowLayout.CENTER);
-		pc.add(new MyLabel(" "+c+" "));
-		add("Center",pc);
-		Panel p=new MyPanel();
-		p.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		p.add(new ButtonAction(this,Global.name("yes"),"Yes"));
-		p.add(new ButtonAction(this,Global.name("no"),"No"));
-		if (abort) p.add(new ButtonAction(this,Global.name("abort"),"Abort"));
-		add("South",p);
-		O=o;
-		pack();
+		pc.add(new MyLabel(" " + c + " "));
+		add("Center", pc);
+		MyPanel p = new MyPanel();
+		p.add(new ButtonAction(this, Global.resourceString("Yes")));
+		p.add(new ButtonAction(this, Global.resourceString("No")));
+		add("South", p);
+		O = o;
+		if (flag)
+			Global.setpacked(this, "question", 300, 150, f);
+		else Global.setpacked(this, "question", 300, 150);
+		validate();
 	}
-	public Question (Frame f, String c, String title, Object o, boolean flag)
-	{	this(f,c,title,o,true,flag);
-	}
-	public Question (Frame f, String c, String title)
-	{	this(f,c,title,null,true,true);
-	}
-	public Question (Frame f, String c, String title, boolean abort)
-	{	this(f,c,title,null,abort,true);
-	}
+
+	@Override
 	public void doAction (String o)
-	{	if (o.equals("Yes"))
-  		{	tell(this,O,YES);
-  		}
-  		else if (o.equals("No"))
-  		{	tell(this,O,NO);
-  		}
-  		else if (o.equals("Abort"))
-  		{	tell(this,O,ABORT);
-  			Aborted=true;
-  		}
-  	}
-  	/**
-  	Needs to be overriden for modal usage. Should dispose the dialog.
-  	*/
-	public void tell (Question q, Object o, int f)
-	{	Result=f;
-		doclose();
+	{
+		Global.notewindow(this, "question");
+		if (Global.resourceString("Yes").equals(o))
+		{
+			tell(this, O, true);
+			Result = true;
+		}
+		else if (Global.resourceString("No").equals(o))
+		{
+			tell(this, O, false);
+		}
+		setVisible(false);
+		dispose();
 	}
-	/**
-	@return if the user pressed yes.
-	*/
-	public boolean yes ()
-	{	return Result==YES;
-	}
-	public int getResult ()
-	{	return Result;
+
+	/** callback for non-modal dialogs */
+	public void tell (Question q, Object o, boolean f)
+	{}
+
+	/** to get the result of the question */
+	public boolean result ()
+	{
+		return Result;
 	}
 }

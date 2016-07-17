@@ -3,6 +3,7 @@ package jagoclient.partner.partner;
 import jagoclient.Global;
 import jagoclient.Go;
 import jagoclient.dialogs.HelpDialog;
+import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CloseDialog;
 import jagoclient.gui.CloseFrame;
@@ -14,6 +15,7 @@ import jagoclient.gui.Panel3D;
 import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -75,12 +77,9 @@ public class EditPartner extends CloseDialog
 		JPanel p1 = new MyPanel();
 		p1.setLayout(new GridLayout(0, 2));
 		p1.add(new MyLabel(Global.resourceString("Name")));
-		p1
-			.add(Name = new FormTextField(Global
-				.resourceString("Name_for_list")));
+		p1.add(Name = new FormTextField(Global.resourceString("Name_for_list")));
 		p1.add(new MyLabel(Global.resourceString("Server")));
-		p1.add(Server = new FormTextField(Global
-			.resourceString("Internet_server_name")));
+		p1.add(Server = new FormTextField(Global.resourceString("Internet_server_name")));
 		p1.add(new MyLabel(Global.resourceString("Port")));
 		p1.add(Port = new FormTextField("Port (default 6970)"));
 		p1.add(new MyLabel(Global.resourceString("State")));
@@ -161,7 +160,14 @@ public class EditPartner extends CloseDialog
 		}
 		else if (Global.resourceString("Help").equals(o))
 		{
-			new HelpDialog(F, "confpartner");
+			try
+			{
+				new HelpDialog(F, "confpartner").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else super.doAction(o);
 	}

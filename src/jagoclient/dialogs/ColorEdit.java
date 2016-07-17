@@ -73,7 +73,7 @@ class ColorScrollbar extends Panel implements AdjustmentListener, DoActionListen
  * the specified name string. Modality is handled as in the Question dialog.
  * 
  * @see jagoclient.Global
- * @see jagoclient.dialogs.Question
+ * @see rene.dialogs.Question
  */
 
 public class ColorEdit extends CloseDialog

@@ -1,7 +1,8 @@
 package jagoclient.partner;
 
 import jagoclient.Global;
-import jagoclient.dialogs.Question;
+
+import rene.dialogs.Question;
 
 /**
 Question to accept a result or decline it.

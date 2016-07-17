@@ -9,8 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 
@@ -22,39 +22,31 @@ import rene.gui.DoActionListener;
  * processing by implementing a DoActionListener. The "Close" resource is
  * reserved to close the dialog. The escape key will close the dialog too.
  */
-public class CloseDialog extends JDialog implements WindowListener,
-	ActionListener, DoActionListener, KeyListener
+public class CloseDialog extends JDialog implements ActionListener, DoActionListener, KeyListener
 {
 	public CloseDialog (Frame f, String s, boolean modal)
 	{
-		super(f, "", modal);
-		addWindowListener(this);
-		setTitle(s);
-	}
-
-	public void windowActivated (WindowEvent e)
-	{}
-
-	public void windowClosed (WindowEvent e)
-	{}
-
-	public void windowClosing (WindowEvent e)
-	{
-		if (close())
+		super(f, s, modal);
+		addWindowListener(new WindowAdapter()
 		{
-			setVisible(false);
-			dispose();
-		}
+			@Override
+			public void windowOpened(WindowEvent e)
+			{
+				CloseDialog window = (CloseDialog)e.getWindow();
+				window.windowOpened(e);
+			}
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				CloseDialog window = (CloseDialog)e.getWindow();
+				if (window.close())
+				{
+					window.setVisible(false);
+					window.dispose();
+				}
+			}
+		});
 	}
-
-	public void windowDeactivated (WindowEvent e)
-	{}
-
-	public void windowDeiconified (WindowEvent e)
-	{}
-
-	public void windowIconified (WindowEvent e)
-	{}
 
 	public void windowOpened (WindowEvent e)
 	{}
@@ -69,11 +61,7 @@ public class CloseDialog extends JDialog implements WindowListener,
 		return true;
 	}
 
-	public boolean escape ()
-	{
-		return close();
-	}
-
+	@Override
 	public void actionPerformed (ActionEvent e)
 	{
 		doAction(e.getActionCommand());
@@ -95,8 +83,7 @@ public class CloseDialog extends JDialog implements WindowListener,
 
 	public void center (Frame f)
 	{
-		Dimension si = f.getSize(), d = getSize(), dscreen = getToolkit()
-			.getScreenSize();
+		Dimension si = f.getSize(), d = getSize(), dscreen = getToolkit().getScreenSize();
 		Point lo = f.getLocation();
 		int x = lo.x + si.width / 2 - d.width / 2;
 		int y = lo.y + si.height / 2 - d.height / 2;

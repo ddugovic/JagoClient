@@ -1,7 +1,8 @@
 package jagoclient.partner;
 
 import jagoclient.Global;
-import jagoclient.dialogs.Question;
+
+import rene.dialogs.Question;
 
 class ClosePartnerQuestion extends Question
 {	public ClosePartnerQuestion (PartnerFrame g)

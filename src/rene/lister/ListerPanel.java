@@ -15,7 +15,7 @@ import rene.util.*;
 public class ListerPanel
 	extends MyPanel implements WheelListener
 {
-		private MyVector V; // Vector of listed Elements
+		private MyVector<Element> V; // Vector of listed Elements
 		int Top; // Top Element
 	
 		Image I; // Buffer Image
@@ -40,7 +40,7 @@ public class ListerPanel
 		
 		public ListerPanel (Lister ld, String name)
 		{	LD=ld; Name=name;
-			V=new MyVector();
+			V=new MyVector<Element>();
 			Top=0;
 			Wheel W=new Wheel(this);
 			addMouseWheelListener(W);
@@ -140,7 +140,7 @@ public class ListerPanel
 			int line=Top;
 			if (line<0) return;
 			while (line-Top<PageSize && line<V.size())
-			{	Element el=(Element)V.elementAt(line);
+			{	Element el=V.elementAt(line);
 				if (isSelected(line))
 				{	g.setColor(getBackground().darker());
 					g.fillRect(0,h-Ascent,W,Height);
@@ -231,8 +231,8 @@ public class ListerPanel
 		
 		// Mouse routines:
 		
-		Vector VAL=new Vector(); // Vector of action listener
-		MyVector Selected=new MyVector(); // currently selected items
+		Vector<ActionListener> VAL=new Vector<ActionListener>(); // Vector of action listener
+		MyVector<Integer> Selected=new MyVector<Integer>();		 // currently selected items
 		
 		/**
 		 * Determine if line sel is selected
@@ -240,9 +240,9 @@ public class ListerPanel
 		 * @return selected or not
 		 */
 		public synchronized boolean isSelected (int sel)
-		{	Enumeration e=Selected.elements();
+		{	Enumeration<Integer> e=Selected.elements();
 			while (e.hasMoreElements())
-			{	int n=((Integer)e.nextElement()).intValue();
+			{	int n=e.nextElement();
 				if (n==sel) return true;
 			}
 			return false;
@@ -253,15 +253,15 @@ public class ListerPanel
 		 * @param sel
 		 */
 		public synchronized void toggleSelect (int sel)
-		{	Enumeration e=Selected.elements();
+		{	Enumeration<Integer> e=Selected.elements();
 			while (e.hasMoreElements())
-			{	Integer i=(Integer)e.nextElement();
-				if (i.intValue()==sel)
+			{	Integer i=e.nextElement();
+				if (i==sel)
 				{	Selected.removeElement(i);
 					return;
 				}
 			}
-			Selected.addElement(new Integer(sel));
+			Selected.addElement(sel);
 		}
 		
 		/**
@@ -272,9 +272,9 @@ public class ListerPanel
 		public synchronized void expandSelect (int sel)
 		{	// compute maximal selected index below sel.
 			int max=-1;
-			Enumeration e=Selected.elements();
+			Enumeration<Integer> e=Selected.elements();
 			while (e.hasMoreElements())
-			{	int i=((Integer)e.nextElement()).intValue();
+			{	int i=e.nextElement();
 				if (i>max && i<sel) max=i;
 			}
 			if (max>=0)
@@ -284,7 +284,7 @@ public class ListerPanel
 			int min=V.size();
 			e=Selected.elements();
 			while (e.hasMoreElements())
-			{	int i=((Integer)e.nextElement()).intValue();
+			{	int i=e.nextElement();
 				if (i<min && i>sel) min=i;
 			}
 			if (min<V.size())
@@ -293,12 +293,12 @@ public class ListerPanel
 		}
 		
 		/**
-		 * Selecte an item by number sel.
+		 * Select an item by number sel.
 		 * @param sel 
 		 */
 		public synchronized void select (int sel)
 		{	if (!isSelected(sel))
-				Selected.addElement(new Integer(sel));
+				Selected.addElement(sel);
 		}
 
 		
@@ -352,7 +352,7 @@ public class ListerPanel
 				}
 				else
 				{	Selected.removeAllElements();
-					Selected.addElement(new Integer(sel));
+					Selected.addElement(sel);
 				}
 				Graphics g=getGraphics();
 				paint(g);
@@ -372,13 +372,13 @@ public class ListerPanel
 		}
 
 		public synchronized Element getElementAt (int n)
-		{	return (Element)V.elementAt(n);
+		{	return V.elementAt(n);
 		}
 
 		public synchronized void save (PrintWriter o)
-		{	Enumeration e=V.elements();
+		{	Enumeration<Element> e=V.elements();
 			while (e.hasMoreElements())
-			{	Element el=(Element)e.nextElement();
+			{	Element el=e.nextElement();
 				o.println(el.getElementString());
 			}
 		}

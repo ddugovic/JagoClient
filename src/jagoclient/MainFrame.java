@@ -6,6 +6,7 @@ import jagoclient.dialogs.FunctionKeyEdit;
 import jagoclient.dialogs.GetFontSize;
 import jagoclient.dialogs.GetParameter;
 import jagoclient.dialogs.Help;
+import jagoclient.dialogs.Message;
 import jagoclient.gmp.GMPConnection;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
@@ -30,11 +31,13 @@ import java.awt.GridLayout;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.dialogs.Question;
 import rene.gui.DoItemListener;
 
 /**
@@ -55,12 +58,12 @@ class GetPort extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String S)
+	public boolean tell (Frame f, String s)
 	{
 		int port = 6970;
 		try
 		{
-			port = Integer.parseInt(S);
+			port = Integer.parseInt(s);
 			Global.setParameter("serverport", port);
 		}
 		catch (NumberFormatException ex)
@@ -155,7 +158,14 @@ class AdvancedOptionsEdit extends CloseDialog
 		}
 		else if (o.equals(Global.resourceString("Help")))
 		{
-			new Help("advanced");
+			try
+			{
+				new Help("advanced").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 	}
 }
@@ -176,9 +186,9 @@ class YourNameQuestion extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String S)
+	public boolean tell (Frame f, String s)
 	{
-		if ( !S.equals("")) Global.setParameter("yourname", S);
+		if ( !s.equals("")) Global.setParameter("yourname", s);
 		return true;
 	}
 }
@@ -204,9 +214,9 @@ class GetLanguage extends GetParameter
 	}
 
 	@Override
-	public boolean tell (Object o, String S)
+	public boolean tell (Frame f, String s)
 	{
-		Global.setParameter("language", S);
+		Global.setParameter("language", s);
 		done = true;
 		return true;
 	}
@@ -263,7 +273,14 @@ class GetRelayServer extends CloseDialog
 		}
 		else if (o.equals(Global.resourceString("Help")))
 		{
-			new Help("relayserver");
+			try
+			{
+				new Help("relayserver").display();
+			}
+			catch (IOException ex)
+			{
+				new Message(Global.frame(), ex.getMessage());
+			}
 		}
 		else super.doAction(o);
 	}
@@ -478,7 +495,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 	{
 		if (Global.getParameter("confirmations", true))
 		{
-			CloseMainQuestion CMQ = new CloseMainQuestion(this);
+			Question CMQ = new CloseMainQuestion(this);
 			if (CMQ.Result) doclose();
 			return false;
 		}
@@ -502,164 +519,170 @@ public class MainFrame extends CloseFrame implements DoItemListener
 	@Override
 	public void doAction (String o)
 	{
-		if ("CloseEnglish".equals(o))
+		try
 		{
-			Global.setParameter("language", "en");
-			if (close()) doclose();
-		}
-		else if (Global.resourceString("Overview").equals(o))
-		{
-			new Help("overview");
-		}
-		else if (Global.resourceString("Using_Windows").equals(o))
-		{
-			new Help("windows");
-		}
-		else if (Global.resourceString("Configuring_Connections").equals(o))
-		{
-			new Help("configure");
-		}
-		else if (Global.resourceString("Partner_Connections").equals(o))
-		{
-			new Help("confpartner");
-		}
-		else if (Global.resourceString("About_Jago").equals(o))
-		{
-			new Help("about");
-		}
-		else if (Global.resourceString("About_Help").equals(o))
-		{
-			new Help("help");
-		}
-		else if (Global.resourceString("About_Sounds").equals(o))
-		{
-			new Help("sound");
-		}
-		else if (Global.resourceString("About_Smart_Go_Format_SGF").equals(o))
-		{
-			new Help("sgf");
-		}
-		else if (Global.resourceString("About_Filter").equals(o))
-		{
-			new Help("filter");
-		}
-		else if (Global.resourceString("About_Function_Keys").equals(o))
-		{
-			new Help("fkeys");
-		}
-		else if (Global.resourceString("Overcoming_Firewalls").equals(o))
-		{
-			new Help("firewall");
-		}
-		else if (Global.resourceString("Play_Go_Help").equals(o))
-		{
-			new Help("gmp");
-		}
-		else if (Global.resourceString("On_line_Version_Information").equals(o))
-		{
-			new Help("version");
-		}
-		else if (Global.resourceString("Local_Board").equals(o))
-		{
-			GoFrame gf = new GoFrame(new Frame(), Global
-				.resourceString("Local_Viewer"));
-		}
-		else if (Global.resourceString("Play_Go").equals(o))
-		{
-			new GMPConnection(this);
-		}
-		else if (Global.resourceString("Server_Port").equals(o))
-		{
-			new GetPort(this, Global.getParameter("serverport", 6970));
-		}
-		else if (Global.resourceString("Set_Language").equals(o))
-		{
-			GetLanguage d = new GetLanguage(this);
-			if (d.done && close()) doclose();
-		}
-		else if (Global.resourceString("Board_Font").equals(o))
-		{
-			new GetFontSize("boardfontname", Global.getParameter(
-				"boardfontname", "SansSerif"), "boardfontsize", Global
-				.getParameter("boardfontsize", 10), false).setVisible(true);
-		}
-		else if (Global.resourceString("Normal_Font").equals(o))
-		{
-			new GetFontSize("sansserif", Global.getParameter("sansserif",
-				"SansSerif"), "ssfontsize", Global.getParameter("ssfontsize",
-				11), false).setVisible(true);
-		}
-		else if (Global.resourceString("Fixed_Font").equals(o))
-		{
-			new GetFontSize("monospaced", Global.getParameter("monospaced",
-				"Monospaced"), "msfontsize", Global.getParameter("msfontsize",
-				11), false).setVisible(true);
-		}
-		else if (Global.resourceString("Big_Font").equals(o))
-		{
-			new GetFontSize("bigmonospaced", Global.getParameter(
-				"bigmonospaced", "BoldMonospaced"), "bigmsfontsize", Global
-				.getParameter("bigmsfontsize", 22), false).setVisible(true);
-		}
-		else if (Global.resourceString("Your_Name").equals(o))
-		{
-			new YourNameQuestion(this);
-		}
-		else if (Global.resourceString("Filter").equals(o))
-		{
-			Global.MF.edit();
-		}
-		else if (Global.resourceString("Function_Keys").equals(o))
-		{
-			new FunctionKeyEdit();
-		}
-		else if (Global.resourceString("Relay_Server").equals(o))
-		{
-			new GetRelayServer(this);
-		}
-		else if (Global.resourceString("Test_Sound").equals(o))
-		{
-			JagoSound.play("high", "wip", true);
-		}
-		else if (Global.resourceString("Start_Server").equals(o))
-		{
-			if (Global.Busy)
+			if ("CloseEnglish".equals(o))
 			{
-				Dump.println("Server started on "
-					+ Global.getParameter("serverport", 6970));
-				if (S == null)
-					S = new Server(Global.getParameter("serverport", 6970),
-						Global.getParameter("publicserver", true));
-				S.open();
-				try
+				Global.setParameter("language", "en");
+				if (close()) doclose();
+			}
+			else if (Global.resourceString("Overview").equals(o))
+			{
+				new Help("overview").display();
+			}
+			else if (Global.resourceString("Using_Windows").equals(o))
+			{
+				new Help("windows").display();
+			}
+			else if (Global.resourceString("Configuring_Connections").equals(o))
+			{
+				new Help("configure").display();
+			}
+			else if (Global.resourceString("Partner_Connections").equals(o))
+			{
+				new Help("confpartner").display();
+			}
+			else if (Global.resourceString("About_Jago").equals(o))
+			{
+				new Help("about").display();
+			}
+			else if (Global.resourceString("About_Help").equals(o))
+			{
+				new Help("help").display();
+			}
+			else if (Global.resourceString("About_Sounds").equals(o))
+			{
+				new Help("sound").display();
+			}
+			else if (Global.resourceString("About_Smart_Go_Format_SGF").equals(o))
+			{
+				new Help("sgf").display();
+			}
+			else if (Global.resourceString("About_Filter").equals(o))
+			{
+				new Help("filter").display();
+			}
+			else if (Global.resourceString("About_Function_Keys").equals(o))
+			{
+				new Help("fkeys").display();
+			}
+			else if (Global.resourceString("Overcoming_Firewalls").equals(o))
+			{
+				new Help("firewall").display();
+			}
+			else if (Global.resourceString("Play_Go_Help").equals(o))
+			{
+				new Help("gmp").display();
+			}
+			else if (Global.resourceString("On_line_Version_Information").equals(o))
+			{
+				new Help("version").display();
+			}
+			else if (Global.resourceString("Local_Board").equals(o))
+			{
+				GoFrame gf = new GoFrame(new Frame(), Global.resourceString("Local_Viewer"));
+			}
+			else if (Global.resourceString("Play_Go").equals(o))
+			{
+				new GMPConnection(this);
+			}
+			else if (Global.resourceString("Server_Port").equals(o))
+			{
+				new GetPort(this, Global.getParameter("serverport", 6970));
+			}
+			else if (Global.resourceString("Set_Language").equals(o))
+			{
+				GetLanguage d = new GetLanguage(this);
+				if (d.done && close()) doclose();
+			}
+			else if (Global.resourceString("Board_Font").equals(o))
+			{
+				new GetFontSize("boardfontname", Global.getParameter(
+					"boardfontname", "SansSerif"), "boardfontsize", Global
+					.getParameter("boardfontsize", 10), false).setVisible(true);
+			}
+			else if (Global.resourceString("Normal_Font").equals(o))
+			{
+				new GetFontSize("sansserif", Global.getParameter("sansserif",
+					"SansSerif"), "ssfontsize", Global.getParameter("ssfontsize",
+					11), false).setVisible(true);
+			}
+			else if (Global.resourceString("Fixed_Font").equals(o))
+			{
+				new GetFontSize("monospaced", Global.getParameter("monospaced",
+					"Monospaced"), "msfontsize", Global.getParameter("msfontsize",
+					11), false).setVisible(true);
+			}
+			else if (Global.resourceString("Big_Font").equals(o))
+			{
+				new GetFontSize("bigmonospaced", Global.getParameter(
+					"bigmonospaced", "BoldMonospaced"), "bigmsfontsize", Global
+					.getParameter("bigmsfontsize", 22), false).setVisible(true);
+			}
+			else if (Global.resourceString("Your_Name").equals(o))
+			{
+				new YourNameQuestion(this);
+			}
+			else if (Global.resourceString("Filter").equals(o))
+			{
+				Global.MF.edit();
+			}
+			else if (Global.resourceString("Function_Keys").equals(o))
+			{
+				new FunctionKeyEdit();
+			}
+			else if (Global.resourceString("Relay_Server").equals(o))
+			{
+				new GetRelayServer(this);
+			}
+			else if (Global.resourceString("Test_Sound").equals(o))
+			{
+				JagoSound.play("high", "wip", true);
+			}
+			else if (Global.resourceString("Start_Server").equals(o))
+			{
+				if (Global.Busy)
 				{
-					StartServer.setLabel(Global.resourceString("Stop_Server"));
+					Dump.println("Server started on "
+						+ Global.getParameter("serverport", 6970));
+					if (S == null)
+						S = new Server(Global.getParameter("serverport", 6970),
+							Global.getParameter("publicserver", true));
+					S.open();
+					try
+					{
+						StartServer.setLabel(Global.resourceString("Stop_Server"));
+					}
+					catch (Exception e)
+					{
+						System.err.println("Motif error with setLabel");
+					}
 				}
-				catch (Exception e)
+				else
 				{
-					System.err.println("Motif error with setLabel");
+					S.close();
+					StartServer.setLabel(Global.resourceString("Start_Server"));
 				}
 			}
-			else
+			else if (Global.resourceString("Stop_Server").equals(o))
 			{
 				S.close();
 				StartServer.setLabel(Global.resourceString("Start_Server"));
 			}
+			else if (Global.resourceString("Advanced_Options").equals(o))
+			{
+				new AdvancedOptionsEdit(this);
+			}
+			else if (Global.resourceString("Background_Color").equals(o))
+			{
+				new BackgroundColorEdit(this, "globalgray", Color.gray);
+			}
+			else super.doAction(o);
 		}
-		else if (Global.resourceString("Stop_Server").equals(o))
+		catch (IOException ex)
 		{
-			S.close();
-			StartServer.setLabel(Global.resourceString("Start_Server"));
+			new Message(Global.frame(), ex.getMessage());
 		}
-		else if (Global.resourceString("Advanced_Options").equals(o))
-		{
-			new AdvancedOptionsEdit(this);
-		}
-		else if (Global.resourceString("Background_Color").equals(o))
-		{
-			new BackgroundColorEdit(this, "globalgray", Color.gray);
-		}
-		else super.doAction(o);
 	}
 
 	@Override

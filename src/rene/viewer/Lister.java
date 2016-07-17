@@ -15,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import rene.util.list.ListElement;
@@ -23,18 +22,23 @@ import rene.util.list.ListElement;
 public class Lister extends Viewer 
 	implements MouseListener,ItemSelectable,KeyListener,FocusListener
 {	ListElement Chosen=null;
-	Vector AL,IL;
+	Vector<ActionListener> AL;
+	Vector<ItemListener> IL;
 	PopupMenu PM=null;
 	public boolean FocusTraversable=true;
 	boolean Focus=false;
 	boolean Multiple=false;
 
-	public Lister (boolean vs, boolean hs)
-	{	super(vs,hs);
-		AL=new Vector();
-		IL=new Vector();
+	public Lister ()
+	{	super(true,true);
+		AL=new Vector<ActionListener>();
+		IL=new Vector<ItemListener>();
 		addKeyListener(this);
 		addFocusListener(this);
+	}
+
+	public Lister (String dummy)
+	{	super(dummy);
 	}
 	
 	public void setMultipleMode (boolean flag)
@@ -47,18 +51,14 @@ public class Lister extends Viewer
 			e.getKeyCode()==KeyEvent.VK_SPACE)
 		{	if (Chosen==null) return;
 			if (e.isControlDown())
-			{	Enumeration en=IL.elements();
-				while (en.hasMoreElements())
-				{	ItemListener li=(ItemListener)en.nextElement();
-					li.itemStateChanged(
+			{	for (ItemListener li : IL)
+				{	li.itemStateChanged(
 						new ItemEvent(this,0,getSelectedItem(),
 							ItemEvent.ITEM_STATE_CHANGED));
 				}
 			}
-			Enumeration en=AL.elements();
-			while (en.hasMoreElements())
-			{	ActionListener li=(ActionListener)en.nextElement();
-				li.actionPerformed(
+			for (ActionListener li : AL)
+			{	li.actionPerformed(
 					new ActionEvent(this,0,getSelectedItem()));
 			}
 			return;
@@ -88,10 +88,8 @@ public class Lister extends Viewer
 				TD.showLine(Chosen);
 				TD.repaint();
 			}
-			Enumeration en=IL.elements();
-			while (en.hasMoreElements())
-			{	ItemListener li=(ItemListener)en.nextElement();
-				li.itemStateChanged(
+			for (ItemListener li : IL)
+			{	li.itemStateChanged(
 					new ItemEvent(this,0,getSelectedItem(),
 						ItemEvent.ITEM_STATE_CHANGED));
 			}
@@ -104,12 +102,6 @@ public class Lister extends Viewer
 	}
 	*/
 	
-	public Lister ()
-	{	this(true,true);
-	}
-	public Lister (String dummy)
-	{	super(dummy);
-	}
 	public String getSelectedItem ()
 	{	if (Chosen==null) return null;
 		return new String(((Line)Chosen.content()).a);
@@ -207,19 +199,16 @@ public class Lister extends Viewer
 	public void mouseClicked (MouseEvent e) {}
 	public void mousePressed (MouseEvent e)
 	{	if (e.getClickCount()>=2 || e.isControlDown())
-			{	if (e.isControlDown())
-			{	Enumeration en=IL.elements();
-				while (en.hasMoreElements())
-				{	ItemListener li=(ItemListener)en.nextElement();
-					li.itemStateChanged(
+		{	if (e.isControlDown())
+			{
+				for (ItemListener li : IL)
+				{	li.itemStateChanged(
 						new ItemEvent(this,0,getSelectedItem(),
 							ItemEvent.ITEM_STATE_CHANGED));
 				}
 			}
-			Enumeration en=AL.elements();
-			while (en.hasMoreElements())
-			{	ActionListener li=(ActionListener)en.nextElement();
-				li.actionPerformed(
+			for (ActionListener li : AL)
+			{	li.actionPerformed(
 					new ActionEvent(this,0,getSelectedItem()));
 			}
 			return;
@@ -235,10 +224,8 @@ public class Lister extends Viewer
 		l.chosen(!l.chosen());
 		TD.paint(TD.getGraphics());
 		if (Multiple) return;
-		Enumeration en=IL.elements();
-		while (en.hasMoreElements())
-		{	ItemListener li=(ItemListener)en.nextElement();
-			li.itemStateChanged(
+		for (ItemListener li : IL)
+		{	li.itemStateChanged(
 				new ItemEvent(this,0,getSelectedItem(),
 					ItemEvent.ITEM_STATE_CHANGED));
 		}
@@ -268,7 +255,7 @@ public class Lister extends Viewer
 				}
 			};
 		f.setLayout(new BorderLayout());
-		v=new Lister(true,false);
+		v=new Lister();
 		f.add("Center",v);
 		f.setSize(300,300);
 		f.setVisible(true);

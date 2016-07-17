@@ -109,7 +109,7 @@ public class OpenPartnerFrame extends CloseFrame
 		if (PL == null) return;
 		for (ListElement<Partner> le : PL)
 		{
-			L.add(((Partner)le.content()).Name);
+			L.add(le.content().Name);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class OpenPartnerFrame extends CloseFrame
 		String s = L.getSelectedItem();
 		for (ListElement<Partner> le : Global.OpenPartnerList)
 		{
-			Partner p = (Partner)le.content();
+			Partner p = le.content();
 			if (p.Name.equals(s))
 			{
 				PartnerFrame cf = new PartnerFrame(Global

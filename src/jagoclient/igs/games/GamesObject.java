@@ -1,6 +1,7 @@
 package jagoclient.igs.games;
 
 import jagoclient.Global;
+import java.util.regex.Pattern;
 import rene.util.parser.StringParser;
 
 /**
@@ -37,13 +38,12 @@ public class GamesObject implements Comparable<GamesObject>
 	String game () { return S; }
 	@Override
 	public int compareTo (GamesObject g)
-	{	if (V<g.V) return 1;
-		else if (V>g.V) return -1;
-		else return 0;
+	{	return g.V-V;
 	}
 	
 	public boolean friend ()
-	{	String friends=Global.getParameter("friends","");
-		return friends.indexOf(" "+White)>=0 || friends.indexOf(" "+Black)>=0;
+	{	String friends=Global.getParameter("friends","").trim();
+		Pattern pattern=Pattern.compile("\\b("+friends.replaceAll(" ","|")+")\\b");
+		return pattern.matcher(White).matches() || pattern.matcher(Black).matches();
 	}
 }
