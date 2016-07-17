@@ -114,9 +114,9 @@ public class NavigationPanel extends MyPanel
 			return x;
 
 		}
-		Tree<Node> p = pos.firstchild();
 		if (Overflow && !inParents(pos))
 		{
+			Tree<Node> p = pos.firstchild();
 			g.setColor(Color.black);
 			g.drawLine(x, y + size, x, y + 2 * size);
 			int x0 = x;
@@ -131,7 +131,7 @@ public class NavigationPanel extends MyPanel
 		{
 			int i = 0;
 			int x0 = x;
-			while (p != null)
+			for (Tree<Node> p : pos.children())
 			{
 				if (i == 0)
 				{
@@ -143,15 +143,11 @@ public class NavigationPanel extends MyPanel
 				else
 				{
 					g.setColor(Color.black);
-					g.drawLine(x0, y + size * 3 / 2, x + 3 * size, y + size * 3
-						/ 2);
+					g.drawLine(x0, y + size * 3 / 2, x + 3 * size, y + size * 3 / 2);
 					x0 = x;
-					g.drawLine(x + 3 * size, y + size * 3 / 2, x + 3 * size, y
-						+ 2 * size);
-					x = paint(g, p, x + 3 * size, y + 3 * size, current,
-						line + 1, currentline);
+					g.drawLine(x + 3 * size, y + size * 3 / 2, x + 3 * size, y + 2 * size);
+					x = paint(g, p, x + 3 * size, y + 3 * size, current, line + 1, currentline);
 				}
-				p = Board.nextchild(p);
 				i++;
 			}
 		}

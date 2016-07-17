@@ -1,7 +1,6 @@
 package rene.util.xml;
 
 import java.util.Enumeration;
-import rene.util.list.ListElement;
 
 import rene.util.list.Tree;
 import rene.util.parser.StringParser;
@@ -18,7 +17,7 @@ public class XmlTree extends Tree<XmlTag>
 	
 	public Tree<XmlTag> xmlFirstContent ()
 	{	if (children.isEmpty()) return null;
-		else return children.getFirst().content();
+		else return children.getFirst();
 	}
 	
 	public boolean isText ()
@@ -32,12 +31,12 @@ public class XmlTree extends Tree<XmlTag>
 	
 	public String getText ()
 	{	if (children.isEmpty()) return "";
-		XmlTree t=(XmlTree)children.getFirst().content();
+		XmlTree t=(XmlTree)children.getFirst();
 		XmlTag tag=t.getTag();
 		return ((XmlTagText)tag).getContent();
 	}
 	
-	ListElement<Tree<XmlTag>> Current;
+	Tree<XmlTag> Current;
 
 	public Enumeration<Tree<XmlTag>> getContent ()
 	{	Current=children().peekFirst();
@@ -52,8 +51,8 @@ public class XmlTree extends Tree<XmlTag>
 	@Override
 	public Tree<XmlTag> nextElement ()
 	{	if (Current==null) return null;
-		Tree<XmlTag> c=Current.content();
-		Current=Current.next();
+		Tree<XmlTag> c=Current;
+		Current=Current.parent().nextchild(Current);
 		return c;
 	}
 
@@ -64,13 +63,13 @@ public class XmlTree extends Tree<XmlTag>
 	public String parseComment ()
 		throws XmlReaderException
 	{	StringBuffer s=new StringBuffer();
-		for (ListElement<Tree<XmlTag>> tree : children)
+		for (Tree<XmlTag> tree : children)
 		{
-			XmlTag tag=tree.content().content();
+			XmlTag tag=tree.content();
 			if (tag.name().equals("P"))
-			{	if (tree.content().children().isEmpty()) s.append("\n");
+			{	if (tree.children().isEmpty()) s.append("\n");
 				else
-				{	Tree<XmlTag> h=tree.content().children().getFirst().content();
+				{	Tree<XmlTag> h=tree.children().getFirst();
 					String k=((XmlTagText)h.content()).getContent();
 					k=k.replace('\n',' ');
 					StringParser p=new StringParser(k);

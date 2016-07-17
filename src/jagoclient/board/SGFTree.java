@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import rene.util.list.ListElement;
 import rene.util.list.Tree;
 import rene.util.parser.StringParser;
 import rene.util.xml.XmlReader;
@@ -681,8 +680,8 @@ public class SGFTree
 			if (!p.haschildren()) break;
 			if (p.lastchild()!=p.firstchild())
 			{
-				for (ListElement<Tree<Node>> e : p.children())
-				{	printtree(e.content(),o);
+				for (Tree<Node> e : p.children())
+				{	printtree(e,o);
 				}
 				break;
 			}
@@ -720,21 +719,16 @@ public class SGFTree
 		}
 		else xml.startTagNewLine("Variation");
 		if (top) xml.startTagNewLine("Nodes");
-		while (true)
+		for ( ; ; p=p.firstchild())
 		{	p.content().print(xml,size);
 			if (!p.haschildren()) break;
-			if (p.lastchild()!=p.firstchild())
-			{	ListElement e=p.children().first();
-				p=p.firstchild();
-				p.content().print(xml,size);
-				e=e.next();
-				while (e!=null)
-				{	printtree((Tree<Node>)e.content(),xml,size,false);
-					e=e.next();
-				}
-				if (!p.haschildren()) break;
+			if (p.children().size() == 1) continue;
+			Tree<Node> node=p.children().getFirst();
+			node.content().print(xml,size); // PV - siblings are alternatives (comments)
+			for (node = p.nextchild(node); node != null; node = p.nextchild(node))
+			{	printtree(node,xml,size,false);
 			}
-			p=p.firstchild();
+			if (!p.haschildren()) break;
 		}
 		if (top) xml.endTagNewLine("Nodes");
 		if (top) xml.endTagNewLine("GoGame");

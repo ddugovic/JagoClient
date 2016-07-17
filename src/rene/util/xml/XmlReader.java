@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import rene.util.SimpleByteBuffer;
-import rene.util.list.ListElement;
+import rene.util.list.Tree;
 
 public class XmlReader
 {	BufferedReader In;
@@ -437,10 +437,8 @@ public class XmlReader
 		{	System.out.print(" "+tag.getParam(i)+"=\""+tag.getValue(i)+"\"");
 		}
 		System.out.println(">");
-		ListElement el=t.children().first();
-		while (el!=null)
-		{	print((XmlTree)(el.content()));
-			el=el.next();
+		for (Tree<XmlTag> el : t.children())
+		{	print((XmlTree)el);
 		}
 		System.out.println("</"+tag.name()+">");
 	}

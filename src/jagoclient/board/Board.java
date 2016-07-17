@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
-import rene.util.list.ListClass;
 
 import rene.util.list.ListElement;
 import rene.util.list.Tree;
@@ -1404,7 +1404,7 @@ public class Board extends Canvas implements MouseListener,
 				}
 			}
 		}
-		ListClass<Tree<Node>> nodes;
+		LinkedList<Tree<Node>> nodes;
 		if (VCurrent && Pos.parent() != null)
 		{
 			nodes = Pos.parent().children();
@@ -1413,9 +1413,8 @@ public class Board extends Canvas implements MouseListener,
 		{
 			nodes = Pos.children();
 		}
-		for (ListElement<Tree<Node>> node : nodes)
+		for (Tree<Node> p : nodes)
 		{
-			Tree<Node> p = node.content();
 			if (p != Pos)
 			{
 				for (ListElement<Action> la : p.content().actions())
@@ -1952,10 +1951,9 @@ public class Board extends Canvas implements MouseListener,
 
 	public void tovarleft ()
 	{
-		ListElement l = Pos.listelement();
-		if (l == null) return;
-		if (l.previous() == null) return;
-		Tree<Node> newpos = (Tree<Node>)l.previous().content();
+		if (Pos.parent() == null) return;
+		if (Pos.parent().previouschild(Pos) == null) return;
+		Tree<Node> newpos = previouschild(Pos);
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -1963,29 +1961,12 @@ public class Board extends Canvas implements MouseListener,
 
 	public void tovarright ()
 	{
-		ListElement<Tree<Node>> l = Pos.listelement();
-		if (l == null) return;
-		if (l.next() == null) return;
-		Tree<Node> newpos = l.next().content();
+		if (Pos.parent() == null) return;
+		if (Pos.parent().previouschild(Pos) == null) return;
+		Tree<Node> newpos = nextchild(Pos);
 		goback();
 		Pos = newpos;
 		act(Pos.content());
-	}
-
-	public boolean hasprevioussibling ()
-	{
-		ListElement<Tree<Node>> l = Pos.listelement();
-		if (l == null) return false;
-		if (l.previous() == null) return false;
-		return true;
-	}
-
-	public boolean hasnextsibling ()
-	{
-		ListElement<Tree<Node>> l = Pos.listelement();
-		if (l == null) return false;
-		if (l.next() == null) return false;
-		return true;
 	}
 
 	public static Tree<Node> previouschild (Tree<Node> p)
@@ -2180,10 +2161,9 @@ public class Board extends Canvas implements MouseListener,
 	{
 		State = 1;
 		getinformation();
-		ListElement l = Pos.listelement();
-		if (l == null) return;
-		if (l.previous() == null) return;
-		Tree<Node> newpos = (Tree<Node>)l.previous().content();
+		if (Pos.parent() == null) return;
+		if (Pos.parent().previouschild(Pos) == null) return;
+		Tree<Node> newpos = Pos.parent().previouschild(Pos);
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -2196,10 +2176,9 @@ public class Board extends Canvas implements MouseListener,
 	{
 		State = 1;
 		getinformation();
-		ListElement l = Pos.listelement();
-		if (l == null) return;
-		if (l.next() == null) return;
-		Tree<Node> newpos = (Tree<Node>)l.next().content();
+		if (Pos.parent() == null) return;
+		if (Pos.parent().nextchild(Pos) == null) return;
+		Tree<Node> newpos = Pos.parent().nextchild(Pos);
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -3223,7 +3202,7 @@ public class Board extends Canvas implements MouseListener,
 		{
 			if ( !Pos.haschildren())
 			{
-				while ( !hasnextsibling())
+				while (Pos.parent() == null || Pos.parent().nextchild(pos) == null)
 				{
 					if (Pos.parent() == null)
 					{
