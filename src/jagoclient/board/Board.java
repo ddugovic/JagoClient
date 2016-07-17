@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+import rene.util.list.ListClass;
 
 import rene.util.list.ListElement;
 import rene.util.list.Tree;
@@ -825,7 +826,7 @@ public class Board extends Canvas implements MouseListener,
 					n.addaction(a); // note the move action
 					setaction(n, a, P.color()); // display the action
 					// !!! We alow for suicide moves
-					TreeNode newpos = new TreeNode(n);
+					Tree<Node> newpos = new Tree<Node>(n);
 					Pos.addchild(newpos); // note the move
 					n.main(Pos);
 					Pos = newpos; // update current position pointer
@@ -1018,7 +1019,7 @@ public class Board extends Canvas implements MouseListener,
 	public Node newnode ()
 	{
 		Node n = new Node(++number);
-		TreeNode newpos = new TreeNode(n);
+		Tree<Node> newpos = new Tree<Node>(n);
 		Pos.addchild(newpos); // note the move
 		n.main(Pos);
 		Pos = newpos; // update current position pointerAction a;
@@ -1403,20 +1404,18 @@ public class Board extends Canvas implements MouseListener,
 				}
 			}
 		}
-		Tree<Node> p;
-		ListElement l = null;
-		if (VCurrent)
+		ListClass<Tree<Node>> nodes;
+		if (VCurrent && Pos.parent() != null)
 		{
-			p = Pos.parent();
-			if (p != null) l = p.firstchild().listelement();
+			nodes = Pos.parent().children();
 		}
-		else if (Pos.haschildren() && Pos.firstchild() != Pos.lastchild())
+		else
 		{
-			l = Pos.firstchild().listelement();
+			nodes = Pos.children();
 		}
-		while (l != null)
+		for (ListElement<Tree<Node>> node : nodes)
 		{
-			p = (TreeNode)l.content();
+			Tree<Node> p = node.content();
 			if (p != Pos)
 			{
 				for (ListElement<Action> la : p.content().actions())
@@ -1436,7 +1435,6 @@ public class Board extends Canvas implements MouseListener,
 					}
 				}
 			}
-			l = l.next();
 		}
 		if ( !GF.getComment().equals(sc))
 		{
@@ -1957,7 +1955,7 @@ public class Board extends Canvas implements MouseListener,
 		ListElement l = Pos.listelement();
 		if (l == null) return;
 		if (l.previous() == null) return;
-		TreeNode newpos = (TreeNode)l.previous().content();
+		Tree<Node> newpos = (Tree<Node>)l.previous().content();
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -1968,7 +1966,7 @@ public class Board extends Canvas implements MouseListener,
 		ListElement<Tree<Node>> l = Pos.listelement();
 		if (l == null) return;
 		if (l.next() == null) return;
-		TreeNode newpos = (TreeNode)l.next().content();
+		Tree<Node> newpos = l.next().content();
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -2014,7 +2012,7 @@ public class Board extends Canvas implements MouseListener,
 		while (p.haschildren())
 			p = p.firstchild();
 		Node n = new Node(number);
-		p.addchild(new TreeNode(n));
+		p.addchild(new Tree<Node>(n));
 		n.main(p);
 		GF.yourMove(Pos != p);
 		if (Pos == p)
@@ -2185,7 +2183,7 @@ public class Board extends Canvas implements MouseListener,
 		ListElement l = Pos.listelement();
 		if (l == null) return;
 		if (l.previous() == null) return;
-		TreeNode newpos = (TreeNode)l.previous().content();
+		Tree<Node> newpos = (Tree<Node>)l.previous().content();
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -2201,7 +2199,7 @@ public class Board extends Canvas implements MouseListener,
 		ListElement l = Pos.listelement();
 		if (l == null) return;
 		if (l.next() == null) return;
-		TreeNode newpos = (TreeNode)l.next().content();
+		Tree<Node> newpos = (Tree<Node>)l.next().content();
 		goback();
 		Pos = newpos;
 		act(Pos.content());
@@ -2292,11 +2290,10 @@ public class Board extends Canvas implements MouseListener,
 		if (CurrentTree + 1 >= Trees.size()) return;
 		State = 1;
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		CurrentTree++;
 		T = (SGFTree)Trees.elementAt(CurrentTree);
 		resettree();
@@ -2311,11 +2308,10 @@ public class Board extends Canvas implements MouseListener,
 		if (CurrentTree == 0) return;
 		State = 1;
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		CurrentTree--;
 		T = (SGFTree)Trees.elementAt(CurrentTree);
 		resettree();
@@ -2328,11 +2324,10 @@ public class Board extends Canvas implements MouseListener,
 	{
 		State = 1;
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		Node n = new Node(number);
 		T = new SGFTree(n);
 		CurrentTree++;
@@ -2370,7 +2365,7 @@ public class Board extends Canvas implements MouseListener,
 		Action a = new Action("B", Field.string(i, j));
 		Node n = new Node(p.content().number() + 1);
 		n.addaction(a);
-		p.addchild(new TreeNode(n));
+		p.addchild(new Tree<Node>(n));
 		n.main(p);
 		GF.yourMove(Pos != p);
 		if (Pos == p) forward();
@@ -2387,7 +2382,7 @@ public class Board extends Canvas implements MouseListener,
 		Action a = new Action("W", Field.string(i, j));
 		Node n = new Node(p.content().number() + 1);
 		n.addaction(a);
-		p.addchild(new TreeNode(n));
+		p.addchild(new Tree<Node>(n));
 		n.main(p);
 		GF.yourMove(Pos != p);
 		if (Pos == p) forward();
@@ -2405,8 +2400,8 @@ public class Board extends Canvas implements MouseListener,
 		Node n;
 		if (p == T.top())
 		{
-			TreeNode newpos;
-			p.addchild(newpos = new TreeNode());
+			Tree<Node> newpos;
+			p.addchild(newpos = new Tree<Node>(new Node(1)));
 			if (Pos == p) Pos = newpos;
 			p = newpos;
 			p.content().main(true);
@@ -2434,8 +2429,8 @@ public class Board extends Canvas implements MouseListener,
 		Node n;
 		if (p == T.top())
 		{
-			TreeNode newpos;
-			p.addchild(newpos = new TreeNode());
+			Tree<Node> newpos;
+			p.addchild(newpos = new Tree<Node>(new Node(1)));
 			if (Pos == p) Pos = newpos;
 			p = newpos;
 			p.content().main(true);
@@ -2461,7 +2456,7 @@ public class Board extends Canvas implements MouseListener,
 		getinformation();
 		P.color( -P.color());
 		Node n = new Node(number);
-		Pos.addchild(new TreeNode(n));
+		Pos.addchild(new Tree<Node>(n));
 		n.main(Pos);
 		goforward();
 		setcurrent(Pos.content());
@@ -2553,7 +2548,7 @@ public class Board extends Canvas implements MouseListener,
 	{
 		if (Pos.haschildren() && !GF.askInsert()) return;
 		Node n = new Node(Pos.content().number());
-		Pos.insertchild(new TreeNode(n));
+		Pos.insertchild(new Tree<Node>(n));
 		n.main(Pos);
 		getinformation();
 		Pos = Pos.lastchild();
@@ -2570,7 +2565,7 @@ public class Board extends Canvas implements MouseListener,
 		int c = P.color();
 		back();
 		Node n = new Node(2);
-		Pos.addchild(new TreeNode(n));
+		Pos.addchild(new Tree<Node>(n));
 		n.main(Pos);
 		Pos = Pos.lastchild();
 		setcurrent(Pos.content());
@@ -2716,14 +2711,14 @@ public class Board extends Canvas implements MouseListener,
 		String whiterank, String komi, String handicap)
 	// set various things like names, rank etc.
 	{
-		T.top().setaction("PB", black, true);
-		T.top().setaction("BR", blackrank, true);
-		T.top().setaction("PW", white, true);
-		T.top().setaction("WR", whiterank, true);
-		T.top().setaction("KM", komi, true);
-		T.top().setaction("HA", handicap, true);
-		T.top().setaction("GN", white + "-" + black, true);
-		T.top().setaction("DT", new Date().toString());
+		T.top().content().setaction("PB", black, true);
+		T.top().content().setaction("BR", blackrank, true);
+		T.top().content().setaction("PW", white, true);
+		T.top().content().setaction("WR", whiterank, true);
+		T.top().content().setaction("KM", komi, true);
+		T.top().content().setaction("HA", handicap, true);
+		T.top().content().setaction("GN", white + "-" + black, true);
+		T.top().content().setaction("DT", new Date().toString());
 	}
 
 	// ************ get board information ******
@@ -2731,13 +2726,13 @@ public class Board extends Canvas implements MouseListener,
 	String getname ()
 	// get node name
 	{
-		return T.top().getaction("N");
+		return T.top().content().getaction("N");
 	}
 
 	public String getKomi ()
 	// get Komi string
 	{
-		return T.top().getaction("KM");
+		return T.top().content().getaction("KM");
 	}
 
 	public String extraInformation ()
@@ -2951,11 +2946,10 @@ public class Board extends Canvas implements MouseListener,
 	// in SGF
 	{
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		for (int i = 0; i < Trees.size(); i++)
 			((SGFTree)Trees.elementAt(i)).print(o);
 	}
@@ -2976,11 +2970,10 @@ public class Board extends Canvas implements MouseListener,
 	// save the file in Jago's XML format
 	{
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		XmlWriter xml = new XmlWriter(o);
 		xml.printEncoding(encoding);
 		xml.printXls("go.xsl");
@@ -2997,11 +2990,10 @@ public class Board extends Canvas implements MouseListener,
 	// save the file in Jago's XML format
 	{
 		getinformation();
-		T.top().setaction("AP", "Jago:" + GF.version(), true);
-		T.top().setaction("SZ", "" + S, true);
-		T.top().setaction("GM", "1", true);
-		T.top()
-			.setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
+		T.top().content().setaction("AP", "Jago:" + GF.version(), true);
+		T.top().content().setaction("SZ", "" + S, true);
+		T.top().content().setaction("GM", "1", true);
+		T.top().content().setaction("FF", GF.getParameter("puresgf", false)?"4":"1", true);
 		XmlWriter xml = new XmlWriter(o);
 		xml.printEncoding(encoding);
 		xml.printXls("go.xsl");
@@ -3018,7 +3010,7 @@ public class Board extends Canvas implements MouseListener,
 	// an ASCII image of the board.
 	{
 		int i, j;
-		o.println(T.top().getaction("GN"));
+		o.println(T.top().content().getaction("GN"));
 		o.print("      ");
 		for (i = 0; i < S; i++)
 		{

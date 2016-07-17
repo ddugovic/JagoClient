@@ -18,22 +18,22 @@ import rene.util.xml.XmlTree;
 import rene.util.xml.XmlWriter;
 
 /**
-This is a class wich contains a TreeNode. It used to store complete
+This is a class wich contains a Tree<Node>. It used to store complete
 game trees.
-@see jagoclient.board.TreeNode
+@see jagoclient.board.Tree<Node>
 */
 
 public class SGFTree
-{	protected TreeNode History; // the game history
+{	protected Tree<Node> History; // the game history
 
 	/** initlialize with a specific Node */
 	public SGFTree (Node n)
-	{	History=new TreeNode(n);
+	{	History=new Tree<Node>(n);
 		History.content().main(true);
 	}
 	
 	/** return the top node of this game tree */
-	public TreeNode top () { return History; }
+	public Tree<Node> top () { return History; }
 
 	final int maxbuffer=4096;
 	char[] Buffer=new char[maxbuffer]; // the buffer for reading of files
@@ -131,11 +131,11 @@ public class SGFTree
 		} // end of actions has been found
 		// append node
 		n.main(p);
-		TreeNode newp;
+		Tree<Node> newp;
 		if (p.content().actions()==null)
 			p.content(n);
 		else
-		{	p.addchild(newp=new TreeNode(n));
+		{	p.addchild(newp=new Tree<Node>(n));
 			n.main(p);
 			p=newp;
 			if (p.parent()!=null && p!=p.parent().firstchild())
@@ -268,7 +268,7 @@ public class SGFTree
 				getBoardSize(information);
 				SGFTree t=new SGFTree(new Node(1));
 				t.GF=gf;
-				TreeNode p=t.readnodes(e,null,tree,true,1);
+				Tree<Node> p=t.readnodes(e,null,tree,true,1);
 				if (p!=null) setInformation(p,information);
 				t.History=p;
 				if (p!=null) v.addElement(t);
@@ -277,51 +277,51 @@ public class SGFTree
 		return v;
 	}
 	
-	public static void setInformation (TreeNode p, XmlTree information)
+	public static void setInformation (Tree<Node> p, XmlTree information)
 		throws XmlReaderException
 	{	Enumeration e=information.getContent();
 		while (e.hasMoreElements())
 		{	XmlTree tree=(XmlTree)e.nextElement();
 			XmlTag tag=tree.getTag();
 			if (tag.name().equals("BoardSize"))
-			{	p.addaction(new Action("SZ",""+BoardSize));
+			{	p.content().addaction(new Action("SZ",""+BoardSize));
 			}
 			else if (tag.name().equals("BlackPlayer"))
-			{	p.addaction(new Action("PB",getText(tree)));
+			{	p.content().addaction(new Action("PB",getText(tree)));
 			}
 			else if (tag.name().equals("BlackRank"))
-			{	p.addaction(new Action("BR",getText(tree)));
+			{	p.content().addaction(new Action("BR",getText(tree)));
 			}
 			else if (tag.name().equals("WhitePlayer"))
-			{	p.addaction(new Action("PW",getText(tree)));
+			{	p.content().addaction(new Action("PW",getText(tree)));
 			}
 			else if (tag.name().equals("WhiteRank"))
-			{	p.addaction(new Action("WR",getText(tree)));
+			{	p.content().addaction(new Action("WR",getText(tree)));
 			}
 			else if (tag.name().equals("Date"))
-			{	p.addaction(new Action("DT",getText(tree)));
+			{	p.content().addaction(new Action("DT",getText(tree)));
 			}
 			else if (tag.name().equals("Time"))
-			{	p.addaction(new Action("TM",getText(tree)));
+			{	p.content().addaction(new Action("TM",getText(tree)));
 			}
 			else if (tag.name().equals("Komi"))
-			{	p.addaction(new Action("KM",getText(tree)));
+			{	p.content().addaction(new Action("KM",getText(tree)));
 			}
 			else if (tag.name().equals("Result"))
-			{	p.addaction(new Action("RE",getText(tree)));
+			{	p.content().addaction(new Action("RE",getText(tree)));
 			}
 			else if (tag.name().equals("Handicap"))
-			{	p.addaction(new Action("HA",getText(tree)));
+			{	p.content().addaction(new Action("HA",getText(tree)));
 			}
 			else if (tag.name().equals("User"))
-			{	p.addaction(new Action("US",getText(tree)));
+			{	p.content().addaction(new Action("US",getText(tree)));
 			}
 			else if (tag.name().equals("Copyright"))
-			{	p.addaction(new Action("CP",parseComment(tree)));
+			{	p.content().addaction(new Action("CP",parseComment(tree)));
 			}
 		}
 		if (!GameName.equals(""))
-			p.addaction(new Action("GN",GameName));
+			p.content().addaction(new Action("GN",GameName));
 	}
 	
 	public static String getText (XmlTree tree)
@@ -363,10 +363,10 @@ public class SGFTree
 		}
 	}
 	
-	TreeNode readnodes (Enumeration e, TreeNode p, XmlTree father, boolean main,
+	Tree<Node> readnodes (Enumeration e, Tree<Node> p, XmlTree father, boolean main,
 		int number)
 		throws XmlReaderException
-	{	TreeNode ret=null;
+	{	Tree<Node> ret=null;
 		while (e.hasMoreElements())
 		{	XmlTree tree=(XmlTree)e.nextElement();
 			XmlTag tag=tree.getTag();
@@ -377,7 +377,7 @@ public class SGFTree
 			{	if (p!=null) number=p.content().number();
 				Node n=readnode(number,tree);
 				n.main(main);
-				TreeNode newp=new TreeNode(n);
+				Tree<Node> newp=new Tree<Node>(n);
 				if (p==null) ret=newp;
 				if (p!=null) p.addchild(newp);
 				p=newp;
@@ -397,7 +397,7 @@ public class SGFTree
 				if (tag.hasParam("timeleft"))
 				{	n.addaction(new Action("WL",tag.getValue("timeleft")));
 				}
-				TreeNode newp=new TreeNode(n);
+				Tree<Node> newp=new Tree<Node>(n);
 				if (p==null) ret=newp;
 				if (p!=null) p.addchild(newp);
 				p=newp;
@@ -417,7 +417,7 @@ public class SGFTree
 				if (tag.hasParam("timeleft"))
 				{	n.addaction(new Action("BL",tag.getValue("timeleft")));
 				}
-				TreeNode newp=new TreeNode(n);
+				Tree<Node> newp=new Tree<Node>(n);
 				if (p==null) ret=newp;
 				if (p!=null) p.addchild(newp);
 				p=newp;
@@ -426,17 +426,17 @@ public class SGFTree
 			{	if (p==null)
 				{	Node n=new Node(number);
 					n.main(main);
-					p=new TreeNode(n);
+					p=new Tree<Node>(n);
 					ret=p;					
 				}
 				Node n=p.content();
 				n.addaction(new Action("C",parseComment(tree)));
 			}
 			else if (tag.name().equals("Variation"))
-			{	TreeNode parent=(TreeNode)p.parent();
+			{	Tree<Node> parent=p.parent();
 				if (parent==null)
 					throw new XmlReaderException("Root node cannot have variation");
-				TreeNode newp=readnodes(tree.getContent(),null,tree,false,1);
+				Tree<Node> newp=readnodes(tree.getContent(),null,tree,false,1);
 				parent.addchild(newp);
 			}
 			else
@@ -682,7 +682,7 @@ public class SGFTree
 			if (p.lastchild()!=p.firstchild())
 			{
 				for (ListElement<Tree<Node>> e : p.children())
-				{	printtree((TreeNode)e.content(),o);
+				{	printtree(e.content(),o);
 				}
 				break;
 			}
@@ -729,7 +729,7 @@ public class SGFTree
 				p.content().print(xml,size);
 				e=e.next();
 				while (e!=null)
-				{	printtree((TreeNode)e.content(),xml,size,false);
+				{	printtree((Tree<Node>)e.content(),xml,size,false);
 					e=e.next();
 				}
 				if (!p.haschildren()) break;
@@ -771,7 +771,7 @@ public class SGFTree
 	
 	public int getSize ()
 	{	try
-		{	return Integer.parseInt(History.getaction("SZ"));
+		{	return Integer.parseInt(History.content().getaction("SZ"));
 		}
 		catch (Exception e)
 		{	return 19;

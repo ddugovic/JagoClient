@@ -55,8 +55,14 @@ public class Tree<E>
 	public boolean haschildren () { return !children.isEmpty(); }
 	@Deprecated
 	public Tree<E> firstchild () { return children.first().content(); }
-	public Tree<E> previouschild (Tree<E> t) { return children.get(children.indexOf(t.listelement())-1).content(); }
-	public Tree<E> nextchild (Tree<E> t) { return children.get(children.indexOf(t.listelement())+1).content(); }
+	public Tree<E> previouschild (Tree<E> t)
+	{	ListElement<Tree<E>> e = children.get(children.indexOf(t.listelement())-1);
+		return e == null ? null : e.content();
+	}
+	public Tree<E> nextchild (Tree<E> t)
+	{	ListElement<Tree<E>> e = children.get(children.indexOf(t.listelement())+1);
+		return e == null ? null : e.content();
+	}
 	@Deprecated
 	public Tree<E> lastchild () { return children.last().content(); }
 	public Tree<E> parent () { return parent; }
@@ -64,6 +70,7 @@ public class Tree<E>
 	public E content () { return content; }
 	public void content (E content) { this.content=content; }
 	@Deprecated
-	public ListElement<Tree<E>> listelement () {
-		return children.stream().filter((ListElement<Tree<E>> e) -> e.content() == this).findFirst().get(); }
+	public ListElement<Tree<E>> listelement ()
+	{	return children.stream().filter((ListElement<Tree<E>> e) -> e.content() == this).findFirst().get();
+	}
 }

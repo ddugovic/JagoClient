@@ -163,7 +163,7 @@ public class NavigationPanel extends MyPanel
 		Enumeration e = Parents.elements();
 		while (e.hasMoreElements())
 		{
-			if ((TreeNode)e.nextElement() == pos) return true;
+			if ((Tree<Node>)e.nextElement() == pos) return true;
 		}
 		return false;
 	}
