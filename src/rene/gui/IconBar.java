@@ -38,9 +38,8 @@ class SaveColor extends Color
 
 
 /**
- * These are the common things to Separators and Incons.
+ * These are the common things to Separators and Icons.
  */
-
 interface IconBarElement
 {
 	public int width ();
@@ -100,9 +99,7 @@ class Separator extends Panel implements IconBarElement
 	{
 		g.setColor(getBackground());
 		if (Global.getParameter("iconbar.showseparators", false))
-			g
-				.fill3DRect(1, 1, getSize().width - 1, getSize().height - 1,
-					false);
+			g.fill3DRect(1, 1, getSize().width - 1, getSize().height - 1, false);
 		else g.fillRect(1, 1, getSize().width - 1, getSize().height - 1);
 	}
 }
@@ -112,8 +109,7 @@ class Separator extends Panel implements IconBarElement
  * @author Rene This is the most basic icon, handling mouse presses and display
  *         in activated, pressed, unset or disabled state.
  */
-class BasicIcon extends Panel implements MouseListener, IconBarElement,
-	Runnable
+class BasicIcon extends Panel implements MouseListener, IconBarElement, Runnable
 {
 	IconBar Bar;
 	String Name;
@@ -233,8 +229,8 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 		if ( !Enabled) return;
 		MouseDown = false;
 		Dimension d = getSize();
-		if (e.getX() < 0 || e.getX() > d.width || e.getY() < 0
-			|| e.getY() > d.height)
+		if (e.getX() < 0 || e.getX() > d.width ||
+			e.getY() < 0 || e.getY() > d.height)
 		{
 			repaint();
 			return;
@@ -242,18 +238,9 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 		Unset = false;
 		pressed(e); // call method for children to change states etc.
 		repaint();
-		T = null; // stop icon help thread
+		if (T != null) T.interrupt(); // stop icon help thread
 		// Notify Iconbar about activation:
-		long time = System.currentTimeMillis();
 		Bar.iconPressed(Name, e.isShiftDown(), e.isControlDown());
-		// Necessary, since Java 1.4 does not report
-		// MouseExited, if a modal dialog is active:
-		time = System.currentTimeMillis() - time;
-		if (MouseOver && time > 1000)
-		{
-			MouseOver = false;
-			repaint();
-		}
 	}
 
 	/**
@@ -268,7 +255,7 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 	public void mouseClicked (MouseEvent e)
 	{}
 
-	Thread T;
+	static Thread T;
 	boolean Control;
 
 	/**
@@ -291,19 +278,18 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 	 */
 	public void run ()
 	{
-		try
+		synchronized (T)
 		{
-			Thread.sleep(1000);
-		}
-		catch (Exception e)
-		{}
-		if ( !T.isInterrupted())
-		{
-			synchronized (this)
+			try
+			{
+				T.sleep(1000);
+			}
+			catch (Exception e)
+			{}
+			if ( !T.isInterrupted())
 			{
 				try
 				{
-					Point P = getLocationOnScreen();
 					String help = Global.name("iconhelp." + Name, "");
 					if (help.equals("") && Name.length() > 1)
 					{
@@ -326,13 +312,13 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 			}
 			try
 			{
-				Thread.sleep(5000);
+				T.sleep(5000);
 			}
-			catch (Exception e)
+			catch (InterruptedException e)
 			{}
-			if ( !T.isInterrupted()) Bar.removeHelp();
-			T = null;
 		}
+		T = null;
+		Bar.removeHelp();
 	}
 
 	/**
@@ -341,11 +327,9 @@ class BasicIcon extends Panel implements MouseListener, IconBarElement,
 	 */
 	public synchronized void mouseExited (MouseEvent e)
 	{
-		T.interrupt();
-		T = null;
+		if (T != null) T.interrupt();
 		MouseOver = false;
 		repaint();
-		Bar.removeHelp();
 	}
 
 	// for the IconBarElement interface
@@ -1151,9 +1135,7 @@ class StateDisplay extends BasicIcon
 
 	@Override
 	public void mouseReleased (MouseEvent e)
-	{
-		T = null;
-	}
+	{}
 
 	@Override
 	public void mouseClicked (MouseEvent e)
@@ -1168,7 +1150,7 @@ class StateDisplay extends BasicIcon
 
 public class IconBar extends Panel implements KeyListener, FocusListener
 {
-	Vector Left = new Vector(), Right = new Vector();
+	final Vector<Panel> Left = new Vector<Panel>(), Right = new Vector<Panel>();
 	int W;
 	Window F;
 	public final int Offset = 2;
@@ -1205,18 +1187,10 @@ public class IconBar extends Panel implements KeyListener, FocusListener
 	public void forceRepaint ()
 	{
 		super.repaint();
-		Enumeration e = Left.elements();
-		while (e.hasMoreElements())
-		{
-			BasicIcon i = (BasicIcon)e.nextElement();
-			i.repaint();
-		}
-		e = Right.elements();
-		while (e.hasMoreElements())
-		{
-			BasicIcon i = (BasicIcon)e.nextElement();
-			i.repaint();
-		}
+		for (Panel p : Left)
+			p.repaint();
+		for (Panel p : Right)
+			p.repaint();
 	}
 
 	public void keyPressed (KeyEvent e)
@@ -1680,14 +1654,16 @@ public class IconBar extends Panel implements KeyListener, FocusListener
 
 	Window WHelp = null;
 
-	public synchronized void displayHelp (IconBarElement i, String text)
+	void displayHelp (IconBarElement i, String text)
 	{
-		if (F == null || WHelp != null) return;
-		Point P = i.getPosition();
-		WHelp = new Window(F);
-		Panel p = new Panel();
+		if (F == null) return;
+		if (WHelp == null)
+			WHelp = new Window(F);
+		WHelp.setVisible(false);
+		WHelp.removeAll();
+		Point point = i.getPosition();
+		Panel p = new Panel(new GridLayout(0, 1));
 		StringTokenizer t = new StringTokenizer(text, "+");
-		p.setLayout(new GridLayout(0, 1));
 		while (t.hasMoreTokens())
 		{
 			p.add(new MyLabel(t.nextToken()));
@@ -1696,16 +1672,16 @@ public class IconBar extends Panel implements KeyListener, FocusListener
 		WHelp.pack();
 		Dimension d = WHelp.getSize();
 		Dimension ds = getToolkit().getScreenSize();
-		int x = P.x, y = P.y + i.width() + 10;
+		int x = point.x, y = point.y + i.width() + 10;
 		if (x + d.width > ds.width) x = ds.width - d.width;
-		if (y + d.height > ds.height) y = P.y - i.width() - d.height;
+		if (y + d.height > ds.height) y = point.y - i.width() - d.height;
 		WHelp.setLocation(x, y);
 		WHelp.setBackground(new Color(255, 255, 220));
 		WHelp.setForeground(Color.black);
 		WHelp.setVisible(true);
 	}
 
-	public synchronized void removeHelp ()
+	synchronized void removeHelp ()
 	{
 		if (WHelp == null) return;
 		WHelp.setVisible(false);

@@ -1246,8 +1246,11 @@ public class Board extends Canvas implements MouseListener,
 						+ number;
 				}
 		}
-		LText = LText + " (" + siblings() + " " + GF.resourceString("Siblings")
-			+ ", " + children() + " " + GF.resourceString("Children") + ")";
+		if (Pos.parent() != null)
+		{
+			LText += " (" + siblings() + " " + GF.resourceString("Siblings") + ", ";
+		}
+		LText += children() + " " + GF.resourceString("Children") + ")";
 		if (NodeName.equals(""))
 		{
 			GF.setLabel(LText);
