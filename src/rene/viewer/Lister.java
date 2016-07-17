@@ -44,11 +44,11 @@ public class Lister extends Viewer
 	public void setMultipleMode (boolean flag)
 	{	Multiple=flag;
 	}
-	
+
+	@Override
 	public void keyPressed (KeyEvent e)
 	{	if (Multiple) return;
-		if (e.getKeyCode()==KeyEvent.VK_ENTER || 
-			e.getKeyCode()==KeyEvent.VK_SPACE)
+		if (e.getKeyCode()==KeyEvent.VK_ENTER || e.getKeyCode()==KeyEvent.VK_SPACE)
 		{	if (Chosen==null) return;
 			if (e.isControlDown())
 			{	for (ItemListener li : IL)
@@ -63,8 +63,7 @@ public class Lister extends Viewer
 			}
 			return;
 		}
-		else if (e.getKeyCode()==KeyEvent.VK_DOWN || 
-			e.getKeyCode()==KeyEvent.VK_UP)
+		else if (e.getKeyCode()==KeyEvent.VK_DOWN || e.getKeyCode()==KeyEvent.VK_UP)
 		{	if (Chosen==null)
 			{	Chosen=TD.L.first();
 				((Line)Chosen.content()).chosen(true);

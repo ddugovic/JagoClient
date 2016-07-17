@@ -93,19 +93,6 @@ public class Node
 	{	Actions.prepend(a);
 	}
 	
-	/** 
-	Insert an action after p.
-	p <b>must</b> have content type action.
-	*/
-	public void insertaction (Action a, ListElement<Action> p)
-	{	Actions.insert(new ListElement<Action>(Actions, a), p);
-	}
-
-	/** remove an action */
-	public void removeaction (ListElement<Action> la)
-	{	Actions.remove(la);
-	}
-
 	/**
 	If there is an action of the type:
 	Remove it, if arg is "", else set its argument to arg.
@@ -247,11 +234,7 @@ public class Node
 
 	// access methods:
 	public ListClass<Action> actions () { return Actions; }
-	@Deprecated
-	public ListElement<Action> lastaction () { return Actions.last(); }
 	public ListClass<Change> changes () { return Changes; }
-	@Deprecated
-	public ListElement<Change> lastchange () { return Changes.last(); }
 	public int number () { return N; }
 	public boolean main () { return Main; }
 }

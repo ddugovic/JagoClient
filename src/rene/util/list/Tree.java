@@ -6,21 +6,19 @@ package rene.util.list;
 public class Tree<E>
 {	protected ListClass<Tree<E>> children; // list of children, each with Tree as content
 	protected E content; // content
-	protected ListElement<Tree<E>> element; // the listelement containing the tree
 	protected Tree<E> parent; // the parent tree
 
 	/** initialize with an object and no children */
 	public Tree (E content)
 	{	this.content=content;
 		children=new ListClass<Tree<E>>();
-		element=null; parent=null;
+		parent=null;
 	}
 
 	/** add a child tree */
 	public void addchild (Tree<E> t)
-	{	ListElement<Tree<E>> p=new ListElement<Tree<E>>(children, t);
-		children.append(p);
-		t.element=p; t.parent=this;
+	{	children.append(t);
+		t.parent=this;
 	}
 
 	/** insert a child tree */
@@ -32,9 +30,8 @@ public class Tree<E>
 		t.children=children;
 		// make t my only child
 		children=new ListClass<Tree<E>>();
-		ListElement<Tree<E>> p=new ListElement<Tree<E>>(children, t);
-		children.append(p);
-		t.element=p; t.parent=this;
+		children.append(t);
+		t.parent=this;
 		// fix the parents of all grandchildren
 		for (ListElement<Tree<E>> le : t.children)
 		{	Tree h=(Tree)(le.content());
@@ -45,7 +42,7 @@ public class Tree<E>
 	/** remove the specific child tree (must be in the tree!!!) */
 	public void remove (Tree<E> t)
 	{	if (t.parent()!=this) return;
-		children.remove(t.element);
+		children.removeIf((ListElement<Tree<E>> e) -> e.content() == t);
 	}
 
 	/** remove all children */
@@ -58,12 +55,15 @@ public class Tree<E>
 	public boolean haschildren () { return !children.isEmpty(); }
 	@Deprecated
 	public Tree<E> firstchild () { return children.first().content(); }
+	public Tree<E> previouschild (Tree<E> t) { return children.get(children.indexOf(t.listelement())-1).content(); }
+	public Tree<E> nextchild (Tree<E> t) { return children.get(children.indexOf(t.listelement())+1).content(); }
 	@Deprecated
 	public Tree<E> lastchild () { return children.last().content(); }
 	public Tree<E> parent () { return parent; }
 	public ListClass<Tree<E>> children () { return children; }
 	public E content () { return content; }
 	public void content (E content) { this.content=content; }
-	public ListElement<Tree<E>> listelement () { return element; }
+	@Deprecated
+	public ListElement<Tree<E>> listelement () {
+		return children.stream().filter((ListElement<Tree<E>> e) -> e.content() == this).findFirst().get(); }
 }
-

@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Vector;
 
 import rene.util.list.ListElement;
@@ -786,14 +787,14 @@ public class Board extends Canvas implements MouseListener,
 		{
 			goback();
 			Pos = newpos;
-			setnode();
-			setlast();
+			act(Pos.content());
+			setcurrent(Pos.content());
 		}
 		else if ( !VCurrent && newpos.parent() == Pos)
 		{
 			Pos = newpos;
-			setnode();
-			setlast();
+			act(Pos.content());
+			setcurrent(Pos.content());
 		}
 		copy();
 		showinformation();
@@ -862,25 +863,25 @@ public class Board extends Canvas implements MouseListener,
 			{
 				undonode();
 				n.toggleaction(new Action("AB", field));
-				setnode();
+				act(Pos.content());
 			}
 			else if (n.contains("AW", field))
 			{
 				undonode();
 				n.toggleaction(new Action("AW", field));
-				setnode();
+				act(Pos.content());
 			}
 			else if (n.contains("B", field))
 			{
 				undonode();
 				n.toggleaction(new Action("B", field));
-				setnode();
+				act(Pos.content());
 			}
 			else if (n.contains("W", field))
 			{
 				undonode();
 				n.toggleaction(new Action("W", field));
-				setnode();
+				act(Pos.content());
 			}
 			else
 			{
@@ -908,7 +909,7 @@ public class Board extends Canvas implements MouseListener,
 				{
 					undonode();
 					a.arguments().first().content(Field.string(i, j));
-					setnode();
+					act(Pos.content());
 					break;
 				}
 			}
@@ -1021,7 +1022,7 @@ public class Board extends Canvas implements MouseListener,
 		Pos.addchild(newpos); // note the move
 		n.main(Pos);
 		Pos = newpos; // update current position pointerAction a;
-		setlast();
+		setcurrent(Pos.content());
 		return n;
 	}
 
@@ -1471,9 +1472,9 @@ public class Board extends Canvas implements MouseListener,
 			a = la.content();
 			if (a.type().equals("C"))
 			{
-				if (GF.getComment().equals(""))
-					Pos.content().removeaction(la);
-				else a.arguments().first().content(GF.getComment());
+				if (GF.getComment().equals("")) {
+					Pos.content().actions().remove(la);
+				} else a.arguments().first().content(GF.getComment());
 				return;
 			}
 		}
@@ -1496,8 +1497,7 @@ public class Board extends Canvas implements MouseListener,
 		int xj = O + OTU + j * D;
 		synchronized (this)
 		{
-			g.drawImage(Empty, xi, xj, xi + D, xj + D, xi, xj, xi + D, xj + D,
-				this);
+			g.drawImage(Empty, xi, xj, xi + D, xj + D, xi, xj, xi + D, xj + D, this);
 			if (GF.getParameter("shadows", true)
 				&& GF.getParameter("beauty", true)
 				&& GF.getParameter("beautystones", true))
@@ -1717,14 +1717,13 @@ public class Board extends Canvas implements MouseListener,
 	{
 		Node n = Pos.content();
 		clearrange();
-		ListElement p = n.lastchange();
-		while (p != null)
+		Iterator<ListElement<Change>> i = n.changes().descendingIterator();
+		while (i.hasNext())
 		{
-			Change c = (Change)p.content();
+			Change c = i.next().content();
 			P.color(c.I, c.J, c.C);
 			P.number(c.I, c.J, c.N);
 			update(c.I, c.J);
-			p = p.previous();
 		}
 		n.clearchanges();
 		Pw -= n.Pw;
@@ -1799,10 +1798,9 @@ public class Board extends Canvas implements MouseListener,
 		}
 	}
 
-	public void setnode ()
+	public void act (Node n)
 	// interpret all actions of a node
 	{
-		Node n = Pos.content();
 		if (n.actions().isEmpty()) return;
 		Action a;
 		String s;
@@ -1860,11 +1858,10 @@ public class Board extends Canvas implements MouseListener,
 		}
 	}
 
-	public void setlast ()
+	public void setcurrent (Node n)
 	// update the last move marker applying all
 	// set move actions in the node
 	{
-		Node n = Pos.content();
 		Action a;
 		String s;
 		int i = lasti, j = lastj;
@@ -1932,7 +1929,7 @@ public class Board extends Canvas implements MouseListener,
 		if (Pos.parent() == null) return;
 		undonode();
 		Pos = Pos.parent();
-		setlast();
+		setcurrent(Pos.content());
 	}
 
 	public void goforward ()
@@ -1940,8 +1937,8 @@ public class Board extends Canvas implements MouseListener,
 	{
 		if ( !Pos.haschildren()) return;
 		Pos = Pos.firstchild();
-		setnode();
-		setlast();
+		act(Pos.content());
+		setcurrent(Pos.content());
 	}
 
 	public void gotoMove (int move)
@@ -1960,34 +1957,46 @@ public class Board extends Canvas implements MouseListener,
 		TreeNode newpos = (TreeNode)l.previous().content();
 		goback();
 		Pos = newpos;
-		setnode();
+		act(Pos.content());
 	}
 
 	public void tovarright ()
 	{
-		ListElement l = Pos.listelement();
+		ListElement<Tree<Node>> l = Pos.listelement();
 		if (l == null) return;
 		if (l.next() == null) return;
 		TreeNode newpos = (TreeNode)l.next().content();
 		goback();
 		Pos = newpos;
-		setnode();
+		act(Pos.content());
 	}
 
-	public boolean hasvariation ()
+	public boolean hasprevioussibling ()
 	{
-		ListElement l = Pos.listelement();
+		ListElement<Tree<Node>> l = Pos.listelement();
+		if (l == null) return false;
+		if (l.previous() == null) return false;
+		return true;
+	}
+
+	public boolean hasnextsibling ()
+	{
+		ListElement<Tree<Node>> l = Pos.listelement();
 		if (l == null) return false;
 		if (l.next() == null) return false;
 		return true;
 	}
 
-	static public Tree<Node> getNext (Tree<Node> p)
+	public static Tree<Node> previouschild (Tree<Node> p)
 	{
-		ListElement<Tree<Node>> l = p.listelement();
-		if (l == null) return null;
-		if (l.next() == null) return null;
-		return l.next().content();
+		if (p.parent() == null) return null;
+		return p.parent().previouschild(p);
+	}
+
+	public static Tree<Node> nextchild (Tree<Node> p)
+	{
+		if (p.parent() == null) return null;
+		return p.parent().nextchild(p);
 	}
 
 	public void territory (int i, int j)
@@ -2176,7 +2185,7 @@ public class Board extends Canvas implements MouseListener,
 		TreeNode newpos = (TreeNode)l.previous().content();
 		goback();
 		Pos = newpos;
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2192,7 +2201,7 @@ public class Board extends Canvas implements MouseListener,
 		TreeNode newpos = (TreeNode)l.next().content();
 		goback();
 		Pos = newpos;
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2288,7 +2297,7 @@ public class Board extends Canvas implements MouseListener,
 		CurrentTree++;
 		T = (SGFTree)Trees.elementAt(CurrentTree);
 		resettree();
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2307,7 +2316,7 @@ public class Board extends Canvas implements MouseListener,
 		CurrentTree--;
 		T = (SGFTree)Trees.elementAt(CurrentTree);
 		resettree();
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2328,7 +2337,7 @@ public class Board extends Canvas implements MouseListener,
 			Trees.addElement(T);
 		else Trees.insertElementAt(T, CurrentTree);
 		resettree();
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2340,7 +2349,7 @@ public class Board extends Canvas implements MouseListener,
 		if (CurrentTree >= Trees.size()) CurrentTree--;
 		T = (SGFTree)Trees.elementAt(CurrentTree);
 		resettree();
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2452,7 +2461,7 @@ public class Board extends Canvas implements MouseListener,
 		Pos.addchild(new TreeNode(n));
 		n.main(Pos);
 		goforward();
-		setlast();
+		setcurrent(Pos.content());
 		showinformation();
 		copy();
 		GF.addComment(GF.resourceString("Pass"));
@@ -2514,7 +2523,7 @@ public class Board extends Canvas implements MouseListener,
 				|| a.type().equals("SL") || a.type().equals("CR")
 				|| a.type().equals("TR") || a.type().equals("LB"));
 		});
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2529,7 +2538,7 @@ public class Board extends Canvas implements MouseListener,
 			Action a = t.content();
 			return (a.type().equals("AB") || a.type().equals("AW") || a.type().equals("AE"));
 		});
-		setnode();
+		act(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2545,7 +2554,7 @@ public class Board extends Canvas implements MouseListener,
 		n.main(Pos);
 		getinformation();
 		Pos = Pos.lastchild();
-		setlast();
+		setcurrent(Pos.content());
 		showinformation();
 		copy();
 	}
@@ -2561,7 +2570,7 @@ public class Board extends Canvas implements MouseListener,
 		Pos.addchild(new TreeNode(n));
 		n.main(Pos);
 		Pos = Pos.lastchild();
-		setlast();
+		setcurrent(Pos.content());
 		P.color( -c);
 		showinformation();
 		copy();
@@ -2906,7 +2915,7 @@ public class Board extends Canvas implements MouseListener,
 			T = (SGFTree)v.elementAt(0);
 			CurrentTree = 0;
 			resettree();
-			setnode();
+			act(Pos.content());
 			showinformation();
 			copy();
 		}
@@ -2928,7 +2937,7 @@ public class Board extends Canvas implements MouseListener,
 			T = (SGFTree)v.elementAt(0);
 			CurrentTree = 0;
 			resettree();
-			setnode();
+			act(Pos.content());
 			showinformation();
 			copy();
 		}
@@ -3215,11 +3224,11 @@ public class Board extends Canvas implements MouseListener,
 		getinformation();
 		Tree<Node> pos = Pos;
 		boolean found = true;
-		outer: while (Pos.content().getaction("C").indexOf(s) < 0 || Pos == pos)
+		outer: while (!Pos.content().getaction("C").contains(s) || Pos == pos)
 		{
 			if ( !Pos.haschildren())
 			{
-				while ( !hasvariation())
+				while ( !hasnextsibling())
 				{
 					if (Pos.parent() == null)
 					{
@@ -3267,7 +3276,7 @@ public class Board extends Canvas implements MouseListener,
 	{
 		set(i, j, c);
 		undonode();
-		setnode();
+		act(Pos.content());
 		showinformation();
 	}
 
@@ -3276,7 +3285,7 @@ public class Board extends Canvas implements MouseListener,
 	{
 		setc(i, j, c);
 		undonode();
-		setnode();
+		act(Pos.content());
 		showinformation();
 	}
 
@@ -3292,7 +3301,7 @@ public class Board extends Canvas implements MouseListener,
 	{
 		delete(i, j);
 		undonode();
-		setnode();
+		act(Pos.content());
 		showinformation();
 	}
 
@@ -3302,7 +3311,7 @@ public class Board extends Canvas implements MouseListener,
 		if (Pos.haschildren()) return;
 		removegroup(i, j);
 		undonode();
-		setnode();
+		act(Pos.content());
 		showinformation();
 	}
 
@@ -3311,7 +3320,7 @@ public class Board extends Canvas implements MouseListener,
 		undonode();
 		VHide = hide;
 		VCurrent = current;
-		setnode();
+		act(Pos.content());
 		updateall();
 		copy();
 	}

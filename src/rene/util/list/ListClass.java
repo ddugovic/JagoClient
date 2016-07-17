@@ -3,46 +3,29 @@ package rene.util.list;
 import java.util.LinkedList;
 
 /**
- * A linked list of ListElements which reference this; i.e., a tree.
- * 
+ * A linked list of ListElements.
+ *
  * @see rene.list.ListElement
+ * @deprecated Use LinkedList instead
  */
 public class ListClass<E> extends LinkedList<ListElement<E>>
 {
 	/**
-	 * Append a node to the list
-	 * @deprecated
-	 */
-	public void append (ListElement<E> l)
-	{
-		super.addLast(l);
-	}
-	public void append (E content)
-	{
-		super.addLast(new ListElement<E>(this, content));
-	}
-
-	/**
 	 * Prepend a node to the list
 	 * @deprecated
 	 */
-	public void prepend (ListElement<E> l)
-	{
-		super.addFirst(l);
-	}
 	public void prepend (E content)
 	{
 		super.addFirst(new ListElement<E>(this, content));
 	}
 
-	/*
-	 * @param l ListElement to be inserted.
-	 * 
-	 * @param after If null, it works like prepend.
+	/**
+	 * Append a node to the list
+	 * @deprecated
 	 */
-	public void insert (ListElement<E> l, ListElement<E> after)
+	public void append (E content)
 	{
-		super.add(indexOf(after) + 1, l);
+		super.addLast(new ListElement<E>(this, content));
 	}
 
 	/**
@@ -64,7 +47,7 @@ public class ListClass<E> extends LinkedList<ListElement<E>>
 	}
 
 	/**
-	 * Prints the class
+	 * Prints a String representation of this instance.
 	 */
 	@Override
 	public String toString ()
@@ -72,7 +55,7 @@ public class ListClass<E> extends LinkedList<ListElement<E>>
 		StringBuilder sb = new StringBuilder();
 		for (ListElement<E> e : this)
 		{
-			sb.append(e.content().toString() + ", ");
+			sb.append(e.content().toString()).append(", ");
 		}
 		return sb.toString();
 	}

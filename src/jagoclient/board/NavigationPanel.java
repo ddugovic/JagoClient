@@ -121,7 +121,7 @@ public class NavigationPanel extends MyPanel
 			g.drawLine(x, y + size, x, y + 2 * size);
 			int x0 = x;
 			x = paint(g, p, x, y + 3 * size, current, line + 1, currentline);
-			if (Board.getNext(p) != null)
+			if (Board.nextchild(p) != null)
 			{
 				g.setColor(Color.black);
 				g.drawLine(x0, y + size * 3 / 2, x0 + size, y + size * 3 / 2);
@@ -151,7 +151,7 @@ public class NavigationPanel extends MyPanel
 					x = paint(g, p, x + 3 * size, y + 3 * size, current,
 						line + 1, currentline);
 				}
-				p = Board.getNext(p);
+				p = Board.nextchild(p);
 				i++;
 			}
 		}
