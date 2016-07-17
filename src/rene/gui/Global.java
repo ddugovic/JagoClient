@@ -101,7 +101,7 @@ public class Global
 	// Resources:
 	static protected ResourceBundle B;
 
-	public static Enumeration names ()
+	public static Enumeration<String> names ()
 	{
 		if (B != null)
 			return B.getKeys();

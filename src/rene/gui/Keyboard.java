@@ -27,7 +27,6 @@ import java.util.Vector;
 
 import rene.dialogs.ItemEditor;
 import rene.dialogs.MyFileDialog;
-import rene.util.sort.Sorter;
 
 /**
 A static class, which contains tranlations for key events. It keeps
@@ -53,10 +52,10 @@ public class Keyboard
 	{	V=new Vector<KeyboardItem>();
 		Hmenu=new Hashtable<String,KeyboardItem>(); Hcharkey=new Hashtable<String,KeyboardItem>();
 		// collect all predefined keys
-		Enumeration e=Global.names();
+		Enumeration<String> e=Global.names();
 		if (e==null) return;
 		while (e.hasMoreElements())
-		{	String key=(String)e.nextElement();
+		{	String key=e.nextElement();
 			if (key.startsWith("key."))
 			{	String menu=key.substring(4);
 				String charkey=Global.getParameter(key,"default");
@@ -70,7 +69,7 @@ public class Keyboard
 		// collect all user defined (double defined) keys
 		e=Global.properties();
 		while (e.hasMoreElements())
-		{	String key=(String)e.nextElement();
+		{	String key=e.nextElement();
 			if (key.startsWith("key."))
 			{	String menu=key.substring(4);
 				if (findMenu(menu)!=null) continue;
@@ -94,15 +93,12 @@ public class Keyboard
 	Generate a shortcut for the menu item.
 	*/
 	public static String shortcut (String tag)
-	{	Enumeration e=V.elements();
-		while (e.hasMoreElements())
-		{	KeyboardItem item=(KeyboardItem)e.nextElement();
+	{	for (KeyboardItem item : V)
 			if (item.getMenuString().equals(tag))
 			{	String shortcut=item.shortcut();
 				if (!shortcut.equals("")) shortcut=" ("+shortcut+")";
 				return shortcut;
 			}
-		}
 		return "";
 	}
 
@@ -147,9 +143,7 @@ public class Keyboard
 		if (d.isAborted()) return;
 		Global.removeAllParameters("key.");
 		V=d.getElements();
-		Enumeration e=V.elements();
-		while (e.hasMoreElements())
-		{	KeyboardItem k=(KeyboardItem)e.nextElement();
+		for (KeyboardItem k : V)
 			if (!k.getCharKey().equals("default"))
 			{	String keytag="key."+k.getMenuString();
 				String description=k.keyDescription();
@@ -157,11 +151,10 @@ public class Keyboard
 				{	Global.setParameter(keytag,description);
 				}
 			}
-		}
 		makeKeys();
 		if (d.getAction()==ItemEditor.SAVE)
 		{	Properties parameters=new Properties();
-			e=Global.properties();
+			Enumeration e=Global.properties();
 			while (e.hasMoreElements())
 			{	String key=(String)e.nextElement();
 				if (key.startsWith("key."))
@@ -199,7 +192,7 @@ public class Keyboard
 			}
 			catch (Exception ex) {}
 			Global.removeAllParameters("key.");
-			e=parameters.keys();
+			Enumeration e=parameters.keys();
 			while (e.hasMoreElements())
 			{	String key=(String)e.nextElement();
 				Global.setParameter(key,(String)parameters.get(key));
@@ -211,19 +204,15 @@ public class Keyboard
 	/**
 	Append a list of keyboard shortcuts to a text area.
 	*/
-	public static Vector getKeys ()
-	{	Vector keys=new Vector();
-		Sorter.sort(V);
-		Enumeration e=V.elements();
-		while (e.hasMoreElements())
-		{	KeyboardItem k=(KeyboardItem)e.nextElement();
+	public static Vector<String> getKeys ()
+	{	Vector<String> keys=new Vector<String>();
+		Collections.sort(V);
+		for (KeyboardItem k : V)
 			if (!k.getCharKey().equals("none"))
 			{	String shortcut=k.shortcut();
-				int n=shortcut.length();
-				for (int i=0; i<30-n; i++) shortcut=shortcut+" ";
+				while (shortcut.length() < 30) shortcut+=" ";
 				keys.addElement(shortcut+" = "+k.getActionName());
 			}
-		}
 		return keys;
 	}
 	
@@ -231,8 +220,8 @@ public class Keyboard
 	Find a shortcut for the command.
 	*/
 	public static String commandShortcut (int type)
-	{	Object o=Hmenu.get("command."+type);
+	{	KeyboardItem o=Hmenu.get("command."+type);
 		if (o==null) return "";
-		return ((KeyboardItem)o).shortcut();
+		return o.shortcut();
 	}
 }

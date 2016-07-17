@@ -1,27 +1,20 @@
 package rene.util;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import rene.util.sort.SortObject;
-import rene.util.sort.Sorter;
-
-class SortFile extends File
-	implements SortObject
-{	String S;
+class SortFile extends File implements Comparable<File>
+{
 	static int SortBy=0;
 	final public static int NAME=0,DATE=1;
 	public SortFile (File dir, String name)
 	{	super(dir,name);
-		try
-		{	S=getCanonicalPath().toUpperCase();
-		}
-		catch (Exception e)
-		{ S=""; }
 	}
-	public int compare (SortObject o)
+	@Override
+	public int compareTo (File o)
 	{	SortFile f=(SortFile)o;
 		if (SortBy==DATE)
 		{	long n=f.lastModified();
@@ -30,7 +23,7 @@ class SortFile extends File
 			if (n>m) return 1;
 			return 0;
 		}
-		return -f.S.compareTo(S);
+		return super.compareTo(f);
 	}
 }
 
@@ -61,7 +54,7 @@ be used to return, if more scanning is necessary.
 */
 
 public class FileList
-{	Vector V=new Vector(),Vdir=new Vector();
+{	Vector<SortFile> V=new Vector<SortFile>(),Vdir=new Vector<SortFile>();
 	boolean Stop;
 	boolean Recurse;
 	String Dir,Filter;
@@ -160,15 +153,8 @@ public class FileList
 	*/
 	public void sort ()
 	{	int i,n=V.size();
-		SortObject v[]=new SortObject[n];
-		for (i=0; i<n; i++) v[i]=(SortFile)V.elementAt(i);
-		Sorter.sort(v);
-		for (i=0; i<n; i++) V.setElementAt(v[i],i);
-		n=Vdir.size();
-		v=new SortObject[n];
-		for (i=0; i<n; i++) v[i]=(SortFile)Vdir.elementAt(i);
-		Sorter.sort(v);
-		for (i=0; i<n; i++) Vdir.setElementAt(v[i],i);
+		Collections.sort(V);
+		Collections.sort(Vdir);
 	}
 	public void sort (int type)
 	{	SortFile.SortBy=type;
