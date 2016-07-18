@@ -10,8 +10,6 @@ import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxAction;
 import jagoclient.gui.CheckboxMenuItemAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.GrayTextField;
 import jagoclient.gui.MenuItemAction;
@@ -63,6 +61,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import rene.dialogs.Question;
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 import rene.gui.DoItemListener;
 import rene.gui.IconBar;
 import rene.gui.IconBarListener;
@@ -114,7 +114,6 @@ class EditInformation extends CloseDialog
 		pb.add(new ButtonAction(this, Global.resourceString("Cancel")));
 		add("South", pb);
 		Global.setpacked(this, "editinformation", 350, 450);
-		setVisible(true);
 	}
 
 	@Override
@@ -148,7 +147,7 @@ class EditInformation extends CloseDialog
 
 class GetEncoding extends GetParameter
 {
-	GoFrame GCF;
+	GoFrame gcf;
 
 	public GetEncoding (GoFrame gcf)
 	{
@@ -157,8 +156,7 @@ class GetEncoding extends GetParameter
 		if ( !Global.isApplet())
 			set(Global.getParameter("encoding", System
 				.getProperty("file.encoding")));
-		GCF = gcf;
-		setVisible(true);
+		this.gcf = gcf;
 	}
 
 	@Override
@@ -174,8 +172,8 @@ class GetEncoding extends GetParameter
 
 class GetSearchString extends CloseDialog
 {
-	GoFrame GF;
-	TextFieldAction T;
+	GoFrame gf;
+	TextFieldAction tfa;
 	static boolean Active = false;
 
 	public GetSearchString (GoFrame gf)
@@ -183,17 +181,16 @@ class GetSearchString extends CloseDialog
 		super(gf, Global.resourceString("Search"), false);
 		if (Active) return;
 		add("North", new MyLabel(Global.resourceString("Search_String")));
-		add("Center", T = new TextFieldAction(this, "Input", 25));
+		add("Center", tfa = new TextFieldAction(this, "Input", 25));
 		JPanel p = new MyPanel();
 		p.add(new ButtonAction(this, Global.resourceString("Search")));
 		p.add(new ButtonAction(this, Global.resourceString("Cancel")));
 		add("South", p);
 		Global.setpacked(this, "getparameter", 300, 150);
 		validate();
-		T.addKeyListener(this);
-		T.setText(Global.getParameter("searchstring", "++"));
-		GF = gf;
-		setVisible(true);
+		tfa.addKeyListener(this);
+		tfa.setText(Global.getParameter("searchstring", "++"));
+		this.gf = gf;
 		Active = true;
 	}
 
@@ -202,8 +199,8 @@ class GetSearchString extends CloseDialog
 	{
 		if (s.equals(Global.resourceString("Search")) || s.equals("Input"))
 		{
-			Global.setParameter("searchstring", T.getText());
-			GF.search();
+			Global.setParameter("searchstring", tfa.getText());
+			gf.search();
 		}
 		else if (s.equals(Global.resourceString("Cancel")))
 		{
@@ -228,15 +225,14 @@ class GetSearchString extends CloseDialog
 
 class CloseQuestion extends Question
 {
-	GoFrame GF;
+	GoFrame gf;
 	boolean Result = false;
 
 	public CloseQuestion (GoFrame g)
 	{
 		super(g, Global.resourceString("Really_trash_this_board_"), Global
 			.resourceString("Close_Board"), g, true);
-		GF = g;
-		setVisible(true);
+		gf = g;
 	}
 
 	@Override
@@ -256,7 +252,6 @@ class SizeQuestion extends GetParameter<GoFrame>
 	{
 		super(g, Global.resourceString("Size_between_5_and_29"), Global
 			.resourceString("Board_size"), g, true);
-		setVisible(true);
 	}
 
 	@Override
@@ -297,14 +292,12 @@ class TextMarkQuestion extends CloseDialog implements DoItemListener
 			.resourceString("String")), 1, T = new TextFieldAction(this, t), 2));
 		T.setText(t);
 		JPanel ps = new MyPanel();
-		ps.add(C = new CheckboxAction(this, Global
-			.resourceString("Auto_Advance")));
+		ps.add(C = new CheckboxAction(this, Global.resourceString("Auto_Advance")));
 		C.setState(Global.getParameter("autoadvance", true));
 		ps.add(new ButtonAction(this, Global.resourceString("Set")));
 		ps.add(new ButtonAction(this, Global.resourceString("Close")));
 		add("South", ps);
 		Global.setpacked(this, "gettextmarkquestion", 300, 150);
-		setVisible(true);
 	}
 
 	@Override
@@ -326,9 +319,15 @@ class TextMarkQuestion extends CloseDialog implements DoItemListener
 	}
 
 	@Override
+	public void itemAction (String o, boolean b)
+	{
+		// ??? (Auto_Advance)
+	}
+
+	@Override
 	public boolean close ()
 	{
-		G.TMQ = null;
+		G.tmq = null;
 		return true;
 	}
 
@@ -370,7 +369,6 @@ class NodeNameEdit extends GetParameter<GoFrame>
 		super(g, Global.resourceString("Name"), Global
 			.resourceString("Node_Name"), g, true);
 		set(s);
-		setVisible(true);
 	}
 
 	@Override
@@ -389,20 +387,18 @@ class NodeNameEdit extends GetParameter<GoFrame>
 
 class BoardColorEdit extends ColorEdit
 {
-	GoFrame GF;
+	GoFrame gf;
 
-	public BoardColorEdit (GoFrame F, String s, int red, int green, int blue)
+	public BoardColorEdit (GoFrame gf, String s, int red, int green, int blue)
 	{
-		super(F, s, red, green, blue, true);
-		GF = F;
-		setVisible(true);
+		super(gf, s, red, green, blue, true);
+		this.gf = gf;
 	}
 
-	public BoardColorEdit (GoFrame F, String s, Color c)
+	public BoardColorEdit (GoFrame gf, String s, Color c)
 	{
-		super(F, s, c.getRed(), c.getGreen(), c.getBlue(), true);
-		GF = F;
-		setVisible(true);
+		super(gf, s, c.getRed(), c.getGreen(), c.getBlue(), true);
+		this.gf = gf;
 	}
 
 	@Override
@@ -411,7 +407,7 @@ class BoardColorEdit extends ColorEdit
 		super.doAction(o);
 		if (Global.resourceString("OK").equals(o))
 		{
-			GF.updateall();
+			gf.updateall();
 		}
 	}
 }
@@ -467,15 +463,13 @@ class EditCopyright extends CloseDialog
 		JPanel p2 = new MyPanel();
 		p2.setLayout(new BorderLayout());
 		p2.add("North", new MyLabel(Global.resourceString("Copyright")));
-		p2.add("Center", Copyright = new TextArea("", 0, 0,
-			TextArea.SCROLLBARS_VERTICAL_ONLY));
+		p2.add("Center", Copyright = new TextArea("", 0, 0, TextArea.SCROLLBARS_VERTICAL_ONLY));
 		add("Center", p2);
 		JPanel pb = new MyPanel();
 		pb.add(new ButtonAction(this, Global.resourceString("OK")));
 		pb.add(new ButtonAction(this, Global.resourceString("Cancel")));
 		add("South", pb);
 		Global.setwindow(this, "editcopyright", 350, 400);
-		setVisible(true);
 		Copyright.setText(n.getaction("CP"));
 	}
 
@@ -506,7 +500,6 @@ class AskUndoQuestion extends Question
 	{
 		super(f, Global.resourceString("Delete_all_subsequent_moves_"), Global
 			.resourceString("Delete_Tree"), f, true);
-		setVisible(true);
 	}
 
 	@Override
@@ -531,7 +524,6 @@ class AskInsertQuestion extends Question
 	{
 		super(f, Global.resourceString("Change_Game_Tree_"), Global
 			.resourceString("Change_Game_Tree"), f, true);
-		setVisible(true);
 	}
 
 	@Override
@@ -595,7 +587,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	CheckboxMenuItem VHide, VCurrent, VChild, VNumbers;
 	String Text = Global.getParameter("textmark", "A");
 	boolean Show;
-	TextMarkQuestion TMQ;
+	TextMarkQuestion tmq;
 	IconBar IB;
 	JPanel ButtonP;
 	String DefaultTitle = "";
@@ -900,7 +892,6 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		B.addKeyListener(this);
 		if (Navigation != null) Navigation.addKeyListener(B);
 		addmenuitems();
-		setVisible(true);
 		repaint();
 	}
 
@@ -982,7 +973,11 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		else if (s.equals("text"))
 		{
 			B.textmark(Text);
-			if (TMQ == null) TMQ = new TextMarkQuestion(this, Text);
+			if (tmq == null)
+			{
+				tmq = new TextMarkQuestion(this, Text);
+				tmq.setVisible(true);
+			}
 		}
 		else if (s.equals("black"))
 			B.black();
@@ -1478,11 +1473,11 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 			}
 			else if (Global.resourceString("Game_Information").equals(o))
 			{
-				new EditInformation(this, B.firstnode());
+				new EditInformation(this, B.firstnode()).setVisible(true);
 			}
 			else if (Global.resourceString("Game_Copyright").equals(o))
 			{
-				new EditCopyright(this, B.firstnode());
+				new EditCopyright(this, B.firstnode()).setVisible(true);
 			}
 			else if (Global.resourceString("Prisoner_Count").equals(o))
 			{
@@ -1493,31 +1488,31 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 			}
 			else if (Global.resourceString("Board_Color").equals(o))
 			{
-				new BoardColorEdit(this, "boardcolor", BoardColor);
+				new BoardColorEdit(this, "boardcolor", BoardColor).setVisible(true);
 			}
 			else if (Global.resourceString("Black_Color").equals(o))
 			{
-				new BoardColorEdit(this, "blackcolor", BlackColor);
+				new BoardColorEdit(this, "blackcolor", BlackColor).setVisible(true);
 			}
 			else if (Global.resourceString("Black_Sparkle_Color").equals(o))
 			{
-				new BoardColorEdit(this, "blacksparklecolor", BlackSparkleColor);
+				new BoardColorEdit(this, "blacksparklecolor", BlackSparkleColor).setVisible(true);
 			}
 			else if (Global.resourceString("White_Color").equals(o))
 			{
-				new BoardColorEdit(this, "whitecolor", WhiteColor);
+				new BoardColorEdit(this, "whitecolor", WhiteColor).setVisible(true);
 			}
 			else if (Global.resourceString("White_Sparkle_Color").equals(o))
 			{
-				new BoardColorEdit(this, "whitesparklecolor", WhiteSparkleColor);
+				new BoardColorEdit(this, "whitesparklecolor", WhiteSparkleColor).setVisible(true);
 			}
 			else if (Global.resourceString("Label_Color").equals(o))
 			{
-				new BoardColorEdit(this, "labelcolor", LabelColor);
+				new BoardColorEdit(this, "labelcolor", LabelColor).setVisible(true);
 			}
 			else if (Global.resourceString("Marker_Color").equals(o))
 			{
-				new BoardColorEdit(this, "markercolor", MarkerColor);
+				new BoardColorEdit(this, "markercolor", MarkerColor).setVisible(true);
 			}
 			else if (Global.resourceString("Board_Font").equals(o))
 			{
@@ -1578,7 +1573,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 			}
 			else if (Global.resourceString("Set_Encoding").equals(o))
 			{
-				new GetEncoding(this);
+				new GetEncoding(this).setVisible(true);
 			}
 			else if (Global.resourceString("Search_Again").equals(o))
 			{
@@ -1586,13 +1581,13 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 			}
 			else if (Global.resourceString("Search").equals(o))
 			{
-				new GetSearchString(this);
+				new GetSearchString(this).setVisible(true);
 			}
 			else super.doAction(o);
 		}
 		catch (IOException ex)
 		{
-			new Message(Global.frame(), ex.getMessage());
+			new Message(Global.frame(), ex.getMessage()).setVisible(true);
 		}
 	}
 
@@ -1657,7 +1652,11 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		else if (Global.resourceString("Text").equals(o))
 		{
 			B.textmark(Text);
-			if (TMQ == null) TMQ = new TextMarkQuestion(this, Text);
+			if (tmq == null)
+			{
+				tmq = new TextMarkQuestion(this, Text);
+				tmq.setVisible(true);
+			}
 		}
 		else if (Global.resourceString("Square").equals(o))
 		{
@@ -2071,6 +2070,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		if (Global.getParameter("confirmations", true))
 		{
 			CloseQuestion CQ = new CloseQuestion(this);
+			CQ.setVisible(true);
 			if (CQ.Result)
 			{
 				Global.notewindow(this, "board");
@@ -2100,7 +2100,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	/** called by menu action, opens a SizeQuestion dialog */
 	public void boardsize ()
 	{
-		new SizeQuestion(this);
+		new SizeQuestion(this).setVisible(true);
 	}
 
 	/**
@@ -2321,7 +2321,9 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	 */
 	public boolean askUndo ()
 	{
-		return new AskUndoQuestion(this).Result;
+		Question question = new AskUndoQuestion(this);
+		question.setVisible(true);
+		return question.Result;
 	}
 
 	/**
@@ -2330,7 +2332,9 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	 */
 	public boolean askInsert ()
 	{
-		return new AskInsertQuestion(this).Result;
+		Question question = new AskInsertQuestion(this);
+		question.setVisible(true);
+		return question.Result;
 	}
 
 	/**
@@ -2349,7 +2353,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	 */
 	public void callInsert ()
 	{
-		new NodeNameEdit(this, B.getname());
+		new NodeNameEdit(this, B.getname()).setVisible(true);
 	}
 
 	/**
@@ -2365,7 +2369,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	 */
 	public void advanceTextmark ()
 	{
-		if (TMQ != null) TMQ.advance();
+		if (tmq != null) tmq.advance();
 	}
 
 	/**

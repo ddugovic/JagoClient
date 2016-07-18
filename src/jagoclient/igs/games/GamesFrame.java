@@ -4,8 +4,6 @@ import jagoclient.Global;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
-import jagoclient.gui.CloseListener;
 import jagoclient.gui.MenuItemAction;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyMenu;
@@ -24,6 +22,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
+import rene.gui.CloseFrame;
+import rene.gui.CloseListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
@@ -227,7 +227,7 @@ public class GamesFrame extends CloseFrame implements CloseListener
 		}
 	}
 
-	public void isClosed ()
+	public void closed ()
 	{
 		if (Global.getParameter("menuclose", true)) setMenuBar(null);
 		setVisible(false);

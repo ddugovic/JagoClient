@@ -2,7 +2,6 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.GrayTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -10,6 +9,8 @@ import jagoclient.gui.Panel3D;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
 
 /**
  * This dialog is opened by IgsGoFrame, when the "Send" button is pressed.

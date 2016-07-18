@@ -1,5 +1,9 @@
 package rene.gui;
 
+/**
+ * An event listener interface for the CloseFrame.
+ */
 public interface CloseListener
-{   public void closed ();
+{	/** called, when the client frame closes */
+	public void closed ();
 }

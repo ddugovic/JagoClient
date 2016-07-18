@@ -6,7 +6,6 @@ import jagoclient.Global;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.HistoryTextField;
 import jagoclient.gui.MenuItemAction;
 import jagoclient.gui.MyMenu;
@@ -31,6 +30,7 @@ import java.net.Socket;
 import javax.swing.JPanel;
 
 import rene.dialogs.Question;
+import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
@@ -97,11 +97,7 @@ public class PartnerFrame extends CloseFrame
 			.resourceString("Partner_Connection")));
 		menu.setHelpMenu(help);
 		p.setLayout(new BorderLayout());
-		p
-			.add(
-				"Center",
-				Output = Global.getParameter("systemviewer", false)?new SystemViewer()
-					:new Viewer());
+		p.add("Center", Output = Global.getParameter("systemviewer", false) ? new SystemViewer() : new Viewer());
 		Output.setFont(Global.Monospaced);
 		p.add("South", Input = new HistoryTextField(this, "Input"));
 		add("Center", p);

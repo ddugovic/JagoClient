@@ -4,7 +4,6 @@ import jagoclient.Global;
 import jagoclient.Go;
 import jagoclient.StopThread;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.MenuItemAction;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyMenu;
@@ -17,6 +16,7 @@ import java.awt.MenuBar;
 
 import javax.swing.JPanel;
 
+import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 

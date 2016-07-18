@@ -2,12 +2,12 @@ package jagoclient.dialogs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
 
 import java.awt.Frame;
 
+import rene.gui.CloseDialog;
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
 
@@ -23,8 +23,7 @@ public class Message extends CloseDialog
 	public Message (Frame f, String m)
 	{
 		super(f, Global.resourceString("Message"), false);
-		add("Center",
-			T = Global.getParameter("systemviewer", false)?new SystemViewer():new Viewer());
+		add("Center", T = Global.getParameter("systemviewer", false) ? new SystemViewer() : new Viewer());
 		T.setFont(Global.Monospaced);
 		MyPanel p = new MyPanel();
 		p.add(new ButtonAction(this, Global.resourceString("OK")));

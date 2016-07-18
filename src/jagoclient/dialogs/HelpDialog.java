@@ -2,7 +2,6 @@ package jagoclient.dialogs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
 
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import rene.gui.CloseDialog;
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
 

@@ -91,105 +91,72 @@ public class JagoGameFrame extends GoFrame
 			.resourceString("Insert_Variation")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Search")));
-		var
-			.add(new MenuItemAction(this, Global.resourceString("Search_Again")));
+		var.add(new MenuItemAction(this, Global.resourceString("Search_Again")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Node_Name")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Goto_Next_Name")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Goto_Previous_Name")));
+		var.add(new MenuItemAction(this, Global.resourceString("Goto_Next_Name")));
+		var.add(new MenuItemAction(this, Global.resourceString("Goto_Previous_Name")));
 		M.add(var);
 		Menu score = new MyMenu(Global.resourceString("Finish_Game"));
 		M.add(score);
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Remove_groups")));
+		score.add(new MenuItemAction(this, Global.resourceString("Remove_groups")));
 		score.add(new MenuItemAction(this, Global.resourceString("Score")));
 		score.addSeparator();
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Game_Information")));
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Game_Copyright")));
+		score.add(new MenuItemAction(this, Global.resourceString("Game_Information")));
+		score.add(new MenuItemAction(this, Global.resourceString("Game_Copyright")));
 		Menu options = new MyMenu(Global.resourceString("Options"));
 		Menu mc = new MyMenu(Global.resourceString("Coordinates"));
-		mc.add(Coordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("On")));
+		mc.add(Coordinates = new CheckboxMenuItemAction(this, Global.resourceString("On")));
 		Coordinates.setState(Global.getParameter("coordinates", true));
-		mc.add(UpperLeftCoordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("Upper_Left")));
-		UpperLeftCoordinates.setState(Global.getParameter(
-			"upperleftcoordinates", true));
-		mc.add(LowerRightCoordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("Lower_Right")));
-		LowerRightCoordinates.setState(Global.getParameter(
-			"lowerrightcoordinates", false));
+		mc.add(UpperLeftCoordinates = new CheckboxMenuItemAction(this, Global.resourceString("Upper_Left")));
+		UpperLeftCoordinates.setState(Global.getParameter("upperleftcoordinates", true));
+		mc.add(LowerRightCoordinates = new CheckboxMenuItemAction(this, Global.resourceString("Lower_Right")));
+		LowerRightCoordinates.setState(Global.getParameter("lowerrightcoordinates", false));
 		options.add(mc);
 		options.addSeparator();
 		Menu colors = new MyMenu(Global.resourceString("Colors"));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Board_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Black_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Black_Sparkle_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("White_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("White_Sparkle_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Label_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Marker_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Board_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Black_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Black_Sparkle_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("White_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("White_Sparkle_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Label_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Marker_Color")));
 		options.add(colors);
-		options.add(MenuBWColor = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_B_W_marks")));
+		options.add(MenuBWColor = new CheckboxMenuItemAction(this, Global.resourceString("Use_B_W_marks")));
 		MenuBWColor.setState(Global.getParameter("bwcolor", false));
 		BWColor = MenuBWColor.getState();
-		options.add(PureSGF = new CheckboxMenuItemAction(this, Global
-			.resourceString("Save_pure_SGF")));
+		options.add(PureSGF = new CheckboxMenuItemAction(this, Global.resourceString("Save_pure_SGF")));
 		PureSGF.setState(Global.getParameter("puresgf", false));
-		options.add(CommentSGF = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_SGF_Comments")));
+		options.add(CommentSGF = new CheckboxMenuItemAction(this, Global.resourceString("Use_SGF_Comments")));
 		CommentSGF.setState(Global.getParameter("sgfcomments", false));
 		options.addSeparator();
 		Menu fonts = new MyMenu(Global.resourceString("Fonts"));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
 		options.add(fonts);
 		options.addSeparator();
-		options.add(MenuTarget = new CheckboxMenuItemAction(this, Global
-			.resourceString("Show_Target")));
+		options.add(MenuTarget = new CheckboxMenuItemAction(this, Global.resourceString("Show_Target")));
 		MenuTarget.setState(Global.getParameter("showtarget", true));
 		ShowTarget = MenuTarget.getState();
-		options.add(MenuLastNumber = new CheckboxMenuItemAction(this, Global
-			.resourceString("Last_Number")));
+		options.add(MenuLastNumber = new CheckboxMenuItemAction(this, Global.resourceString("Last_Number")));
 		MenuLastNumber.setState(Global.getParameter("lastnumber", false));
 		LastNumber = MenuLastNumber.getState();
 		options.add(new MenuItemAction(this, Global.resourceString("Last_50")));
-		options
-			.add(new MenuItemAction(this, Global.resourceString("Last_100")));
+		options.add(new MenuItemAction(this, Global.resourceString("Last_100")));
 		options.addSeparator();
-		options.add(TrueColor = new CheckboxMenuItemAction(this, Global
-			.resourceString("True_Color_Board")));
+		options.add(TrueColor = new CheckboxMenuItemAction(this, Global.resourceString("True_Color_Board")));
 		TrueColor.setState(Global.getParameter("beauty", true));
-		options.add(TrueColorStones = new CheckboxMenuItemAction(this, Global
-			.resourceString("True_Color_Stones")));
+		options.add(TrueColorStones = new CheckboxMenuItemAction(this, Global.resourceString("True_Color_Stones")));
 		TrueColorStones.setState(Global.getParameter("beautystones", true));
-		options.add(Alias = new CheckboxMenuItemAction(this, Global
-			.resourceString("Anti_alias_Stones")));
+		options.add(Alias = new CheckboxMenuItemAction(this, Global.resourceString("Anti_alias_Stones")));
 		Alias.setState(Global.getParameter("alias", true));
-		options.add(Shadows = new CheckboxMenuItemAction(this, Global
-			.resourceString("Shadows")));
+		options.add(Shadows = new CheckboxMenuItemAction(this, Global.resourceString("Shadows")));
 		Shadows.setState(Global.getParameter("shadows", true));
-		options.add(SmallerStones = new CheckboxMenuItemAction(this, Global
-			.resourceString("Smaller_Stones")));
+		options.add(SmallerStones = new CheckboxMenuItemAction(this, Global.resourceString("Smaller_Stones")));
 		SmallerStones.setState(Global.getParameter("smallerstones", false));
-		options.add(BlackOnly = new CheckboxMenuItemAction(this, Global
-			.resourceString("Black_Only")));
+		options.add(BlackOnly = new CheckboxMenuItemAction(this, Global.resourceString("Black_Only")));
 		BlackOnly.setState(Global.getParameter("blackonly", false));
 		M.add(options);
 		// Board
@@ -205,8 +172,7 @@ public class JagoGameFrame extends GoFrame
 		SimplePanel sp = new SimplePanel(L, 80, Lm, 20);
 		BP.add("South", sp);
 		// Text Area
-		JPanel bcp = new BoardCommentPanel(new Panel3D(BP),
-			new Panel3D(Comment), B);
+		JPanel bcp = new BoardCommentPanel(new Panel3D(BP), new Panel3D(Comment), B);
 		add("Center", bcp);
 		// Navigation panel
 		IB = createIconBar();
@@ -218,7 +184,6 @@ public class JagoGameFrame extends GoFrame
 		validate();
 		Show = true;
 		B.addKeyListener(this);
-		setVisible(true);
 		repaint();
 	}
 

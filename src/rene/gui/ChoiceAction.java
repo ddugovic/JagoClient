@@ -21,8 +21,8 @@ class ChoiceTranslator implements ItemListener
 This is a choice item, which sets a specified font and translates
 events into strings, which are passed to the doAction method of the
 DoActionListener.
-@see jagoclient.gui.CloseFrame#doAction
-@see jagoclient.gui.CloseDialog#doAction
+@see rene.gui.CloseFrame#doAction
+@see rene.gui.CloseDialog#doAction
 */
 
 public class ChoiceAction extends Choice

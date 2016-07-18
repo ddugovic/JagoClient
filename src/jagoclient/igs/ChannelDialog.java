@@ -4,8 +4,6 @@ import jagoclient.Global;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
-import jagoclient.gui.CloseListener;
 import jagoclient.gui.HistoryTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyMenu;
@@ -23,13 +21,15 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import rene.gui.CloseFrame;
+import rene.gui.CloseListener;
+
 /**
  * Contains a text area and a text field for anwers.
  * 
  * @see jagoclient.igs.ChannelDistributor
  */
-public class ChannelDialog extends CloseFrame implements CloseListener,
-	KeyListener
+public class ChannelDialog extends CloseFrame implements CloseListener, KeyListener
 {
 	PrintWriter Out;
 	TextArea T;
@@ -110,7 +110,7 @@ public class ChannelDialog extends CloseFrame implements CloseListener,
 		return false;
 	}
 
-	public void isClosed ()
+	public void closed ()
 	{
 		doclose();
 	}

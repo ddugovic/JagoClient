@@ -3,7 +3,6 @@ package jagoclient.dialogs;
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.ChoiceAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.IntField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -21,6 +20,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
 import rene.gui.DoItemListener;
 
 /**

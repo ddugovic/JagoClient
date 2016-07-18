@@ -2,8 +2,6 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
-import jagoclient.gui.CloseListener;
 import jagoclient.gui.HistoryTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -19,6 +17,9 @@ import java.io.PrintWriter;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import rene.gui.CloseFrame;
+import rene.gui.CloseListener;
 
 /**
  * The SayDialog is opened by the SayDistributor in response to a say.
@@ -108,7 +109,7 @@ public class SayDialog extends CloseFrame implements CloseListener, KeyListener
 		return true;
 	}
 
-	public void isClosed ()
+	public void closed ()
 	{
 		doclose();
 	}

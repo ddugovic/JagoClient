@@ -5,8 +5,6 @@ import jagoclient.Go;
 import jagoclient.dialogs.HelpDialog;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -20,6 +18,8 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 
 public class EditPartner extends CloseDialog

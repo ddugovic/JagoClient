@@ -2,7 +2,6 @@ package jagoclient.dialogs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
@@ -15,6 +14,8 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
 
 /**
  * A general dialog to get a string parameter. Contains a simple text field. The

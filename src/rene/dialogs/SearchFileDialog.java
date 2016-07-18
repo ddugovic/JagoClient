@@ -147,12 +147,14 @@ public class SearchFileDialog extends CloseDialog
 	public SearchFileDialog (Frame f, String action)
 	{	this(f,action,"",false);
 	}
+	@Override
 	public void actionPerformed (ActionEvent e)
 	{	if (e.getSource()==L)
 		{	action();
 		}
 		else super.actionPerformed(e);
 	}
+	@Override
 	public void doAction (String o)
 	{	Result=null;
 		if (o.equals("SearchRek")) search(true);
@@ -183,6 +185,7 @@ public class SearchFileDialog extends CloseDialog
 		SearchrekButton.setEnabled(f);
 		ActionButton.setEnabled(f);
 	}
+	@Override
 	public void run ()
 	{	Result=null;
 		enableButtons(false);
@@ -203,17 +206,21 @@ public class SearchFileDialog extends CloseDialog
 		doclose();
 	}
 	public String getResult() { return Result; }
+	@Override
 	public void focusGained (FocusEvent e)
 	{	Pattern.requestFocus();
 	}
+	@Override
 	public void setVisible (boolean flag)
 	{	if (flag) enableButtons(true);
 		super.setVisible(flag);
 	}
+	@Override
 	public boolean close ()
 	{	Abort=true;
 		return true;
 	}
+	@Override
 	public void doclose ()
 	{	if (F!=null) F.stopIt();
 		Dir.saveHistory("searchfile.dir");
@@ -239,15 +246,18 @@ public class SearchFileDialog extends CloseDialog
 		Sn=0;
 		return this;
 	}
+	@Override
 	public boolean hasMoreElements ()
 	{	return Sn<S.length;
 	}
+	@Override
 	public Object nextElement ()
 	{	if (Sn>=S.length) return null;
 		String s=S[Sn];
 		Sn++;
 		return s;
 	}
+	@Override
 	public boolean isAborted ()
 	{	return Abort;
 	}

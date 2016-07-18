@@ -2,7 +2,6 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.TextFieldAction;
@@ -18,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
 import rene.util.parser.StringParser;
 
 /**

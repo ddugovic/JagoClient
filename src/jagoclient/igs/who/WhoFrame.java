@@ -5,9 +5,6 @@ import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
-import jagoclient.gui.CloseListener;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.HistoryTextField;
 import jagoclient.gui.MenuItemAction;
@@ -32,6 +29,9 @@ import java.util.Arrays;
 
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
+import rene.gui.CloseListener;
 import rene.gui.DoItemListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -501,7 +501,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 		L.append(s);
 	}
 
-	public void isClosed ()
+	public void closed ()
 	{
 		if (Global.getParameter("menuclose", true)) setMenuBar(null);
 		setVisible(false);

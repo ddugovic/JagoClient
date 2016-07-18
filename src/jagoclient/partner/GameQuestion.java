@@ -3,7 +3,6 @@ package jagoclient.partner;
 import jagoclient.Global;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -13,6 +12,8 @@ import java.awt.Choice;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+
+import rene.gui.CloseDialog;
 
 /**
  * Question to start a game with user definable paramters (handicap etc.)

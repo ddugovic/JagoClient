@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.InputStream;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 class ToFrontDelay extends Thread
 {
@@ -40,7 +41,6 @@ class ToFrontDelay extends Thread
 	}
 }
 
-
 /**
  * A Frame, which can be closed with the close button in the window frame.
  * <p>
@@ -55,10 +55,11 @@ class ToFrontDelay extends Thread
  * Sometimes the Frame wants to set the focus to a certain text field. To
  * support this, override focusGained().
  */
-
 public class CloseFrame extends Frame implements WindowListener,
 	ActionListener, DoActionListener, FocusListener
 {
+	LinkedList<CloseListener> L = new LinkedList<CloseListener>();
+
 	public CloseFrame (String s)
 	{
 		super(s);
@@ -131,6 +132,23 @@ public class CloseFrame extends Frame implements WindowListener,
 			}
 		};
 		t.start();
+	}
+
+	public void addCloseListener (CloseListener cl)
+	{
+		L.add(cl);
+	}
+
+	public void inform ()
+	{
+		L.stream().forEach((cl) -> {
+			cl.closed();
+		});
+	}
+
+	public void removeCloseListener (CloseListener cl)
+	{
+		L.remove(cl);
 	}
 
 	public void itemAction (String o, boolean flag)

@@ -48,8 +48,7 @@ public class Server extends Thread
 					S.close();
 					continue;
 				}
-				PartnerFrame cf=
-					new PartnerFrame(Global.resourceString("Server"),true);
+				PartnerFrame cf = new PartnerFrame(Global.resourceString("Server"),true);
 				Global.setwindow(cf,"partner",500,400);
 				cf.setVisible(true);
 				cf.open(S);

@@ -2,7 +2,6 @@ package jagoclient.partner;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -12,6 +11,8 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
 
 /**
  * Question to accept or decline a game with received parameters.

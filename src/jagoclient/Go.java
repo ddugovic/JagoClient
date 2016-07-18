@@ -11,7 +11,6 @@ import jagoclient.dialogs.GetParameter;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CardPanel;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 import jagoclient.igs.Connect;
@@ -39,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import rene.gui.CloseFrame;
 import rene.gui.DoActionListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -61,7 +61,6 @@ class GetPassword extends GetParameter
 			.resourceString("Password"), g, '*', true);
 		C = c;
 		G = g;
-		setVisible(true);
 	}
 
 	@Override
@@ -307,8 +306,9 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				// get password, if there is a user name, but no password,
 				// and automatic login
 				{
-					GetPassword GP = new GetPassword(F, this, c);
-					if (GP.Password.equals("")) return;
+					GetPassword gp = new GetPassword(F, this, c);
+					gp.setVisible(true);
+					if (gp.Password.equals("")) return;
 					// create a connection frame and connect via
 					// the connect class
 					ConnectionFrame cf = new ConnectionFrame(Global
@@ -316,7 +316,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 						+ c.Name + Global.resourceString("_as_") + c.User,
 						c.Encoding);
 					Global.setwindow(cf, "connection", 500, 400);
-					new Thread(new Connect(c, GP.Password, cf)).start();
+					new Thread(new Connect(c, gp.Password, cf)).start();
 				}
 				else
 				{ // create a connection frame and connect via
@@ -346,8 +346,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					return;
 				}
 				// create a PartnerFrame and connect via ConnectPartner class
-				PartnerFrame cf = new PartnerFrame(Global
-					.resourceString("Connection_to_")
+				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_")
 					+ c.Name, false);
 				Global.setwindow(cf, "partner", 500, 400);
 				new ConnectPartner(c, cf);
@@ -360,7 +359,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			Connection c = find(L.getSelectedItem());
 			if (c != null)
 			{
-				new EditConnection(F, ConnectionList, c, this);
+				new EditConnection(F, ConnectionList, c, this).setVisible(true);
 			}
 		}
 		else if ("EditPartner".equals(o))
@@ -370,7 +369,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			Partner c = pfind(PL.getSelectedItem());
 			if (c != null)
 			{
-				new EditPartner(F, PartnerList, c, this);
+				new EditPartner(F, PartnerList, c, this).setVisible(true);
 			}
 		}
 		else if ("AddServer".equals(o))
@@ -590,6 +589,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	static void openlocal (String file)
 	{
 		GoFrame gf = new GoFrame(new Frame(), "Local");
+		gf.setVisible(true);
 		gf.load(file);
 	}
 }

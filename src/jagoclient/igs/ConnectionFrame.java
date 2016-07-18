@@ -8,7 +8,6 @@ import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.GrayTextField;
 import jagoclient.gui.HistoryTextField;
 import jagoclient.gui.MenuItemAction;
@@ -42,6 +41,7 @@ import java.net.Socket;
 import javax.swing.JTextField;
 
 import rene.dialogs.Question;
+import rene.gui.CloseFrame;
 import rene.gui.DoItemListener;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;

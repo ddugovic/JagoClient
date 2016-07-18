@@ -3,8 +3,6 @@ package jagoclient.gmp;
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.IntField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -20,6 +18,9 @@ import java.util.StringTokenizer;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 
 class GMPWait extends CloseDialog
 {

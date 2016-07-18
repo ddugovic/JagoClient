@@ -93,8 +93,8 @@ public class JagoGame extends Applet implements ActionListener, Runnable
 
 	public void actionPerformed (ActionEvent e)
 	{
-		GF = new JagoGameFrame(new Frame(), Global
-			.resourceString("Jago_Viewer"));
+		GF = new JagoGameFrame(new Frame(), Global.resourceString("Jago_Viewer"));
+		GF.setVisible(true);
 		Global.setcomponent(GF);
 		if (L != null)
 		{
@@ -134,8 +134,8 @@ public class JagoGame extends Applet implements ActionListener, Runnable
 	public void load (String game)
 	{
 		Game = game;
-		GF = new JagoGameFrame(new Frame(), Global
-			.resourceString("Jago_Viewer"));
+		GF = new JagoGameFrame(new Frame(), Global.resourceString("Jago_Viewer"));
+		GF.setVisible(true);
 		new Thread(this).start();
 	}
 }

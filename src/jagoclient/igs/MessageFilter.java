@@ -2,8 +2,6 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.MenuItemAction;
 import jagoclient.gui.MyLabel;
@@ -19,11 +17,12 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.function.Predicate;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 

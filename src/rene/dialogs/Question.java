@@ -2,13 +2,14 @@ package rene.dialogs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
+
+import rene.gui.CloseDialog;
 
 /**
  * The Question dialog displays a question and yes/no buttons. It can be modal

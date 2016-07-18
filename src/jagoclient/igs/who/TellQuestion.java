@@ -2,7 +2,6 @@ package jagoclient.igs.who;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.GrayTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -17,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
 
 /**
  * Ask to tell the chosen user something, using the IGS tell command.

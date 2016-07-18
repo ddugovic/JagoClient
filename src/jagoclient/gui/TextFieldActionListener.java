@@ -12,8 +12,8 @@ import rene.gui.DoActionListener;
  * 
  * @see DoActionListener
  * @see TextFieldAction
- * @see jagoclient.gui.CloseFrame#doAction
- * @see jagoclient.gui.CloseDialog#doAction
+ * @see rene.gui.CloseFrame#doAction
+ * @see rene.gui.CloseDialog#doAction
  */
 
 class TextFieldActionListener implements ActionListener

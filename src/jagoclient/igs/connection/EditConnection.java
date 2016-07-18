@@ -5,8 +5,6 @@ import jagoclient.Go;
 import jagoclient.dialogs.HelpDialog;
 import jagoclient.dialogs.Message;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.FormTextField;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
@@ -21,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 
 public class EditConnection extends CloseDialog
@@ -47,14 +47,11 @@ public class EditConnection extends CloseDialog
 		p1.add(Server = new FormTextField(C.Server));
 		p1.add(new MyLabel(Global.resourceString("Port__Use_23_for_Telnet_")));
 		p1.add(Port = new FormTextField("" + C.Port));
-		p1.add(new MyLabel(Global
-			.resourceString("User__empty_for_manual_login_")));
+		p1.add(new MyLabel(Global.resourceString("User__empty_for_manual_login_")));
 		p1.add(User = new FormTextField("" + C.User));
-		p1.add(new MyLabel(Global
-				.resourceString("Password__empty_for_prompt_")));
+		p1.add(new MyLabel(Global.resourceString("Password__empty_for_prompt_")));
 		p1.add(Password = new JPasswordField("" + C.Password));
-		p1.add(new MyLabel(Global
-			.resourceString("Move_Style__move__if_unknown_")));
+		p1.add(new MyLabel(Global.resourceString("Move_Style__move__if_unknown_")));
 		p1.add(MChoice = new Choice());
 		MChoice.setFont(Global.SansSerif);
 		MChoice.add(Global.resourceString("move"));
@@ -84,7 +81,6 @@ public class EditConnection extends CloseDialog
 		add("South", new Panel3D(p));
 		Global.setpacked(this, "edit", 300, 200, F);
 		validate();
-		setVisible(true);
 		Name.requestFocus();
 	}
 

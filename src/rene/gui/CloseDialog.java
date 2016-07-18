@@ -108,7 +108,7 @@ public class CloseDialog extends Dialog implements WindowListener,
 	public void showHelp ()
 	{
 		InfoDialog.Subject = Subject;
-		InfoDialog id = new InfoDialog(F);
+		new InfoDialog(F).setVisible(true);
 	}
 
 	public void keyPressed (KeyEvent e)

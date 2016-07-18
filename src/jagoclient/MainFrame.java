@@ -10,8 +10,6 @@ import jagoclient.dialogs.Message;
 import jagoclient.gmp.GMPConnection;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.CheckboxMenuItemAction;
-import jagoclient.gui.CloseDialog;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.GrayTextField;
 import jagoclient.gui.IntField;
 import jagoclient.gui.MenuItemAction;
@@ -38,6 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import rene.dialogs.Question;
+import rene.gui.CloseDialog;
+import rene.gui.CloseFrame;
 import rene.gui.DoItemListener;
 
 /**
@@ -46,15 +46,14 @@ import rene.gui.DoItemListener;
 
 class GetPort extends GetParameter
 {
-	MainFrame GCF;
+	MainFrame gcf;
 
 	public GetPort (MainFrame gcf, int port)
 	{
 		super(gcf, Global.resourceString("Server_Port"), Global
 			.resourceString("Port"), gcf, true, "port");
 		set("" + port);
-		GCF = gcf;
-		setVisible(true);
+		this.gcf = gcf;
 	}
 
 	@Override
@@ -92,36 +91,28 @@ class AdvancedOptionsEdit extends CloseDialog
 		setLayout(new BorderLayout());
 		JPanel p = new MyPanel();
 		p.setLayout(new GridLayout(0, 1));
-		p.add(UseConfirmation = new Checkbox(Global
-			.resourceString("Confirmations")));
+		p.add(UseConfirmation = new Checkbox(Global.resourceString("Confirmations")));
 		UseConfirmation.setState(Global.getParameter("confirmations", true));
 		UseConfirmation.setFont(Global.SansSerif);
 		p.add(KoRule = new Checkbox(Global.resourceString("Obey_Ko_Rule")));
 		KoRule.setState(Global.getParameter("korule", true));
 		KoRule.setFont(Global.SansSerif);
-		p
-			.add(WhoWindow = new Checkbox(Global
-				.resourceString("Show_Who_Window")));
+		p.add(WhoWindow = new Checkbox(Global.resourceString("Show_Who_Window")));
 		WhoWindow.setState(Global.getParameter("whowindow", true));
 		WhoWindow.setFont(Global.SansSerif);
-		p.add(GamesWindow = new Checkbox(Global
-			.resourceString("Show_Games_Window")));
+		p.add(GamesWindow = new Checkbox(Global.resourceString("Show_Games_Window")));
 		GamesWindow.setState(Global.getParameter("gameswindow", true));
 		GamesWindow.setFont(Global.SansSerif);
-		p.add(Pack = new Checkbox(Global
-			.resourceString("Pack_some_of_the_dialogs")));
+		p.add(Pack = new Checkbox(Global.resourceString("Pack_some_of_the_dialogs")));
 		Pack.setState(Global.getParameter("pack", true));
 		Pack.setFont(Global.SansSerif);
-		p.add(SetIcon = new Checkbox(Global
-			.resourceString("Set_own_icon__buggy_in_windows__")));
+		p.add(SetIcon = new Checkbox(Global.resourceString("Set_own_icon__buggy_in_windows__")));
 		SetIcon.setState(Global.getParameter("icons", false));
 		SetIcon.setFont(Global.SansSerif);
-		p.add(UseSystemViewer = new Checkbox(Global
-			.resourceString("Use_AWT_TextArea")));
+		p.add(UseSystemViewer = new Checkbox(Global.resourceString("Use_AWT_TextArea")));
 		UseSystemViewer.setState(Global.getParameter("systemviewer", false));
 		UseSystemViewer.setFont(Global.SansSerif);
-		p.add(UseSystemLister = new Checkbox(Global
-			.resourceString("Use_AWT_List")));
+		p.add(UseSystemLister = new Checkbox(Global.resourceString("Use_AWT_List")));
 		UseSystemLister.setState(Global.getParameter("systemlister", false));
 		UseSystemLister.setFont(Global.SansSerif);
 		add("Center", new Panel3D(p));
@@ -132,7 +123,6 @@ class AdvancedOptionsEdit extends CloseDialog
 		ps.add(new ButtonAction(this, Global.resourceString("Help")));
 		add("South", new Panel3D(ps));
 		Global.setpacked(this, "advancedoptionsedit", 300, 150, f);
-		setVisible(true);
 	}
 
 	@Override
@@ -174,7 +164,6 @@ class AdvancedOptionsEdit extends CloseDialog
 /**
  * Get the name for the partner client.
  */
-
 class YourNameQuestion extends GetParameter
 {
 	public YourNameQuestion (MainFrame gcf)
@@ -182,7 +171,6 @@ class YourNameQuestion extends GetParameter
 		super(gcf, Global.resourceString("Name"), Global
 			.resourceString("Your_Name"), gcf, true, "yourname");
 		set(Global.getParameter("yourname", "Your Name"));
-		setVisible(true);
 	}
 
 	@Override
@@ -195,22 +183,19 @@ class YourNameQuestion extends GetParameter
 
 
 /**
- * Get the languate locale
+ * Get the language locale
  */
-
 class GetLanguage extends GetParameter
 {
 	public boolean done = false;
 
 	public GetLanguage (MainFrame gcf)
 	{
-		super(gcf, "Your Locale (leave empty for default)", "Language", gcf,
-			true, "language");
+		super(gcf, "Your Locale (leave empty for default)", "Language", gcf, true, "language");
 		String S = "Your Locale";
 		String T = Global.resourceString(S);
 		if ( !S.equals(T)) Prompt.setText(T + " (" + S + ")");
 		set(Locale.getDefault().toString());
-		setVisible(true);
 	}
 
 	@Override
@@ -241,8 +226,7 @@ class GetRelayServer extends CloseDialog
 		p.add(Server = new GrayTextField());
 		Server.setText(Global.getParameter("relayserver", "localhost"));
 		p.add(new MyLabel(Global.resourceString("Port")));
-		p.add(Port = new IntField(this, Global.resourceString("Port"), Global
-			.getParameter("relayport", 6971)));
+		p.add(Port = new IntField(this, Global.resourceString("Port"), Global.getParameter("relayport", 6971)));
 		add("Center", new Panel3D(p));
 		JPanel bp = new MyPanel();
 		bp.add(new ButtonAction(this, Global.resourceString("OK")));
@@ -252,7 +236,6 @@ class GetRelayServer extends CloseDialog
 		add("South", new Panel3D(bp));
 		Global.setpacked(this, "getrelay", 300, 200, F);
 		validate();
-		setVisible(true);
 	}
 
 	@Override
@@ -279,7 +262,7 @@ class GetRelayServer extends CloseDialog
 			}
 			catch (IOException ex)
 			{
-				new Message(Global.frame(), ex.getMessage());
+				new Message(Global.frame(), ex.getMessage()).setVisible(true);
 			}
 		}
 		else super.doAction(o);
@@ -296,7 +279,6 @@ class BackgroundColorEdit extends ColorEdit
 	public BackgroundColorEdit (Frame f, String s, Color c)
 	{
 		super(f, s, c, false);
-		setVisible(true);
 	}
 
 	@Override
@@ -495,8 +477,9 @@ public class MainFrame extends CloseFrame implements DoItemListener
 	{
 		if (Global.getParameter("confirmations", true))
 		{
-			Question CMQ = new CloseMainQuestion(this);
-			if (CMQ.Result) doclose();
+			Question cmq = new CloseMainQuestion(this);
+			cmq.setVisible(true);
+			if (cmq.Result) doclose();
 			return false;
 		}
 		else
@@ -581,18 +564,20 @@ public class MainFrame extends CloseFrame implements DoItemListener
 			else if (Global.resourceString("Local_Board").equals(o))
 			{
 				GoFrame gf = new GoFrame(new Frame(), Global.resourceString("Local_Viewer"));
+				gf.setVisible(true);
 			}
 			else if (Global.resourceString("Play_Go").equals(o))
 			{
-				new GMPConnection(this);
+				new GMPConnection(this).setVisible(true);
 			}
 			else if (Global.resourceString("Server_Port").equals(o))
 			{
-				new GetPort(this, Global.getParameter("serverport", 6970));
+				new GetPort(this, Global.getParameter("serverport", 6970)).setVisible(true);
 			}
 			else if (Global.resourceString("Set_Language").equals(o))
 			{
 				GetLanguage d = new GetLanguage(this);
+				d.setVisible(true);
 				if (d.done && close()) doclose();
 			}
 			else if (Global.resourceString("Board_Font").equals(o))
@@ -621,7 +606,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 			}
 			else if (Global.resourceString("Your_Name").equals(o))
 			{
-				new YourNameQuestion(this);
+				new YourNameQuestion(this).setVisible(true);
 			}
 			else if (Global.resourceString("Filter").equals(o))
 			{
@@ -629,11 +614,11 @@ public class MainFrame extends CloseFrame implements DoItemListener
 			}
 			else if (Global.resourceString("Function_Keys").equals(o))
 			{
-				new FunctionKeyEdit();
+				new FunctionKeyEdit().setVisible(true);
 			}
 			else if (Global.resourceString("Relay_Server").equals(o))
 			{
-				new GetRelayServer(this);
+				new GetRelayServer(this).setVisible(true);
 			}
 			else if (Global.resourceString("Test_Sound").equals(o))
 			{
@@ -671,17 +656,17 @@ public class MainFrame extends CloseFrame implements DoItemListener
 			}
 			else if (Global.resourceString("Advanced_Options").equals(o))
 			{
-				new AdvancedOptionsEdit(this);
+				new AdvancedOptionsEdit(this).setVisible(true);
 			}
 			else if (Global.resourceString("Background_Color").equals(o))
 			{
-				new BackgroundColorEdit(this, "globalgray", Color.gray);
+				new BackgroundColorEdit(this, "globalgray", Color.gray).setVisible(true);
 			}
 			else super.doAction(o);
 		}
 		catch (IOException ex)
 		{
-			new Message(Global.frame(), ex.getMessage());
+			new Message(Global.frame(), ex.getMessage()).setVisible(true);
 		}
 	}
 

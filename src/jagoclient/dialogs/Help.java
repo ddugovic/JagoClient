@@ -2,17 +2,15 @@ package jagoclient.dialogs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseFrame;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 
+import rene.gui.CloseFrame;
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
 
@@ -29,7 +27,7 @@ import rene.viewer.Viewer;
  * @see jagoclient.Global#getStream
  */
 
-public class Help extends CloseFrame implements Runnable
+public class Help extends CloseFrame
 {
 	Viewer V; // The viewer
 
@@ -66,48 +64,6 @@ public class Help extends CloseFrame implements Runnable
 				throw new IOException(Global.resourceString("Could_not_find_the_help_file_"), ex2);
 			}
 		}
-	}
-
-	/**
-	 * This constructor is used to get the about.txt file from our homeserver
-	 * (address is hard coded into the run method). A thread is used to wait for
-	 * connection.
-	 */
-	public Help ()
-	{
-		super(Global.resourceString("Help"));
-		seticon("ihelp.gif");
-		V = Global.getParameter("systemviewer", false)?new SystemViewer()
-			:new Viewer();
-		V.setFont(Global.Monospaced);
-		new Thread(this).start();
-	}
-
-	public void run ()
-	{
-		String H = "";
-		try
-		{
-			BufferedReader in;
-			in = new BufferedReader(new InputStreamReader(new DataInputStream(
-				new URL("http://www.rene-grothmann.de/jago/about.txt")
-					.openStream())));
-			while (true)
-			{
-				String s = in.readLine();
-				if (s == null) break;
-				V.appendLine(s);
-			}
-			in.close();
-		}
-		catch (Exception e)
-		{
-			new Message(Global.frame(), Global
-				.resourceString("Could_not_find_the_help_file_"));
-			doclose();
-			return;
-		}
-		display();
 	}
 
 	public void display ()

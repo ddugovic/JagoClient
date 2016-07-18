@@ -2,7 +2,6 @@ package jagoclient.igs;
 
 import jagoclient.Global;
 import jagoclient.gui.ButtonAction;
-import jagoclient.gui.CloseDialog;
 import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.TextFieldAction;
@@ -14,6 +13,8 @@ import java.io.PrintWriter;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import rene.gui.CloseDialog;
 
 /**
  * This dialog is opened by an InformatioDistributor.
