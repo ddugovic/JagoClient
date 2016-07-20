@@ -1,6 +1,5 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.dialogs.Message;
 import jagoclient.sound.JagoSound;
@@ -11,10 +10,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.function.Predicate;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 
 /**
@@ -31,13 +31,14 @@ import rene.util.parser.StringParser;
 
 public class IgsStream
 {
+	private static final Logger LOG = Logger.getLogger(IgsStream.class.getName());
 	String Line;
 	char C[];
 	final int linesize = 4096;
 	int L;
 	int Number;
 	String Command;
-	final ListClass<Distributor> DistributorList;
+	final AbstractList<Distributor> DistributorList;
 	PrintWriter Out;
 	BufferedReader In;
 	ConnectionFrame CF;
@@ -57,8 +58,8 @@ public class IgsStream
 		Line = "";
 		L = 0;
 		Number = 0;
-		Dump.println("--> IgsStream opened");
-		DistributorList = new ListClass<Distributor>();
+		LOG.info("--> IgsStream opened");
+		DistributorList = new ArrayList<Distributor>();
 		C = new char[linesize];
 		initstream(in);
 	}
@@ -103,7 +104,7 @@ public class IgsStream
 			int c = In.read();
 			if (c == -1 || c == 255 && lastcommand == 255)
 			{
-				Dump.println("Received character " + c);
+				LOG.log(Level.FINE, "Received character {0}", c);
 				throw new IOException();
 			}
 			lastcommand = c;
@@ -160,7 +161,7 @@ public class IgsStream
 		{
 			if (L >= linesize || b == '\n')
 			{
-				if (L >= linesize) Dump.println("IGS : Buffer overflow");
+				if (L >= linesize) LOG.severe("IGS : Buffer overflow");
 				break;
 			}
 			C[L++] = b;
@@ -195,8 +196,7 @@ public class IgsStream
 		while (true)
 		{
 			readlineprim();
-			Dump.println("IGS:(" + Number + " for " + dis.number() + ") "
-				+ Command);
+			LOG.log(Level.INFO, "IGS:({0} for {1}) {2}", new Object[]{Number, dis.number(), Command});
 			if (Number == dis.number())
 				dis.send(Command);
 			else if (Number == 9) // information got in other content
@@ -204,23 +204,26 @@ public class IgsStream
 				Distributor dist = findDistributor(9);
 				if (dist != null)
 				{
-					Dump.println("Sending information");
+					LOG.info("Sending information");
 					dist.send(Command);
 					// sendall(dist); // logical error
 				}
 			}
 			else
 			{
-				if (dis.once())
+				if (dis.sizetask() != null || dis.task() != null)
 				{
 					unchain(dis);
-					dis.finished();
-					Dump.println("Distributor " + dis.number() + " finished");
+					if (dis.sizetask() != null)
+						dis.sizetask().sizefinished();
+					if (dis.task() != null)
+						dis.task().finished();
+					LOG.log(Level.INFO, "Distributor {0} finished", dis.number());
 				}
 				break;
 			}
 		}
-		Dump.println("sendall() for " + dis.number() + " finished");
+		LOG.log(Level.INFO, "sendall() for {0} finished", dis.number());
 		dis.allsended();
 	}
 
@@ -233,15 +236,18 @@ public class IgsStream
 		while (true)
 		{
 			readlineprim();
-			Dump.println("IGS: " + Command);
+			LOG.log(Level.INFO, "IGS: {0}", Command);
 			if (Number == 11)
 				dis.send(s + Command);
 			else
 			{
-				if (dis.once())
+				if (dis.sizetask() != null || dis.task() != null)
 				{
 					unchain(dis);
-					dis.finished();
+					if (dis.sizetask() != null)
+						dis.sizetask().sizefinished();
+					if (dis.task() != null)
+						dis.task().finished();
 				}
 				break;
 			}
@@ -282,7 +288,7 @@ public class IgsStream
 			{
 				if (L >= linesize)
 				{
-					Dump.println("IGS : Buffer overflow");
+					LOG.severe("IGS : Buffer overflow");
 					throw new IOException("Buffer Overflow");
 				}
 				if (b == '\n')
@@ -294,9 +300,8 @@ public class IgsStream
 				if ( !available()) break;
 				b = read();
 			}
-			// Dump.println(L+" characters received from server");
 			Line = new String(C, 0, L);
-			Dump.println("IGS sent: " + Line);
+			LOG.log(Level.INFO, "IGS sent: {0}", Line);
 			Number = 0;
 			Command = "";
 			if (full)
@@ -326,7 +331,7 @@ public class IgsStream
 				L = 0;
 				loop1: while (true)
 				{
-					Dump.println("loop1 with " + Number + " " + Command);
+					LOG.log(Level.INFO, "loop1 with {0} {1}", new Object[]{Number, Command});
 					if (Number == 21
 						&& (Command.startsWith("{Game") || Command
 							.startsWith("{ Game")))
@@ -341,7 +346,7 @@ public class IgsStream
 						Distributor dis = findDistributor(15, G);
 						if (dis != null)
 						{
-							Dump.println("Sending comment to game " + G);
+							LOG.log(Level.INFO, "Sending comment to game {0}", G);
 							dis.send(Command);
 							L = 0;
 							continue outerloop;
@@ -383,7 +388,7 @@ public class IgsStream
 						Distributor dis = findDistributor(15, G);
 						if (dis != null)
 						{
-							Dump.println("Sending kibitz to game " + G);
+							LOG.log(Level.INFO, "Sending kibitz to game {0}", G);
 							dis.send(Command);
 							sendall("Kibitz-> ", dis);
 							continue loop1;
@@ -396,7 +401,7 @@ public class IgsStream
 						Distributor dis = findDistributor(15);
 						if (dis != null)
 						{
-							Dump.println("Got " + Command);
+							LOG.log(Level.INFO, "Got {0}", Command);
 							dis.send(Command);
 							sendall(dis);
 							continue loop1;
@@ -408,10 +413,10 @@ public class IgsStream
 						Distributor dis = findDistributor(9);
 						if (dis != null)
 						{
-							Dump.println("Sending information");
+							LOG.info("Sending information");
 							dis.send(Command);
 							sendall(dis);
-							Dump.println("End of information");
+							LOG.info("End of information");
 							continue loop1;
 						}
 					}
@@ -425,7 +430,7 @@ public class IgsStream
 						Distributor dis = findDistributor(15, G);
 						if (dis != null)
 						{
-							Dump.println("Sending to game " + G);
+							LOG.log(Level.INFO, "Sending to game {0}", G);
 							dis.send(Command);
 							sendall(dis);
 							continue loop1;
@@ -433,7 +438,7 @@ public class IgsStream
 						dis = findDistributor(15, -1);
 						if (dis != null)
 						{
-							Dump.println("Game " + G + " started");
+							LOG.log(Level.INFO, "Game {0} started", G);
 							dis.game(G);
 							dis.send(Command);
 							sendall(dis);
@@ -455,7 +460,7 @@ public class IgsStream
 						Distributor dis = findDistributor(32, G);
 						if (dis != null)
 						{
-							Dump.println("Sending to channel " + G);
+							LOG.log(Level.INFO, "Sending to channel {0}", G);
 							dis.send(sp.upto((char)0));
 							continue outerloop;
 						}
@@ -485,7 +490,7 @@ public class IgsStream
 						Distributor dis = findDistributor(32);
 						if (dis != null)
 						{
-							Dump.println("Sending to channel " + dis.game());
+							LOG.log(Level.INFO, "Sending to channel {0}", dis.game());
 							dis.send(Command);
 							continue outerloop;
 						}
@@ -495,7 +500,7 @@ public class IgsStream
 						&& (Command.startsWith("8") || Command.startsWith("5") || Command
 							.startsWith("6")))
 					{
-						Dump.println("1 received " + Command);
+						LOG.log(Level.INFO, "1 received {0}", Command);
 					}
 					else if (Number != 9)
 					{
@@ -506,8 +511,7 @@ public class IgsStream
 							sendall(dis);
 							continue loop1;
 						}
-						else Dump.println("Distributor " + Number
-							+ " not found");
+						else LOG.log(Level.WARNING, "Distributor {0} not found", Number);
 					}
 					break;
 				}
@@ -522,9 +526,8 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			for (ListElement<Distributor> l : DistributorList)
+			for (Distributor dis : DistributorList)
 			{
-				Distributor dis = l.content();
 				if (dis.number() == n)
 				{
 					if (dis.game() == g) return dis;
@@ -538,9 +541,8 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			for (ListElement<Distributor> l : DistributorList)
+			for (Distributor dis : DistributorList)
 			{
-				Distributor dis = l.content();
 				if (dis.number() == n) return dis;
 			}
 			return null;
@@ -548,13 +550,13 @@ public class IgsStream
 	}
 
 	/**
-	 * Chaines a new distributor to the distributor list.
+	 * Chains a new distributor to the distributor list.
 	 */
-	public void distributor (Distributor o)
+	public void append (Distributor dis)
 	{
 		synchronized (DistributorList)
 		{
-			DistributorList.append(o);
+			DistributorList.add(dis);
 		}
 	}
 
@@ -565,9 +567,8 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			for (ListElement<Distributor> l : DistributorList)
+			for (Distributor dis : DistributorList)
 			{
-				Distributor dis = l.content();
 				if (dis.number() == 15)
 				{
 					if (dis.game() == g) return true;
@@ -577,13 +578,13 @@ public class IgsStream
 		}
 	}
 
-	public void unchain (Distributor o)
+	public void unchain (Distributor dis)
 	{
 		try
 		{
 			synchronized (DistributorList)
 			{
-				DistributorList.removeIf((ListElement<Distributor> t) -> t.content() == o);
+				DistributorList.remove(dis);
 			}
 		}
 		catch (Exception e)
@@ -597,10 +598,7 @@ public class IgsStream
 	{
 		synchronized (DistributorList)
 		{
-			for (ListElement<Distributor> l : DistributorList)
-			{
-				l.content().remove();
-			}
+			DistributorList.clear();
 		}
 	}
 
@@ -610,7 +608,7 @@ public class IgsStream
 			|| s.startsWith("status")) return;
 		Out.println(s);
 		Out.flush();
-		Dump.println("Sending: " + s);
+		LOG.log(Level.INFO, "Sending: {0}", s);
 	}
 
 	public int number ()

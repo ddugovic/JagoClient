@@ -11,7 +11,7 @@ public class ObserveDistributor extends Distributor
 {	GoObserver P;
 	boolean Blocked;
 	public ObserveDistributor (IgsStream in, GoObserver p, int n)
-	{	super(in,15,n,false);
+	{	super(in,15,n,null,null);
 		P=p;
 		Blocked=true;
 	}

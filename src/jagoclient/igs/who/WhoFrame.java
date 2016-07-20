@@ -12,6 +12,7 @@ import jagoclient.gui.MyMenu;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
 import jagoclient.igs.ConnectionFrame;
+import jagoclient.igs.Distributor;
 import jagoclient.igs.IgsStream;
 
 import java.awt.BorderLayout;
@@ -25,6 +26,8 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JTextField;
@@ -33,7 +36,6 @@ import rene.gui.CloseDialog;
 import rene.gui.CloseFrame;
 import rene.gui.CloseListener;
 import rene.gui.DoItemListener;
-import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 import rene.viewer.Lister;
@@ -96,14 +98,14 @@ class EditButtons extends CloseDialog
  * name.
  */
 
-public class WhoFrame extends CloseFrame implements CloseListener, DoItemListener
+public class WhoFrame extends CloseFrame implements CloseListener, DoItemListener, Distributor.Task
 {
 	IgsStream In;
 	PrintWriter Out;
 	Lister T;
 	ConnectionFrame CF;
 	WhoDistributor GD;
-	ListClass<String> L;
+	AbstractList<String> L;
 	boolean SortName;
 	boolean Closed = false;
 	String Range;
@@ -425,7 +427,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 	 */
 	synchronized public void refresh ()
 	{
-		L = new ListClass<String>();
+		L = new ArrayList<String>();
 		T.setText(Global.resourceString("Loading"));
 		if (GD != null) GD.unchain();
 		GD = null;
@@ -434,52 +436,41 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 	}
 
 	/**
-	 * The distributor told me that all players have been receved. Now unchain
-	 * the distributor, parse and sort the output and display.
+	 * The distributor told me that all players have been received.
+	 * Now unchain the distributor, parse and sort the output and display.
 	 */
 	synchronized void allsended ()
 	{
 		if (GD != null) GD.unchain();
 		GD = null;
 		if (Closed) return;
-		ListElement<String> p = L.first();
-		int i, n = 0;
-		while (p != null)
+		if (L.size() > 2)
 		{
-			n++;
-			p = p.next();
-		}
-		if (n > 2)
-		{
-			WhoObject v[] = new WhoObject[n];
-			p = L.first();
-			for (i = 0; i < n; i++)
+			WhoObject v[] = new WhoObject[L.size()];
+			for (int i = 0; i < L.size(); i++)
 			{
-				v[i] = new WhoObject(p.content(), SortName);
-				p = p.next();
+				v[i] = new WhoObject(L.get(i), SortName);
 			}
 			Arrays.sort(v);
 			T.setText("");
 			T.appendLine0(Global
 				.resourceString("_Info_______Name_______Idle___Rank"));
 			Color FC = Color.green.darker(), CM = Color.red.darker();
-			for (i = 0; i < n; i++)
+			for (WhoObject who : v)
 			{
-				if ( !(Looking.getState() && !v[i].looking()
-					|| OmitX.getState() && v[i].silent() || OmitQ.getState()
-					&& v[i].quiet() || FriendsOnly.getState() && !v[i].friend()))
-					T.appendLine0(v[i].who(), v[i].friend()?FC:v[i].marked()?CM
+				if ( !(Looking.getState() && !who.looking()
+					|| OmitX.getState() && who.silent() || OmitQ.getState()
+					&& who.quiet() || FriendsOnly.getState() && !who.friend()))
+					T.appendLine0(who.who(), who.friend()?FC:who.marked()?CM
 						:Color.black);
 			}
 			T.doUpdate(false);
 		}
 		else
 		{
-			p = L.first();
-			while (p != null)
+			for (String s : L)
 			{
-				T.appendLine(p.content());
-				p = p.next();
+				T.appendLine(s);
 			}
 			T.doUpdate(false);
 		}
@@ -495,12 +486,16 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 		if (p.skip("****")) return;
 		p = new StringParser(s);
 		s = p.upto('|');
-		L.append(s);
+		L.add(s);
 		if ( !p.skip("| ")) return;
 		s = p.upto('|');
-		L.append(s);
+		L.add(s);
 	}
 
+	@Override
+	public void finished () {}
+
+	@Override
 	public void closed ()
 	{
 		if (Global.getParameter("menuclose", true)) setMenuBar(null);

@@ -14,14 +14,11 @@ the observer distributor has sent the status command.
 class ObserveSizeDistributor extends Distributor
 {	GoObserver P;
 	public ObserveSizeDistributor (IgsStream in, GoObserver p)
-	{	super(in,22,0,true);
+	{	super(in,22,0,p,null);
 		P=p;
 	}
 	public void send (String c)
 	{	P.receivesize(c);
-	}
-	public void finished ()
-	{	P.sizefinished();
 	}
 }
 
@@ -69,7 +66,7 @@ Most of these inconveniences are caused by a dirty server protocol.
 @see jagoclient.igs.Player
 */
 
-public class GoObserver
+public class GoObserver implements Distributor.SizeTask
 {	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
@@ -126,6 +123,7 @@ public class GoObserver
 		L++;
 	}
 
+	@Override
 	public void sizefinished ()
 	{	PD=new ObserveDistributor(In,this,N);
 		GF.distributor(PD);

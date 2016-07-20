@@ -15,29 +15,31 @@ distributor.
 @see jagoclient.igs.IgsStream
 */
 
-public class Distributor
+public abstract class Distributor
 {	int N; // number to expect
 	int G; // game number, if applicable
-	boolean Once=false; // needed only for one input
+	SizeTask ST; // single-input distributor
+	Task T; // single-input distributor
 	IgsStream In;
 	public boolean Playing;
-	public Distributor (IgsStream in, int n, int game, boolean once)
+	public Distributor (IgsStream in, int n, int game, SizeTask sizetask, Task task)
 	{	N=n; G=game;
-		in.distributor(this);
-		Once=once;
+		in.append(this);
+		ST=sizetask;
+		T=task;
 		In=in;
 		Playing=false;
 	}
-	public int number () { return N; }
-	public int game () { return G; }
+	public final int number () { return N; }
+	public final int game () { return G; }
 	public void game (int n) {}
-	public boolean once () { return Once; }
-	public void send (String C) {}
-	public void finished () {} // message for a once-distributor at end
+	public final SizeTask sizetask () { return ST; }
+	public final Task task () { return T; }
+	public abstract void send (String s);
 	public void unchain ()
 	{	In.unchain(this);
 	}
-	public void remove () {} // remove client (called from IgsStream at connection end)
+	public void remove () {} // dispose client (called from IgsStream at connection end)
 	public boolean blocked () { return false; }
 	public boolean wantsmove () { return Playing; }
 	public void set (int i, int j, int sec) {}
@@ -47,5 +49,14 @@ public class Distributor
 	public void refresh() {}
 	public boolean started () { return false; }
 	public boolean newmove () { return false; }
+
+	public interface SizeTask
+	{
+		public void sizefinished ();
+	}
+	public interface Task
+	{
+		public void finished ();
+	}
 }
 

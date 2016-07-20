@@ -14,7 +14,7 @@ public class SayDistributor extends Distributor
 	public SayDialog MD;
 	ConnectionFrame CF;
 	public SayDistributor (ConnectionFrame cf, IgsStream in, PrintWriter out)
-	{	super(in,19,0,false);
+	{	super(in,19,0,null,null);
 		CF=cf; Out=out;
 		MD=null;
 	}

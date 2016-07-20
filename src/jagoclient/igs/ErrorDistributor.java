@@ -18,7 +18,7 @@ public class ErrorDistributor extends Distributor
 	String S;
 	public ErrorDistributor
 		(ConnectionFrame cf, IgsStream in, PrintWriter out)
-	{	super(in,5,0,false);
+	{	super(in,5,0,null,null);
 		CF=cf; Out=out;
 		S="";
 	}

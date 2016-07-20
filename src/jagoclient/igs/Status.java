@@ -7,12 +7,10 @@ import java.io.PrintWriter;
 import rene.util.parser.StringParser;
 
 /**
-This interprets, what the server send in response to a
-status command (and to the problem command). It gets a
-GoFrame to display the game status.
-*/
-
-public class Status
+ * This interprets, what the server send in response to a status command
+ * (or to the problem command). It gets a GoFrame to display the game status.
+ */
+public class Status implements Distributor.Task
 {	IgsGoFrame GF;
 	IgsStream In;
 	StatusDistributor PD;
@@ -86,10 +84,10 @@ public class Status
 	}
 
 	/**
-	When the board status is complete the GoFrame window is
-	asked to display itself.
-	*/
-	void finished ()
+	 * When the board status is complete, displays the GoFrame window.
+	 */
+	@Override
+	public void finished ()
 	{	Dump.println("Status is finished");
 		GF.setVisible(true);
 		GF.active(true);

@@ -13,7 +13,7 @@ in an old GamesFrame via refresh.
 public class GamesDistributor extends Distributor
 {	GamesFrame P;
 	public GamesDistributor (IgsStream in, GamesFrame p)
-	{	super(in,7,0,true);
+	{	super(in,7,0,null,p);
 		P=p;
 	}
 	public void send (String c)

@@ -160,6 +160,7 @@ class MessageDialog extends CloseFrame implements CloseListener, KeyListener
 		UserChoice.add(user);
 	}
 
+	@Override
 	public void closed ()
 	{
 		doclose();

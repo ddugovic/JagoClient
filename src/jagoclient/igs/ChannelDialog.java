@@ -110,6 +110,7 @@ public class ChannelDialog extends CloseFrame implements CloseListener, KeyListe
 		return false;
 	}
 
+	@Override
 	public void closed ()
 	{
 		doclose();

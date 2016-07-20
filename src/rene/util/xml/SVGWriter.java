@@ -31,6 +31,7 @@ public class SVGWriter extends XmlWriter
 		startTagEndNewLine();
 	}
 	
+	@Override
 	public void close ()
 	{	endTag("svg");
 		super.close();

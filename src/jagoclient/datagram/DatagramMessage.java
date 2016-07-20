@@ -15,7 +15,8 @@ and from byte arrays.
 */
 
 public class DatagramMessage 
-{	byte B[];
+{	private static final Logger LOG = Logger.getLogger(DatagramMessage.class.getName());
+	byte B[];
 	final int MAX=4096;
 	int Used;
 	public DatagramMessage ()
@@ -27,14 +28,14 @@ public class DatagramMessage
 	*/
 	public void add (String s)
 	{	try
-		{	byte B1[]=s.getBytes();
-		    for (int i=0; i<s.length(); i++) B[Used+i]=B1[i];
+		{	System.arraycopy(s.getBytes(), 0, B, Used, s.length());
 			Used+=s.length();
 			B[Used]=0; Used++;
+			LOG.info(s);
 		}
 		catch (Exception ex)
 		{
-			Logger.getLogger(DatagramMessage.class.getName()).log(Level.WARNING, null, ex);
+			LOG.log(Level.WARNING, null, ex);
 		}
 	}
 	/**
@@ -51,7 +52,7 @@ public class DatagramMessage
 		}
 		catch (Exception ex)
 		{
-			Logger.getLogger(DatagramMessage.class.getName()).log(Level.WARNING, null, ex);
+			LOG.log(Level.WARNING, null, ex);
 		}
 	}
 	/**
@@ -71,10 +72,11 @@ public class DatagramMessage
 				i++;
 			}
 			ds.close();
+			LOG.info(v.toString());
 		}
 		catch (Exception ex)
 		{
-			Logger.getLogger(DatagramMessage.class.getName()).log(Level.WARNING, null, ex);
+			LOG.log(Level.WARNING, null, ex);
 		}
 		return v;
 	}

@@ -223,7 +223,7 @@ public class IgsGoFrame extends ConnectedGoFrame implements TimedBoard,
 	@Override
 	public void doclose ()
 	{
-		if (Dis != null && !Dis.once()) Dis.remove();
+		if (Dis != null) Dis.remove();
 		CF.removeOutputListener(this);
 		if (Timer != null && Timer.isAlive()) Timer.stopit();
 		if (ExtraSendField) SendField.saveHistory("sendfield.history");

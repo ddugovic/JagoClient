@@ -17,7 +17,7 @@ public class InformationDistributor extends Distributor
 	int Lines;
 	public InformationDistributor
 		(ConnectionFrame cf, IgsStream in, PrintWriter out)
-	{	super(in,9,0,false);
+	{	super(in,9,0,null,null);
 		CF=cf; Out=out;
 		S=new String(""); Lines=0;
 		infodialog=null;

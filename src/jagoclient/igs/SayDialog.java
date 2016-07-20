@@ -109,6 +109,7 @@ public class SayDialog extends CloseFrame implements CloseListener, KeyListener
 		return true;
 	}
 
+	@Override
 	public void closed ()
 	{
 		doclose();

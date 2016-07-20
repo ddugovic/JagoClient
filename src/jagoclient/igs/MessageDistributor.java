@@ -22,7 +22,7 @@ public class MessageDistributor extends Distributor
 	
 	public MessageDistributor
 		(ConnectionFrame cf, IgsStream in, PrintWriter out)
-	{	super(in,24,0,false);
+	{	super(in,24,0,null,null);
 		CF=cf; Out=out;
 		MD=null;
 	}

@@ -10,6 +10,7 @@ import jagoclient.gui.MyMenu;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
 import jagoclient.igs.ConnectionFrame;
+import jagoclient.igs.Distributor;
 import jagoclient.igs.IgsStream;
 
 import java.awt.BorderLayout;
@@ -39,7 +40,7 @@ import rene.viewer.SystemLister;
  * @see jagoclient.sort.Sorter
  */
 
-public class GamesFrame extends CloseFrame implements CloseListener
+public class GamesFrame extends CloseFrame implements CloseListener, Distributor.Task
 {
 	IgsStream In;
 	PrintWriter Out;
@@ -227,6 +228,10 @@ public class GamesFrame extends CloseFrame implements CloseListener
 		}
 	}
 
+	@Override
+	public void finished () {}
+
+	@Override
 	public void closed ()
 	{
 		if (Global.getParameter("menuclose", true)) setMenuBar(null);

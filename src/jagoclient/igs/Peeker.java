@@ -9,28 +9,22 @@ import rene.util.parser.StringParser;
 class PeekerSizeDistributor extends Distributor
 {	Peeker P;
 	public PeekerSizeDistributor (IgsStream in, Peeker p)
-	{	super(in,22,0,true);
+	{	super(in,22,0,p,null);
 		P=p;
 	}
 	public void send (String c)
 	{	P.receivesize(c);
-	}
-	public void finished ()
-	{	P.sizefinished();
 	}
 }
 
 class PeekDistributor extends Distributor
 {	Peeker P;
 	public PeekDistributor (IgsStream in, Peeker p, int n)
-	{	super(in,15,n,true);
+	{	super(in,15,n,null,p);
 		P=p;
 	}
 	public void send (String c)
 	{	P.receive(c);
-	}
-	public void finished ()
-	{	P.finished();
 	}
 	public void remove ()
 	{	P.remove();
@@ -44,7 +38,7 @@ of moves.
 @see jagoclient.igs.Player
 */
 
-public class Peeker
+public class Peeker implements Distributor.Task, Distributor.SizeTask
 {	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
@@ -61,7 +55,8 @@ public class Peeker
 		N=n; L=1; BS=19;
 	}
 
-	void sizefinished ()
+	@Override
+	public void sizefinished ()
 	{	if (BS!=19) GF.doboardsize(BS);
 		setinformation();
 		PD=new PeekDistributor(In,this,N);
@@ -144,7 +139,8 @@ public class Peeker
 		else GF.black(i,BS-1-j);
 	}
 
-	void finished ()
+	@Override
+	public void finished ()
 	{	Dump.println("Peeker is finished");
 		GF.active(true);
 	}

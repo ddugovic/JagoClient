@@ -63,6 +63,7 @@ public class ProxyIgsStream extends IgsStream
 		}
 	}
 	
+	@Override
 	public boolean available ()
 	{	try
 		{	return (In.available()>0);
@@ -70,6 +71,7 @@ public class ProxyIgsStream extends IgsStream
 		catch (IOException e) { return false; }
 	}
 
+	@Override
 	public void close () throws IOException
 	{	In.close();
 	}

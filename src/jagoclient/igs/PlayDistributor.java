@@ -18,7 +18,7 @@ public class PlayDistributor extends Distributor
 	PrintWriter Out;
 	ConnectionFrame F;
 	public PlayDistributor (ConnectionFrame f, IgsStream in, PrintWriter out)
-	{	super(in,15,-1,false);
+	{	super(in,15,-1,null,null);
 		F=f;
 		In=in; Out=out;
 		P=null;

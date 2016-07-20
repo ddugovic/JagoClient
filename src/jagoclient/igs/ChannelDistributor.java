@@ -13,15 +13,15 @@ public class ChannelDistributor extends Distributor
 	ChannelDialog CD;
 	public ChannelDistributor
 		(ConnectionFrame cf, IgsStream in, PrintWriter out, int n)
-	{	super(in,32,n,false);
+	{	super(in,32,n,null,null);
 		CF=cf; Out=out;
 		CD=new ChannelDialog(CF,Out,game(),this);
 	}
-	public void send (String C)
+	public void send (String s)
 	{	if (CD==null)
 		{	CD=new ChannelDialog(CF,Out,game(),this);
 		}
-		CD.append(C);
+		CD.append(s);
 	}
 }
 

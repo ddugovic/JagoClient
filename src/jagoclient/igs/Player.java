@@ -10,14 +10,11 @@ import rene.util.parser.StringParser;
 class PlayerSizeDistributor extends Distributor
 {	Player P;
 	public PlayerSizeDistributor (IgsStream in, Player p)
-	{	super(in,22,0,true);
+	{	super(in,22,0,p,null);
 		P=p;
 	}
 	public void send (String c)
 	{	P.receivesize(c);
-	}
-	public void finished ()
-	{	P.sizefinished();
 	}
 }
 
@@ -41,7 +38,7 @@ that had already be sent, it will take back moves. This may happen,
 when an undo took place, and is the only way to determine undo.
 */
 
-public class Player
+public class Player implements Distributor.SizeTask
 {	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
@@ -98,10 +95,10 @@ public class Player
 	}
 
 	/**
-	This is called by PlayerSizeDistributor at the end of the
-	status information. The method will send a moves command
-	to retrieve the previous moves.
-	*/
+	 * This is called by PlayerSizeDistributor at the end of the status information.
+	 * The method will send a moves command to retrieve the previous moves.
+	 */
+	@Override
 	public void sizefinished ()
 	{	Dump.println("Sizer has size "+BS);
 		HaveSize=true;
