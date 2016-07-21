@@ -1079,11 +1079,11 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 			else if (Global.resourceString("Score").equals(o))
 			{
 				String s = B.done();
-				if (s != null) new Message(this, s);
+				if (s != null) new Message(this, s).setVisible(true);
 			}
 			else if (Global.resourceString("Local_Count").equals(o))
 			{
-				new Message(this, B.docount());
+				new Message(this, B.docount()).setVisible(true);
 			}
 			else if (Global.resourceString("New").equals(o))
 			{
@@ -1228,7 +1228,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 				catch (IOException ex)
 				{
 					new Message(this, Global.resourceString("Write_error_") + "\n"
-						+ ex.toString());
+						+ ex.toString()).setVisible(true);
 					return;
 				}
 			}
@@ -1327,7 +1327,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 				catch (IOException ex)
 				{
 					new Message(this, Global.resourceString("Write_error_") + "\n"
-						+ ex.toString());
+						+ ex.toString()).setVisible(true);
 					return;
 				}
 			}
@@ -1358,7 +1358,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 				catch (Exception ex)
 				{
 					new Message(this, Global.resourceString("Write_error_") + "\n"
-						+ ex.toString());
+						+ ex.toString()).setVisible(true);
 					return;
 				}
 			}
@@ -1388,7 +1388,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 						}
 						catch (XmlReaderException e)
 						{
-							new Message(this, "Error in file!\n" + e.getText());
+							new Message(this, "Error in file!\n" + e.getText()).setVisible(true);
 						}
 						in.close();
 					}
@@ -1409,7 +1409,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 						}
 						catch (IOException e)
 						{
-							new Message(this, "Error in file!");
+							new Message(this, "Error in file!").setVisible(true);
 						}
 						fi.close();
 					}
@@ -1417,7 +1417,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 				catch (IOException ex)
 				{
 					new Message(this, Global.resourceString("Read_error_") + "\n"
-						+ ex.toString());
+						+ ex.toString()).setVisible(true);
 					return;
 				}
 				String s = B.firstnode().getaction("GN");
@@ -1484,7 +1484,7 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 				String s = Global.resourceString("Black__") + B.Pw
 					+ Global.resourceString("__White__") + B.Pb + "\n"
 					+ Global.resourceString("Komi") + " " + B.getKomi();
-				new Message(this, s);
+				new Message(this, s).setVisible(true);
 			}
 			else if (Global.resourceString("Board_Color").equals(o))
 			{

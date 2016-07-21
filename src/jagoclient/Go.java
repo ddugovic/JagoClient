@@ -298,7 +298,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				if (c.Trying)
 				{
 					new Message(Global.frame(), Global
-						.resourceString("Already_trying_this_connection"));
+						.resourceString("Already_trying_this_connection")).setVisible(true);
 					return;
 				}
 				if (c.Password.equals("") && !c.User.equals("")
@@ -342,7 +342,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				if (c.Trying)
 				{
 					new Message(Global.frame(), Global
-						.resourceString("Already_trying_this_connection"));
+						.resourceString("Already_trying_this_connection")).setVisible(true);
 					return;
 				}
 				// create a PartnerFrame and connect via ConnectPartner class
@@ -555,7 +555,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		{
 			if (F != null)
 				new Message(F, Global
-					.resourceString("Could_not_write_to_server_cfg"));
+					.resourceString("Could_not_write_to_server_cfg")).setVisible(true);
 		}
 	}
 
@@ -581,7 +581,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		{
 			if (F != null)
 				new Message(F, Global
-					.resourceString("Could_not_write_to_partner_cfg"));
+					.resourceString("Could_not_write_to_partner_cfg")).setVisible(true);
 		}
 	}
 

@@ -154,7 +154,7 @@ class AdvancedOptionsEdit extends CloseDialog
 			}
 			catch (IOException ex)
 			{
-				new Message(Global.frame(), ex.getMessage());
+				new Message(Global.frame(), ex.getMessage()).setVisible(true);
 			}
 		}
 	}

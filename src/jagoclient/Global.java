@@ -24,9 +24,6 @@ import java.util.Locale;
 
 import rene.util.list.ListClass;
 
-class GlobalObject
-{}
-
 
 /**
  * This class stores global parameters. It is equivalent to global parameters in
@@ -46,11 +43,10 @@ class GlobalObject
  * "JagoResource_de.properties" and similar).
  */
 
-public class Global extends rene.gui.Global
+public abstract class Global extends rene.gui.Global
 {
 	public static Component C;
 	public static String Dir, Home;
-	public static Frame F;
 	public static MessageFilter MF = null;
 	public static ListClass<Partner> PartnerList = null;
 	public static ListClass<Partner> OpenPartnerList = null;
@@ -59,17 +55,14 @@ public class Global extends rene.gui.Global
 	public static URL Url;
 	public static boolean Busy = true;
 	public static Font SansSerif, Monospaced, BigMonospaced, BoardFont;
-	public static Hashtable WindowList;
 	public static int Silent = 0;
 
 	/** initialze the Jago Ressource bundle */
 	static
 	{
-		WindowList = new Hashtable();
 		Dir = "";
 		Home = "";
 		initBundle("i18n/JagoResource");
-		if (B == null) initBundle("JagoResource");
 	}
 
 	/** load the message filters */
@@ -111,8 +104,7 @@ public class Global extends rene.gui.Global
 		}
 		catch (Exception e)
 		{
-			Object G = new GlobalObject();
-			return G.getClass().getResourceAsStream("/" + filename);
+			return Global.class.getResourceAsStream("/" + filename);
 		}
 	}
 
@@ -165,7 +157,6 @@ public class Global extends rene.gui.Global
 			}
 			Locale.setDefault(new Locale(lang, langsec));
 			initBundle("i18n/JagoResource");
-			if (B == null) initBundle("JagoResource");
 		}
 	}
 
@@ -225,19 +216,6 @@ public class Global extends rene.gui.Global
 	public static void setColor (String a, Color c)
 	{
 		setParameter(a, c);
-	}
-
-	/** set a default invisible frame */
-	public static void frame (Frame f)
-	{
-		F = f;
-	}
-
-	/** get the default frame */
-	public static Frame frame ()
-	{
-		if (F == null) F = new Frame();
-		return F;
 	}
 
 	/** look up, if that string filters as blocking */
@@ -367,11 +345,9 @@ public class Global extends rene.gui.Global
 	 * Set the window sizes as read from go.cfg. The paramter tags are made from
 	 * the window name and "ypos", "xpos", "width" or "height".
 	 */
-	public static void setwindow (Window c, String name, int w, int h,
-		boolean minsize)
+	public static void setwindow (Window c, String name, int w, int h, boolean minsize)
 	{
-		int x = getParameter(name + "xpos", 100), y = getParameter(name
-			+ "ypos", 100);
+		int x = getParameter(name + "xpos", 100), y = getParameter(name + "ypos", 100);
 		w = getParameter(name + "width", w);
 		h = getParameter(name + "height", h);
 		if (minsize)

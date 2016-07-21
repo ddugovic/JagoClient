@@ -74,7 +74,7 @@ public class GameQuestion extends CloseDialog
 			}
 			catch (NumberFormatException ex)
 			{
-				new Message(PF, Global.resourceString("Illegal_Number_Format_"));
+				new Message(PF, Global.resourceString("Illegal_Number_Format_")).setVisible(true);
 				return;
 			}
 			if (s < 5) s = 5;

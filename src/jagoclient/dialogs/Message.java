@@ -30,7 +30,6 @@ public class Message extends CloseDialog
 		add("South", new Panel3D(p));
 		Global.setwindow(this, "message", 300, 150);
 		validate();
-		setVisible(true);
 		T.setText(m);
 	}
 

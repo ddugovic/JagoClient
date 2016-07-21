@@ -189,7 +189,7 @@ public class ReceiveThread extends Thread
 				Output.append(Global.resourceString("_____connection_error__n")
 					+ ex + "\n");
 				new Message(Global.frame(), Global
-					.resourceString("Lost_Connection"));
+					.resourceString("Lost_Connection")).setVisible(true);
 				try
 				{
 					sleep(10000);

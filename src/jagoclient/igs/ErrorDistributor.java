@@ -28,7 +28,7 @@ public class ErrorDistributor extends Distributor
 	}
 	public void allsended ()
 	{	if (Global.blocks(S)==0 && CF.wantserrors()) 
-			new Message(CF,Global.resourceString("Error:\n")+S);
+			new Message(CF,Global.resourceString("Error:\n")+S).setVisible(true);
 		CF.append("Error\n"+S,Color.red.darker());
 		S="";
 	}

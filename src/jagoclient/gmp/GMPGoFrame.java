@@ -51,7 +51,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	{	updateTime();
 		Dump.println("Opponent passed");
 		B.setpass();
-		Message d=new Message(this,Global.resourceString("Pass"));
+		new Message(this,Global.resourceString("Pass")).setVisible(true);
 	}
 
 	public void notepass ()

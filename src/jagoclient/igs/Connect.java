@@ -30,7 +30,7 @@ public class Connect implements Runnable
 				Global.getParameter("relayserver","localhost"),
 				Global.getParameter("relayport",6971)))
 			{	CF.setVisible(false); CF.dispose();
-				new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!");
+				new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!").setVisible(true);
 				try
 				{	Thread.sleep(10000);
 				}
@@ -42,7 +42,7 @@ public class Connect implements Runnable
 		else if (!CF.connect(C.Server,C.Port,C.User,
 			S.equals("")?C.Password:S,C.Port==23?true:false))
 		{	CF.setVisible(false); CF.dispose();
-			new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!");
+			new Message(Global.frame(),Global.resourceString("No_connection_to_")+C.Server+"!").setVisible(true);
 			try
 			{	Thread.sleep(10000);
 			}

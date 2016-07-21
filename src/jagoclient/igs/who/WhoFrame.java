@@ -338,7 +338,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 			}
 			catch (IOException ex)
 			{
-				new Message(Global.frame(), ex.getMessage());
+				new Message(Global.frame(), ex.getMessage()).setVisible(true);
 			}
 		}
 		else if (o.equals(Global.resourceString("Edit_Buttons")))

@@ -28,11 +28,10 @@ class ColorScrollbar extends Panel implements AdjustmentListener, DoActionListen
 
 	public ColorScrollbar (ColorEdit ce, String s, int value)
 	{
+		super(new GridLayout(1, 0));
 		CE = ce;
-		setLayout(new GridLayout(1, 0));
 		Value = value;
-		MyPanel p = new MyPanel();
-		p.setLayout(new GridLayout(1, 0));
+		MyPanel p = new MyPanel(new GridLayout(1, 0));
 		p.add(new MyLabel(s));
 		p.add(L = new IntField(this, "L", Value, 4));
 		add(p);
@@ -84,20 +83,16 @@ public class ColorEdit extends CloseDialog
 	MyPanel CP;
 	String Name;
 
-	public ColorEdit (Frame F, String s, int red, int green, int blue,
-		boolean flag)
+	public ColorEdit (Frame F, String s, int red, int green, int blue, boolean flag)
 	{
 		super(F, Global.resourceString("Edit_Color"), flag);
 		Name = s;
 		C = Global.getColor(s, red, green, blue);
 		MyPanel p = new MyPanel();
 		p.setLayout(new GridLayout(0, 1));
-		p.add(Red = new ColorScrollbar(this, Global.resourceString("Red"), C
-			.getRed()));
-		p.add(Green = new ColorScrollbar(this, Global.resourceString("Green"),
-			C.getGreen()));
-		p.add(Blue = new ColorScrollbar(this, Global.resourceString("Blue"), C
-			.getBlue()));
+		p.add(Red = new ColorScrollbar(this, Global.resourceString("Red"), C.getRed()));
+		p.add(Green = new ColorScrollbar(this, Global.resourceString("Green"), C.getGreen()));
+		p.add(Blue = new ColorScrollbar(this, Global.resourceString("Blue"), C.getBlue()));
 		add("Center", new Panel3D(p));
 		MyPanel pb = new MyPanel();
 		pb.add(new ButtonAction(this, Global.resourceString("OK")));

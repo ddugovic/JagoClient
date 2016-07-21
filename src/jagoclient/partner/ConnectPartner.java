@@ -25,7 +25,7 @@ public class ConnectPartner extends Thread
 				Global.getParameter("relayport",6971)))
 			{	PF.setVisible(false); PF.dispose();
 				new Message(Global.frame(),
-					Global.resourceString("No_connection_to_")+P.Server);
+					Global.resourceString("No_connection_to_")+P.Server).setVisible(true);
 				try
 				{	sleep(10000);
 				}
@@ -37,7 +37,7 @@ public class ConnectPartner extends Thread
 		else if (!PF.connect(P.Server,P.Port))
 		{	PF.setVisible(false); PF.dispose();
 			new Message(Global.frame(),
-				Global.resourceString("No_connection_to_")+P.Server);
+				Global.resourceString("No_connection_to_")+P.Server).setVisible(true);
 			try
 			{	sleep(10000);
 			}

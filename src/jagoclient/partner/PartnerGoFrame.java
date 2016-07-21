@@ -64,7 +64,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 		else if (Global.resourceString("Count").equals(o))
 		{	if (Ended || !B.ismain())
 			{	String s=B.done();
-				if (s!=null) new Message(this,s);
+				if (s!=null) new Message(this,s).setVisible(true);
 			}
 			return;
 		}
@@ -193,7 +193,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 				CurrentTime=now;
 			}
 			else if (BlackMoves>0)
-			{	new Message(this,Global.resourceString("Black_looses_by_time_"));
+			{	new Message(this,Global.resourceString("Black_looses_by_time_")).setVisible(true);
 				Timer.stopit();
 			}
 			else
@@ -209,7 +209,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 				CurrentTime=now;
 			}
 			else if (WhiteMoves>0)
-			{	new Message(this,Global.resourceString("White_looses_by_time_"));
+			{	new Message(this,Global.resourceString("White_looses_by_time_")).setVisible(true);
 				Timer.stopit();
 			}
 			else

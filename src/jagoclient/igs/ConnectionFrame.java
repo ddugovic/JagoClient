@@ -610,7 +610,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		}
 		catch (IOException ex)
 		{
-			new Message(Global.frame(), ex.getMessage());
+			new Message(Global.frame(), ex.getMessage()).setVisible(true);
 		}
 	}
 
@@ -695,7 +695,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		else if (os.toLowerCase().startsWith("moves"))
 		{
 			new Message(this, Global
-				.resourceString("Do_not_enter_this_command_here_"));
+				.resourceString("Do_not_enter_this_command_here_")).setVisible(true);
 		}
 		else
 		{
@@ -710,7 +710,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		if (In.gamewaiting(n))
 		{
 			new Message(this, Global
-				.resourceString("There_is_already_a_board_for_this_game_"));
+				.resourceString("There_is_already_a_board_for_this_game_")).setVisible(true);
 			return;
 		}
 		IgsGoFrame gf = new IgsGoFrame(this, Global.resourceString("Peek_game"));
@@ -732,7 +732,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		if (In.gamewaiting(n))
 		{
 			new Message(this, Global
-				.resourceString("There_is_already_a_board_for_this_game_"));
+				.resourceString("There_is_already_a_board_for_this_game_")).setVisible(true);
 			return;
 		}
 		IgsGoFrame gf = new IgsGoFrame(this, Global

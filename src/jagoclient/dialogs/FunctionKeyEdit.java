@@ -10,15 +10,6 @@ import jagoclient.gui.Panel3D;
 import java.awt.GridLayout;
 import rene.gui.CloseDialog;
 
-class FunctionKey extends GrayTextField
-{
-	public FunctionKey (int i)
-	{
-		super(Global.getParameter("f" + i, ""));
-	}
-}
-
-
 /**
  * A dialog, which lets the user edit all function keys. Contains an array of 10
  * text fields.
@@ -27,18 +18,18 @@ class FunctionKey extends GrayTextField
  */
 public class FunctionKeyEdit extends CloseDialog
 {
-	FunctionKey FK[];
+	GrayTextField FK[];
 
 	public FunctionKeyEdit ()
 	{
 		super(Global.frame(), Global.resourceString("Function_Keys"), false);
 		MyPanel p = new MyPanel();
 		p.setLayout(new GridLayout(0, 2));
-		FK = new FunctionKey[10];
+		FK = new GrayTextField[10];
 		for (int i = 0; i < 10; i++)
 		{
 			p.add(new MyLabel("F" + (i + 1)));
-			p.add(FK[i] = new FunctionKey(i + 1));
+			p.add(FK[i] = new GrayTextField(Global.getParameter("f" + i, "")));
 		}
 		add("Center", new Panel3D(p));
 		MyPanel bp = new MyPanel();

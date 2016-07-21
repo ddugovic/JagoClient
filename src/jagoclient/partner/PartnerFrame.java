@@ -172,7 +172,7 @@ public class PartnerFrame extends CloseFrame
 		catch (Exception e)
 		{
 			Dump.println("---> no connection");
-			new Message(this, Global.resourceString("Got_no_Connection_"));
+			new Message(this, Global.resourceString("Got_no_Connection_")).setVisible(true);
 			return;
 		}
 		PT = new PartnerThread(In, Out, Input, Output, this);
@@ -205,7 +205,7 @@ public class PartnerFrame extends CloseFrame
 				else
 				{
 					new Message(this, Global
-						.resourceString("You_have_already_a_game_"));
+						.resourceString("You_have_already_a_game_")).setVisible(true);
 				}
 			}
 
@@ -218,7 +218,7 @@ public class PartnerFrame extends CloseFrame
 			}
 			catch (IOException ex)
 			{
-				new Message(Global.frame(), ex.getMessage());
+				new Message(Global.frame(), ex.getMessage()).setVisible(true);
 			}
 		}
 		else super.doAction(o);
@@ -300,7 +300,7 @@ public class PartnerFrame extends CloseFrame
 		else if (s.startsWith("@@-board"))
 		{
 			new Message(this, Global
-				.resourceString("Partner_declines_the_game_"));
+				.resourceString("Partner_declines_the_game_")).setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@start"))
@@ -404,7 +404,7 @@ public class PartnerFrame extends CloseFrame
 		else if (s.startsWith("@@-endgame"))
 		{
 			if (PGF == null) return;
-			new Message(this, "Partner declines game end!");
+			new Message(this, "Partner declines game end!").setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@result"))
@@ -431,13 +431,13 @@ public class PartnerFrame extends CloseFrame
 				+ Global.resourceString("__W_") + w + "\n", Color.green
 				.darker());
 			new Message(this, Global.resourceString("Result__B_") + b
-				+ Global.resourceString("__W_") + w + " was accepted!");
+				+ Global.resourceString("__W_") + w + " was accepted!").setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@-result"))
 		{
 			if (PGF == null) return;
-			new Message(this, Global.resourceString("Partner_declines_result_"));
+			new Message(this, Global.resourceString("Partner_declines_result_")).setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@undo"))
@@ -449,7 +449,7 @@ public class PartnerFrame extends CloseFrame
 		else if (s.startsWith("@@-undo"))
 		{
 			if (PGF == null) return;
-			new Message(this, Global.resourceString("Partner_declines_undo_"));
+			new Message(this, Global.resourceString("Partner_declines_undo_")).setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@!undo"))
@@ -478,7 +478,7 @@ public class PartnerFrame extends CloseFrame
 		else if (s.startsWith("@@-restore"))
 		{
 			new Message(this, Global
-				.resourceString("Partner_declines_restore_"));
+				.resourceString("Partner_declines_restore_")).setVisible(true);
 			Block = false;
 		}
 		else if (s.startsWith("@@!restore"))
@@ -612,7 +612,7 @@ public class PartnerFrame extends CloseFrame
 	public void adjourn ()
 	{
 		new Message(this, Global
-			.resourceString("Your_Partner_closed_the_board_"));
+			.resourceString("Your_Partner_closed_the_board_")).setVisible(true);
 		savemoves();
 		PGF = null;
 	}

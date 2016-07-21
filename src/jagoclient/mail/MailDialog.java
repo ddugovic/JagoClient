@@ -104,6 +104,6 @@ public class MailDialog extends CloseDialog implements MailCallback
 
 	public void result (boolean flag, String s)
 	{
-		new Message(Global.frame(), s);
+		new Message(Global.frame(), s).setVisible(true);
 	}
 }

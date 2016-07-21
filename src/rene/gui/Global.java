@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.awt.SystemColor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -24,7 +25,7 @@ import rene.util.FileName;
  * various things from this resource file.
  */
 
-public class Global
+public abstract class Global
 {
 	// Fonts:
 	static public Font NormalFont = null, FixedFont = null, BoldFont = null;
@@ -42,8 +43,7 @@ public class Global
 	}
 
 	static public void createEmbeddedFonts (int defsize)
-	// Works only, if regular.ttf and bold.ttf are in the main directory of the
-	// project.
+	// Works only, if regular.ttf and bold.ttf are in the main directory of the project.
 	{
 		try
 		{
@@ -66,18 +66,15 @@ public class Global
 		String mode = getParameter(name + ".mode", "plain");
 		if (bold || mode.equals("bold"))
 		{
-			return new Font(fontname, Font.BOLD, getParameter(name + ".size",
-				defsize));
+			return new Font(fontname, Font.BOLD, getParameter(name + ".size", defsize));
 		}
 		else if (mode.equals("italic"))
 		{
-			return new Font(fontname, Font.ITALIC, getParameter(name + ".size",
-				defsize));
+			return new Font(fontname, Font.ITALIC, getParameter(name + ".size", defsize));
 		}
 		else
 		{
-			return new Font(fontname, Font.PLAIN, Global.getParameter(name
-				+ ".size", defsize));
+			return new Font(fontname, Font.PLAIN, Global.getParameter(name + ".size", defsize));
 		}
 	}
 
@@ -128,27 +125,25 @@ public class Global
 		return name(tag, tag.substring(tag.lastIndexOf(".") + 1));
 	}
 
-	public static void initBundle (String file, boolean language)
+	public static void initBundle (String file, boolean localize)
 	{
-		try
+		B = ResourceBundle.getBundle(file);
+		if (localize)
 		{
-			B = ResourceBundle.getBundle(file);
-			String lang = getParameter("language", "");
-			if (language && !lang.equals("") && !lang.equals("default"))
+			String language = getParameter("language", "default");
+			if (!language.equals("default"))
 			{
-				String langsec = "";
-				if (lang.length() > 3 && lang.charAt(2) == '_')
+				String country = "";
+				Pattern pattern = Pattern.compile("(\\w{2})_(\\w+)");
+				Matcher matcher = pattern.matcher(language);
+				if (matcher.matches())
 				{
-					langsec = lang.substring(3);
-					lang = lang.substring(0, 2);
+					language = matcher.group(1);
+					country = matcher.group(2);
 				}
-				Locale.setDefault(new Locale(lang, langsec));
+				Locale.setDefault(new Locale(language, country));
 				initBundle(file, false);
 			}
-		}
-		catch (RuntimeException e)
-		{
-			B = null;
 		}
 	}
 
@@ -180,42 +175,36 @@ public class Global
 		}
 	}
 
-	public static synchronized boolean loadPropertiesFromResource (
-		String filename)
+	public static synchronized boolean loadPropertiesFromResource (String filename)
 	{
-		try
+		P = new Properties();
+		ConfigName = filename;
+		try (InputStream in = Global.class.getResourceAsStream(filename))
 		{
-			Object G = new Object();
-			InputStream in = G.getClass().getResourceAsStream(filename);
-			P = new Properties();
 			P.load(in);
-			in.close();
+			return true;
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			P = new Properties();
+			P.clear();
 			return false;
 		}
-		ConfigName = filename;
-		return true;
 	}
 
 	public static synchronized boolean loadProperties (String filename)
 	{
+		P = new Properties();
 		ConfigName = filename;
-		try
+		try (InputStream in = new FileInputStream(filename))
 		{
-			FileInputStream in = new FileInputStream(filename);
-			P = new Properties();
 			P.load(in);
-			in.close();
+			return true;
 		}
 		catch (Exception e)
 		{
-			P = new Properties();
+			P.clear();
 			return false;
 		}
-		return true;
 	}
 
 	public static synchronized void loadProperties (String dir, String filename)
@@ -503,7 +492,28 @@ public class Global
 
 	// Warnings
 
-	static Frame F = null;
+	protected static Frame F = null;
+
+	/**
+	 * Sets the application window
+	 *
+	 * @param f
+	 */
+	public static void frame (Frame f)
+	{
+		F = f;
+	}
+
+	/**
+	 * Gets the application window
+	 *
+	 * @return Application window
+	 */
+	public static Frame frame ()
+	{
+		if (F == null) F = new Frame();
+		return F;
+	}
 
 	public static void warning (String s)
 	{

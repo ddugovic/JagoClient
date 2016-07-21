@@ -79,7 +79,7 @@ public class ChannelDialog extends CloseFrame implements CloseListener, KeyListe
 			}
 			catch (IOException ex)
 			{
-				new Message(Global.frame(), ex.getMessage());
+				new Message(Global.frame(), ex.getMessage()).setVisible(true);
 			}
 		}
 		else if ("Answer".equals(o))

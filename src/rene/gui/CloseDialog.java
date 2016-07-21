@@ -142,18 +142,10 @@ public class CloseDialog extends Dialog implements WindowListener,
 		t.start();
 	}
 
+	@Deprecated
 	public void center (Frame f)
 	{
-		Dimension si = f.getSize(), d = getSize(), dscreen = getToolkit()
-				.getScreenSize();
-		Point lo = f.getLocation();
-		int x = lo.x + si.width / 2 - d.width / 2;
-		int y = lo.y + si.height / 2 - d.height / 2;
-		if (x + d.width > dscreen.width) x = dscreen.width - d.width - 10;
-		if (x < 10) x = 10;
-		if (y + d.height > dscreen.height) y = dscreen.height - d.height - 10;
-		if (y < 10) y = 10;
-		setLocation(x, y);
+		setLocationRelativeTo(f);
 	}
 
 	static public void center (Frame f, Dialog dialog)

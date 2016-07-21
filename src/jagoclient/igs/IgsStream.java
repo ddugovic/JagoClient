@@ -360,7 +360,7 @@ public class IgsStream
 					else if (Number == 21 && !CF.Waitfor.equals("")
 						&& Command.indexOf(CF.Waitfor) >= 0)
 					{
-						new Message(CF, Command);
+						new Message(CF, Command).setVisible(true);
 					}
 					else if (Number == 21 && Command.startsWith("{")
 						&& Global.getParameter("reducedoutput", true)
