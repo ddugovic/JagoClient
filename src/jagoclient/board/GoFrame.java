@@ -389,15 +389,15 @@ class BoardColorEdit extends ColorEdit
 {
 	GoFrame gf;
 
-	public BoardColorEdit (GoFrame gf, String s, int red, int green, int blue)
+	public BoardColorEdit (GoFrame gf, String s, int red, int green, int blue, Color c)
 	{
-		super(gf, s, red, green, blue, true);
+		super(gf, s, red, green, blue, c, true);
 		this.gf = gf;
 	}
 
 	public BoardColorEdit (GoFrame gf, String s, Color c)
 	{
-		super(gf, s, c.getRed(), c.getGreen(), c.getBlue(), true);
+		super(gf, s, c.getRed(), c.getGreen(), c.getBlue(), c, true);
 		this.gf = gf;
 	}
 
@@ -604,13 +604,13 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 
 	void setcolors ()
 	{ // Take colors from Global parameters.
-		BoardColor = Global.getColor("boardcolor", 170, 120, 70);
-		BlackColor = Global.getColor("blackcolor", 30, 30, 30);
-		BlackSparkleColor = Global.getColor("blacksparklecolor", 120, 120, 120);
-		WhiteColor = Global.getColor("whitecolor", 210, 210, 210);
-		WhiteSparkleColor = Global.getColor("whitesparklecolor", 250, 250, 250);
-		MarkerColor = Global.getColor("markercolor", Color.blue);
-		LabelColor = Global.getColor("labelcolor", Color.pink.darker());
+		BoardColor = Global.getColor("boardcolor", 170, 120, 70, Color.RED);
+		BlackColor = Global.getColor("blackcolor", 30, 30, 30, Color.WHITE);
+		BlackSparkleColor = Global.getColor("blacksparklecolor", 120, 120, 120, Color.GRAY);
+		WhiteColor = Global.getColor("whitecolor", 210, 210, 210, Color.DARK_GRAY);
+		WhiteSparkleColor = Global.getColor("whitesparklecolor", 250, 250, 250, Color.BLACK);
+		MarkerColor = Global.getColor("markercolor", Color.BLUE);
+		LabelColor = Global.getColor("labelcolor", Color.PINK.darker());
 		Global.setColor("boardcolor", BoardColor);
 		Global.setColor("blackcolor", BlackColor);
 		Global.setColor("blacksparklecolor", BlackSparkleColor);
@@ -2522,9 +2522,9 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 
 	// interface routines for the BoardInterface
 
-	public Color getColor (String S, int r, int g, int b)
+	public Color getColor (String key, int r, int g, int b, Color c)
 	{
-		return Global.getColor(S, r, g, b);
+		return Global.getColor(key, r, g, b, c);
 	}
 
 	public String resourceString (String S)

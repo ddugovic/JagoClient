@@ -83,11 +83,11 @@ public class ColorEdit extends CloseDialog
 	MyPanel CP;
 	String Name;
 
-	public ColorEdit (Frame F, String s, int red, int green, int blue, boolean flag)
+	public ColorEdit (Frame F, String s, int red, int green, int blue, Color c, boolean flag)
 	{
 		super(F, Global.resourceString("Edit_Color"), flag);
 		Name = s;
-		C = Global.getColor(s, red, green, blue);
+		C = Global.getColor(s, red, green, blue, c);
 		MyPanel p = new MyPanel();
 		p.setLayout(new GridLayout(0, 1));
 		p.add(Red = new ColorScrollbar(this, Global.resourceString("Red"), C.getRed()));
@@ -112,7 +112,7 @@ public class ColorEdit extends CloseDialog
 
 	public ColorEdit (Frame F, String s, Color C, boolean flag)
 	{
-		this(F, s, C.getRed(), C.getGreen(), C.getBlue(), flag);
+		this(F, s, C.getRed(), C.getGreen(), C.getBlue(), C, flag);
 	}
 
 	@Override

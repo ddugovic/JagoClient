@@ -1,7 +1,6 @@
 package jagoclient.igs;
 
 import jagoclient.CloseConnection;
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.dialogs.GetParameter;
 import jagoclient.dialogs.Help;
@@ -37,6 +36,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTextField;
 
@@ -106,6 +107,7 @@ class GetReply extends GetParameter
 
 class RefreshWriter extends PrintWriter
 {
+	private static final Logger LOG = Logger.getLogger(RefreshWriter.class.getName());
 	Thread T;
 	boolean NeedsRefresh;
 	boolean Stop = false;
@@ -115,7 +117,7 @@ class RefreshWriter extends PrintWriter
 		super(out, flag);
 		if (Global.getParameter("refresh", true))
 		{
-			Dump.println("Refresh Thread started.");
+			LOG.info("Refresh Thread started.");
 			T = new Thread()
 			{
 				@Override
@@ -132,14 +134,14 @@ class RefreshWriter extends PrintWriter
 	public void print (String s)
 	{
 		super.print(s);
-		Dump.println("Out ---> " + s);
+		LOG.log(Level.INFO, "Out ---> {0}", s);
 		NeedsRefresh = false;
 	}
 
 	public void printLn (String s)
 	{
 		super.println(s);
-		Dump.println("Out ---> " + s);
+		LOG.log(Level.INFO, "Out ---> {0}", s);
 		NeedsRefresh = false;
 	}
 
@@ -167,7 +169,7 @@ class RefreshWriter extends PrintWriter
 			{
 				println("ayt");
 				// write(254);
-				Dump.println("ayt sent!");
+				LOG.info("ayt sent!");
 			}
 		}
 	}
@@ -181,6 +183,7 @@ class RefreshWriter extends PrintWriter
 
 public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyListener
 {
+	private static final Logger LOG = Logger.getLogger(ConnectionFrame.class.getName());
 	GridBagLayout girdbag;
 	Viewer Output;
 	HistoryTextField Input;
@@ -751,7 +754,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		if (In != null) In.removeall();
 		Out.println("quit");
 		Out.close();
-		Dump.println("doclose() called in connection");
+		LOG.info("doclose() called in connection");
 		new CloseConnection(Server, In.getInputStream());
 		inform();
 		super.doclose();
@@ -820,7 +823,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 	{
 		if (s.startsWith("observe") || s.startsWith("status")
 			|| s.startsWith("moves")) return;
-		Dump.println("---> " + s);
+		LOG.info("---> " + s);
 		Out.println(s);
 	}
 

@@ -3,12 +3,11 @@ package jagoclient.sound;
 import jagoclient.Global;
 import rene.util.sound.SoundList;
 
-public class JagoSound
+public abstract class JagoSound
 {
 	static SoundList SL = new SoundList();
 
-	static synchronized public void play (String file, String simplefile,
-		boolean beep)
+	static synchronized public void play (String file, String simplefile, boolean beep)
 	{
 		if (Global.getParameter("nosound", true)) return;
 		if (Global.getParameter("beep", true))

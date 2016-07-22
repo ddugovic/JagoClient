@@ -397,7 +397,7 @@ public abstract class Global
 		}
 	}
 
-	static public synchronized Color getParameter (String key, int red, int green, int blue)
+	static public synchronized Color getParameter (String key, int red, int green, int blue, Color c)
 	{
 		String s = getParameter(key, "");
 		if (s.equals("")) return new Color(red, green, blue);
@@ -414,7 +414,7 @@ public abstract class Global
 		}
 		catch (RuntimeException e)
 		{
-			return Color.BLACK;
+			return c;
 		}
 	}
 
@@ -566,11 +566,6 @@ public abstract class Global
 
 	public static void main (String args[])
 	{
-		try
-		{
-			System.out.println(new Color(4, 5, 600));
-		}
-		catch (RuntimeException e)
-		{}
+		System.out.println(new Color(4, 5, 600));
 	}
 }

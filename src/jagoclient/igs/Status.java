@@ -1,8 +1,7 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
-
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 import rene.util.parser.StringParser;
 
@@ -11,7 +10,8 @@ import rene.util.parser.StringParser;
  * (or to the problem command). It gets a GoFrame to display the game status.
  */
 public class Status implements Distributor.Task
-{	IgsGoFrame GF;
+{	private static final Logger LOG = Logger.getLogger(Status.class.getName());
+	IgsGoFrame GF;
 	IgsStream In;
 	StatusDistributor PD;
 	String Black,White;
@@ -88,7 +88,7 @@ public class Status implements Distributor.Task
 	 */
 	@Override
 	public void finished ()
-	{	Dump.println("Status is finished");
+	{	LOG.info("Status is finished");
 		GF.setVisible(true);
 		GF.active(true);
 		// GF.B.showinformation();

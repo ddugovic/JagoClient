@@ -1,9 +1,10 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 The PlayDistributor is opened with a ConnectionFrame to display
@@ -13,7 +14,8 @@ object and send output to it.
 */
 
 public class PlayDistributor extends Distributor
-{	Player P;
+{	private static final Logger LOG = Logger.getLogger(PlayDistributor.class.getName());
+	Player P;
 	IgsStream In;
 	PrintWriter Out;
 	ConnectionFrame F;
@@ -36,7 +38,7 @@ public class PlayDistributor extends Distributor
 	moves.
 	*/
 	public void game (int n)
-	{	Dump.println("Opening go frame for game "+n);
+	{	LOG.log(Level.INFO, "Opening go frame for game {0}", n);
 		IgsGoFrame gf=new IgsGoFrame(F,Global.resourceString("Play_game"));
 		gf.distributor(this);
 		gf.Playing.setState(true);
@@ -48,12 +50,12 @@ public class PlayDistributor extends Distributor
 	}
 	/** called from the goframe to set a move (passed to Player) */
 	public void set (int i, int j, int sec)
-	{	Dump.println("Play Distributor got move at "+i+","+j);
+	{	LOG.log(Level.INFO, "Play Distributor got move at {0},{1}", new Object[]{i, j});
 		P.set(i,j,sec);
 	}
 	/** called from the goframe to pass (passed to Player) */
 	public void pass ()
-	{	Dump.println("Play Distributor got a pass");
+	{	LOG.info("Play Distributor got a pass");
 		P.pass();
 	}
 	/** called from the goframe to refresh the board (passed to Player) */

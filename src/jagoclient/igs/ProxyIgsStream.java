@@ -1,11 +1,11 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 This is a specified IGS stream, which reads byte over a telnet proxy.
@@ -14,7 +14,8 @@ a byte stream and cannot translate into locales.
 */
 
 public class ProxyIgsStream extends IgsStream
-{	DataInputStream In;
+{	private static final Logger LOG = Logger.getLogger(ProxyIgsStream.class.getName());
+	DataInputStream In;
 	
 	public ProxyIgsStream (ConnectionFrame cf, InputStream in, 
 		PrintWriter out)
@@ -30,7 +31,7 @@ public class ProxyIgsStream extends IgsStream
 		{	byte c=In.readByte();
 			if (c==-1) // Telnet ??
 			{	c=In.readByte();
-				Dump.println("Telnet received!"+(int)(256+c));
+				LOG.log(Level.INFO, "Telnet received!{0}", (256+c));
 				if (c==-3)
 				{	c=In.readByte();
 					CF.Outstream.write(255);

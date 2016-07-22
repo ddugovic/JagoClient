@@ -118,7 +118,7 @@ public interface BoardInterface
 	// check Board.java for necessary parameters
 	// default is f
 
-	public Color getColor (String S, int red, int green, int blue);
+	public Color getColor (String key, int red, int green, int blue, Color c);
 
 	// get a named parameter with Color value
 	// check Board.java for necessary parameters

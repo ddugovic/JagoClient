@@ -4,6 +4,8 @@ import jagoclient.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class GMPCloser extends Thread
 {
@@ -51,6 +53,7 @@ class GMPCloser extends Thread
 
 public class GMPConnector implements Runnable
 {
+	private static final Logger LOG = Logger.getLogger(GMPConnector.class.getName());
 	String Program;
 	Process P;
 	InputStream In, Err;
@@ -137,8 +140,8 @@ public class GMPConnector implements Runnable
 		Out.write((byte)b3);
 		Out.write((byte)b4);
 		Out.flush();
-		Dump.println("sent " + format(b1) + " " + format(checksum) + " "
-			+ format(b3) + " " + format(b4) + " = " + c + "," + a);
+		LOG.log(Level.INFO, "sent {0} {1} {2} {3} = {4},{5}",
+			new Object[]{format(b1), format(checksum), format(b3), format(b4), c, a});
 	}
 
 	byte makeCommandByte1 (int c, int a)
@@ -192,8 +195,8 @@ public class GMPConnector implements Runnable
 		int cs = read();
 		int b3 = read();
 		int b4 = read();
-		Dump.println("rcvd " + format(b1) + " " + format(cs) + " " + format(b3)
-			+ " " + format(b4));
+		LOG.log(Level.INFO, "rcvd {0} {1} {2} {3}",
+			new Object[]{format(b1), format(cs), format(b3), format(b4)});
 		if ((b1 & 0x0080) != 0 || (cs & 0x0080) == 0 || (b3 & 0x0080) == 0
 			|| (b4 & 0x0080) == 0) return false;
 		if (computeChecksum((byte)b1, (byte)b3, (byte)b4) != (byte)cs)
@@ -301,7 +304,7 @@ public class GMPConnector implements Runnable
 	 */
 	public synchronized void answer () throws IOException
 	{
-		Dump.println(Command + " " + Argument);
+		LOG.log(Level.INFO, "{0} {1}", new Object[]{Command, Argument});
 		if (Command == 3) // Questions
 		{
 			switch (Argument)
@@ -349,7 +352,7 @@ public class GMPConnector implements Runnable
 		else if (Command == 0) // OK
 		{
 			if (I != null) I.gotOk();
-			Dump.println("Got OK");
+			LOG.info("Got OK");
 		}
 		else ok();
 	}
@@ -400,7 +403,6 @@ public class GMPConnector implements Runnable
 	 */
 	static public void main (String args[])
 	{
-		Dump.terminal(true);
 		try
 		{
 			GMPConnector c = new GMPConnector("gnugo.exe");

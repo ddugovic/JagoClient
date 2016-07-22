@@ -1,11 +1,11 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.dialogs.Message;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 import rene.viewer.Viewer;
 
@@ -22,6 +22,7 @@ import rene.viewer.Viewer;
 
 public class ReceiveThread extends Thread
 {
+	private static final Logger LOG = Logger.getLogger(ReceiveThread.class.getName());
 	IgsStream In;
 	PrintWriter Out;
 	Viewer Output;
@@ -68,7 +69,7 @@ public class ReceiveThread extends Thread
 						break;
 					}
 				}
-				Dump.println("--- Leaving Login section ---");
+				LOG.info("--- Leaving Login section ---");
 				while (true)
 				{
 					if (In.readline())
@@ -102,7 +103,7 @@ public class ReceiveThread extends Thread
 						}
 					}
 				}
-				Dump.println("--- Leaving Password section ---");
+				LOG.info("--- Leaving Password section ---");
 			}
 			// end of autologin and start of loop
 			boolean AskPassword = true;

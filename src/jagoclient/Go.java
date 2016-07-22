@@ -456,8 +456,6 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	 * Available arguments are
 	 * <ul>
 	 * <li>-h sets the home directory for the application
-	 * <li>-d starts a session dump to dump.dat
-	 * <li>-t dumps tp the termimal too
 	 * <li>another argument opens a local SGF file immediately
 	 * </ul>
 	 */
@@ -486,16 +484,6 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				Global.home(args[na + 1]);
 				na += 2;
 				homefound = true;
-			}
-			else if (args[na].startsWith("-d"))
-			{
-				Dump.open("dump.dat");
-				na++;
-			}
-			else if (args[na].startsWith("-t"))
-			{
-				Dump.terminal(true);
-				na++;
 			}
 			else
 			{

@@ -1,8 +1,8 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
-
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rene.util.parser.StringParser;
 
@@ -39,7 +39,8 @@ of moves.
 */
 
 public class Peeker implements Distributor.Task, Distributor.SizeTask
-{	IgsGoFrame GF;
+{	private static final Logger LOG = Logger.getLogger(Peeker.class.getName());
+	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
 	PeekDistributor PD;
@@ -94,7 +95,7 @@ public class Peeker implements Distributor.Task, Distributor.SizeTask
 	void receive (String s)
 	{	StringParser p;
 		int nu,i,j;
-		Dump.println("Peeked: "+s);
+		LOG.log(Level.INFO, "Peeked: {0}", s);
 		p=new StringParser(s);
 		p.skipblanks();
 		if (!p.isint())
@@ -121,7 +122,7 @@ public class Peeker implements Distributor.Task, Distributor.SizeTask
 		{	int hn;
 			p.skipblanks();
 			hn=p.parseint();
-			Dump.println("Peeker read: Handicap "+hn);
+			LOG.log(Level.INFO, "Peeker read: Handicap {0}", hn);
 			GF.handicap(hn);
 			return;
 		}
@@ -134,14 +135,14 @@ public class Peeker implements Distributor.Task, Distributor.SizeTask
 		{	j=-1;
 		}
 		if (i<0 || j<0) return;
-		Dump.println("Peeker read: "+c+" "+i+","+j);
+		LOG.log(Level.INFO, "Peeker read: {0} {1},{2}", new Object[]{c, i, j});
 		if (c.equals("W")) GF.white(i,BS-1-j);
 		else GF.black(i,BS-1-j);
 	}
 
 	@Override
 	public void finished ()
-	{	Dump.println("Peeker is finished");
+	{	LOG.info("Peeker is finished");
 		GF.active(true);
 	}
 

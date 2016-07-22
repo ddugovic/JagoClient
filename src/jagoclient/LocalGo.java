@@ -31,11 +31,6 @@ public class LocalGo
 				na += 2;
 				homefound = true;
 			}
-			else if (args[na].startsWith("-d"))
-			{
-				Dump.open("dump.dat");
-				na++;
-			}
 			else
 			{
 				localgame = args[na];

@@ -1,6 +1,5 @@
 package jagoclient.partner;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.datagram.DatagramMessage;
 import jagoclient.partner.partner.Partner;
@@ -10,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 import rene.util.list.ListElement;
 
@@ -21,7 +21,8 @@ checks for datagrams that announce open partners.
 */
 
 public class Server extends Thread
-{	int Port;
+{	private static final Logger LOG = Logger.getLogger(Server.class.getName());
+	int Port;
 	boolean Public;
 	static public PartnerServerThread PST=null;
 	ServerSocket SS;
@@ -55,7 +56,7 @@ public class Server extends Thread
 			}
 		}
 		catch (Exception e)
-		{	Dump.println("Server Error");
+		{	LOG.warning("Server Error");
 		}
 	}
 	

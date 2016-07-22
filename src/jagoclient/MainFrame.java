@@ -31,6 +31,8 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -318,6 +320,7 @@ class BackgroundColorEdit extends ColorEdit
 
 public class MainFrame extends CloseFrame implements DoItemListener
 {
+	private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
 	CheckboxMenuItem StartPublicServer, TimerInTitle, BigTimer,
 		ExtraInformation, ExtraSendField, DoSound, SimpleSound, BeepOnly,
 		Warning, RelayCheck, Automatic, EveryMove, FineBoard, Navigation;
@@ -628,8 +631,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 			{
 				if (Global.Busy)
 				{
-					Dump.println("Server started on "
-						+ Global.getParameter("serverport", 6970));
+					LOG.log(Level.INFO, "Server started on {0}", Global.getParameter("serverport", 6970));
 					if (S == null)
 						S = new Server(Global.getParameter("serverport", 6970),
 							Global.getParameter("publicserver", true));

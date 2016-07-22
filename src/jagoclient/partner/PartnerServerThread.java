@@ -1,12 +1,12 @@
 package jagoclient.partner;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.datagram.DatagramMessage;
 import jagoclient.partner.partner.Partner;
 
 import java.net.InetAddress;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
@@ -18,7 +18,8 @@ are private.
 */
 
 class PartnerServerThread extends Thread
-{	int Port;
+{	private static final Logger LOG = Logger.getLogger(PartnerServerThread.class.getName());
+	int Port;
 	
 	public PartnerServerThread (int port)
 	{	Port=port; Global.OpenPartnerList=new ListClass(); start();
@@ -28,56 +29,47 @@ class PartnerServerThread extends Thread
 	{	DatagramMessage M=new DatagramMessage();
 		while (true)
 		{	// wait for a datagram
-			Vector v=M.receive(Port);
+			Vector<String> v=M.receive(Port);
 			// got one
-			Dump.println("*** Datagram received ***");
-			int i;
-			for (i=0; i<v.size(); i++)
-				Dump.println((String)v.elementAt(i));
-			Dump.println("*************************");			
-			interpret(v);
+			LOG.info("*** Datagram received ***");
+			for (String s : v)
+				LOG.info(s);
+			LOG.info("*************************");
+			try
+			{	interpret(v);
+			}
+			catch (RuntimeException ex) {}
 		}
 	}
 	
-	void interpret (Vector v)
+	void interpret (Vector<String> v)
 	{	if (v.size()<1) return; // empty datagram
-		String arg=((String)v.elementAt(0));
-		if (arg.equals("open")) 
+		switch (v.firstElement()) {
 		// a server opened, send him an openinfo datagram
-		{	try 
-			{	open(
-					(String)v.elementAt(1),
-					(String)v.elementAt(2),
-					Integer.parseInt((String)v.elementAt(3)),
-					Integer.parseInt((String)v.elementAt(4)));
-				openinfo(
-					(String)v.elementAt(2),
-					Integer.parseInt((String)v.elementAt(3)));
-			}
-			catch (Exception e) {}
-		}
-		else if (arg.equals("spreadopen"))
+		case "open":
+			open(v.elementAt(1), v.elementAt(2),
+				Integer.parseInt(v.elementAt(3)),
+				Integer.parseInt(v.elementAt(4)));
+			openinfo(v.elementAt(2),
+				Integer.parseInt(v.elementAt(3)));
+			break;
 		// a server notifies about opening of another server
-		{	try 
-			{	open(
-					(String)v.elementAt(1),
-					(String)v.elementAt(2),
-					Integer.parseInt((String)v.elementAt(3)),
-					Integer.parseInt((String)v.elementAt(4)));
-			}
-			catch (Exception e) {}
-		}
-		else if (arg.equals("openinfo"))
+		case "spreadopen":
+			open(v.elementAt(1), v.elementAt(2),
+				Integer.parseInt(v.elementAt(3)),
+				Integer.parseInt(v.elementAt(4)));
+			break;
 		// a server sent me his list of open servers
-		{	openinfo(v);
-		}
-		else if (arg.equals("close") ||
-			arg.equals("spreadclose"))
+		case "openinfo":
+			openinfo(v);
+			break;
 		// a server closed or notifies about the closing of another server
-		{	try 
-			{	close((String)v.elementAt(1),(String)v.elementAt(2));
-			}
-			catch (Exception e) {}
+		case "close":
+		case "spreadclose":
+			close(v.elementAt(1), v.elementAt(2));
+			break;
+		default:
+			break;
 		}
 	}
 	

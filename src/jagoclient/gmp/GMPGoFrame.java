@@ -1,13 +1,15 @@
 package jagoclient.gmp;
 
 import jagoclient.Global;
-import jagoclient.Dump;
 import jagoclient.board.*;
 import jagoclient.dialogs.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GMPGoFrame extends ConnectedGoFrame
 	implements TimedBoard
-{	GMPConnection C;
+{	private static final Logger LOG = Logger.getLogger(GMPGoFrame.class.getName());
+	GMPConnection C;
 	boolean WantMove=true;
 	int BlackTime=0,WhiteTime=0;
 	long CurrentTime;
@@ -49,7 +51,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	
 	public void gotPass (int color)
 	{	updateTime();
-		Dump.println("Opponent passed");
+		LOG.info("Opponent passed");
 		B.setpass();
 		new Message(this,Global.resourceString("Pass")).setVisible(true);
 	}
@@ -57,7 +59,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	public void notepass ()
 	{	if (B.maincolor()==MyColor) return;
 		updateTime();
-		Dump.println("I pass");
+		LOG.info("I pass");
 		C.pass();
 		B.setpass();
 	}
@@ -65,7 +67,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	public boolean moveset (int i, int j)
 	{	if (B.maincolor()==MyColor) return false;
 		updateTime();
-		Dump.println("Move at "+i+" "+j);
+		LOG.log(Level.INFO, "Move at {0} {1}", new Object[]{i, j});
 		C.moveset(i,j);
 		updateTime();
 		return true;

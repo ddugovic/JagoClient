@@ -1,8 +1,8 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
-
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rene.util.parser.StringParser;
 
@@ -67,7 +67,8 @@ Most of these inconveniences are caused by a dirty server protocol.
 */
 
 public class GoObserver implements Distributor.SizeTask
-{	IgsGoFrame GF;
+{	private static final Logger LOG = Logger.getLogger(GoObserver.class.getName());
+	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
 	ObserveDistributor PD;
@@ -137,7 +138,7 @@ public class GoObserver implements Distributor.SizeTask
 	{	if (Closed || !Observing) return;
 		StringParser p;
 		int nu,i,j;
-		Dump.println("Observed("+N+"): "+s);
+		LOG.log(Level.INFO, "Observed({0}): {1}", new Object[]{N, s});
 		p=new StringParser(s);
 		p.skipblanks();
 		if (!p.isint())
@@ -162,7 +163,7 @@ public class GoObserver implements Distributor.SizeTask
 		nu=p.parseint('(');
 		if (p.error()) return;
 		if (Expected<nu && Got==0)
-		{	Dump.println("Oberver denies number "+nu+" expecting "+Expected);
+		{	LOG.log(Level.INFO, "Oberver denies number {0} expecting {1}", new Object[]{nu, Expected});
 			Out.println("moves "+N);
 			Got=nu;
 			return;
@@ -201,17 +202,17 @@ public class GoObserver implements Distributor.SizeTask
 		{	j=-1;
 		}
 		if (i<0 || j<0) return;
-		Dump.println("GoObserver interpreted: "+c+" "+i+","+j);
+		LOG.log(Level.INFO, "GoObserver interpreted: {0} {1},{2}", new Object[]{c, i, j});
 		if (c.equals("W")) GF.white(i,BS-1-j);
 		else GF.black(i,BS-1-j);
 	}
 
 	public void finished ()
-	{	Dump.println("GoObserver("+N+") is finished");
+	{	LOG.log(Level.INFO, "GoObserver({0}) is finished", N);
 	}
 
 	public void remove ()
-	{	Dump.println("GoObserver("+N+") has ended, unobserving");
+	{	LOG.log(Level.INFO, "GoObserver({0}) has ended, unobserving", N);
 		Closed=true;
 		Out.println("unobserve "+N);
 		new ObserverCloser(this);
@@ -236,12 +237,12 @@ public class GoObserver implements Distributor.SizeTask
 		char c[]=new char[1];
 		c[0]=(char)('a'+i);
 		Out.println(new String(c)+(BS-j));
-		Dump.println("***> Player sends "+new String(c)+(BS-j));
+		LOG.log(Level.INFO, "***> Player sends {0}{1}", new Object[]{new String(c), BS-j});
 	}
 
 	public void pass ()
 	{	Out.println("pass");
-		Dump.println("***> Player passes");
+		LOG.info("***> Player passes");
 	}
 
     public boolean newmove ()

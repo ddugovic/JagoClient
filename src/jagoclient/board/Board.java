@@ -234,7 +234,7 @@ public class Board extends Canvas implements MouseListener,
 	 */
 	public synchronized boolean trywood (Graphics gr, Graphics grs, int w)
 	{
-		if (EmptyPaint.haveImage(w, w, GF.getColor("boardcolor", 170, 120, 70),
+		if (EmptyPaint.haveImage(w, w, GF.getColor("boardcolor", 170, 120, 70, Color.RED),
 			OP + OP / 2, OP - OP / 2, D))
 		// use predrawn image
 		{
@@ -249,7 +249,7 @@ public class Board extends Canvas implements MouseListener,
 		{
 			if (EPThread != null && EPThread.isAlive()) EPThread.stopit();
 			EPThread = new EmptyPaint(this, w, w, GF.getColor("boardcolor",
-				170, 120, 70), true, OP + OP / 2, OP - OP / 2, D);
+				170, 120, 70, Color.RED), true, OP + OP / 2, OP - OP / 2, D);
 		}
 		return false;
 	}

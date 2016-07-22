@@ -201,21 +201,21 @@ public abstract class Global extends rene.gui.Global
 	}
 
 	/** getParameter for color values */
-	public static Color getColor (String a, int red, int green, int blue)
+	public static Color getColor (String key, int red, int green, int blue, Color c)
 	{
-		return getParameter(a, red, green, blue);
+		return getParameter(key, red, green, blue, c);
 	}
 
-	/** getParameter for colors */
-	public static Color getColor (String a, Color c)
+	/** getParameter for color values */
+	public static Color getColor (String key, Color c)
 	{
-		return getParameter(a, c);
+		return getParameter(key, c);
 	}
 
-	/** setParameter for colors */
-	public static void setColor (String a, Color c)
+	/** setParameter for color values */
+	public static void setColor (String key, Color c)
 	{
-		setParameter(a, c);
+		setParameter(key, c);
 	}
 
 	/** look up, if that string filters as blocking */

@@ -1,7 +1,6 @@
 package jagoclient.partner;
 
 import jagoclient.CloseConnection;
-import jagoclient.Dump;
 import jagoclient.Global;
 import jagoclient.dialogs.Help;
 import jagoclient.dialogs.Message;
@@ -26,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
@@ -73,6 +74,7 @@ class PartnerMove
 
 public class PartnerFrame extends CloseFrame
 {
+	private static final Logger LOG = Logger.getLogger(PartnerFrame.class.getName());
 	BufferedReader In;
 	PrintWriter Out;
 	Viewer Output;
@@ -114,7 +116,7 @@ public class PartnerFrame extends CloseFrame
 
 	public boolean connect (String s, int p)
 	{
-		Dump.println("Starting partner connection");
+		LOG.info("Starting partner connection");
 		try
 		{
 			Server = new Socket(s, p);
@@ -160,7 +162,7 @@ public class PartnerFrame extends CloseFrame
 
 	public void open (Socket server)
 	{
-		Dump.println("Starting partner server");
+		LOG.info("Starting partner server");
 		Server = server;
 		try
 		{
@@ -171,7 +173,7 @@ public class PartnerFrame extends CloseFrame
 		}
 		catch (Exception e)
 		{
-			Dump.println("---> no connection");
+			LOG.warning("---> no connection");
 			new Message(this, Global.resourceString("Got_no_Connection_")).setVisible(true);
 			return;
 		}
@@ -323,7 +325,7 @@ public class PartnerFrame extends CloseFrame
 			int i = p.parseint(), j = p.parseint();
 			int bt = p.parseint(), bm = p.parseint();
 			int wt = p.parseint(), wm = p.parseint();
-			Dump.println("Move of " + color + " at " + i + "," + j);
+			LOG.log(Level.INFO, "Move of {0} at {1},{2}", new Object[]{color, i, j});
 			if (color.equals("b"))
 			{
 				if (PGF.maincolor() < 0) return;
@@ -349,7 +351,7 @@ public class PartnerFrame extends CloseFrame
 			int i = p.parseint(), j = p.parseint();
 			int bt = p.parseint(), bm = p.parseint();
 			int wt = p.parseint(), wm = p.parseint();
-			Dump.println("Move of " + color + " at " + i + "," + j);
+			LOG.log(Level.INFO, "Move of {0} at {1},{2}", new Object[]{color, i, j});
 			if (color.equals("b"))
 			{
 				if (PGF.maincolor() < 0) return;
@@ -371,7 +373,7 @@ public class PartnerFrame extends CloseFrame
 			p.skip("@@pass");
 			int bt = p.parseint(), bm = p.parseint();
 			int wt = p.parseint(), wm = p.parseint();
-			Dump.println("Pass");
+			LOG.info("Pass");
 			PGF.dopass();
 			PGF.settimes(bt, bm, wt, wm);
 			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
@@ -384,7 +386,7 @@ public class PartnerFrame extends CloseFrame
 			p.skip("@@!pass");
 			int bt = p.parseint(), bm = p.parseint();
 			int wt = p.parseint(), wm = p.parseint();
-			Dump.println("Pass");
+			LOG.info("Pass");
 			PGF.dopass();
 			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
 			PGF.settimes(bt, bm, wt, wm);
@@ -414,7 +416,7 @@ public class PartnerFrame extends CloseFrame
 			p.skip("@@result");
 			int b = p.parseint();
 			int w = p.parseint();
-			Dump.println("Result " + b + " " + w);
+			LOG.log(Level.INFO, "Result {0} {1}", new Object[]{b, w});
 			new ResultQuestion(this, Global.resourceString("Accept_result__B_")
 				+ b + Global.resourceString("__W_") + w + "?", b, w);
 			Block = true;
@@ -426,7 +428,7 @@ public class PartnerFrame extends CloseFrame
 			p.skip("@@!result");
 			int b = p.parseint();
 			int w = p.parseint();
-			Dump.println("Result " + b + " " + w);
+			LOG.info("Result " + b + " " + w);
 			Output.append(Global.resourceString("Game_Result__B_") + b
 				+ Global.resourceString("__W_") + w + "\n", Color.green
 				.darker());

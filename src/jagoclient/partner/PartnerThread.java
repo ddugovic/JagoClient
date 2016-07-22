@@ -1,11 +1,12 @@
 package jagoclient.partner;
 
-import jagoclient.Dump;
 import jagoclient.Global;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTextField;
 
@@ -18,6 +19,7 @@ import rene.viewer.Viewer;
 
 public class PartnerThread extends Thread
 {
+	private static final Logger LOG = Logger.getLogger(PartnerThread.class.getName());
 	BufferedReader In;
 	PrintWriter Out;
 	Viewer T;
@@ -43,7 +45,7 @@ public class PartnerThread extends Thread
 			{
 				String s = In.readLine();
 				if (s == null || s.equals("@@@@end")) throw new IOException();
-				Dump.println("From Partner: " + s);
+				LOG.log(Level.INFO, "From Partner: {0}", s);
 				if (s.startsWith("@@busy"))
 				{
 					T.append(Global.resourceString("____Server_is_busy____"));

@@ -1,9 +1,10 @@
 package jagoclient.igs;
 
-import jagoclient.Dump;
 import jagoclient.igs.connection.Connection;
 
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rene.util.parser.StringParser;
 
@@ -39,7 +40,8 @@ when an undo took place, and is the only way to determine undo.
 */
 
 public class Player implements Distributor.SizeTask
-{	IgsGoFrame GF;
+{	private static final Logger LOG = Logger.getLogger(Player.class.getName());
+	IgsGoFrame GF;
 	IgsStream In;
 	PrintWriter Out;
 	int N,L;
@@ -66,7 +68,7 @@ public class Player implements Distributor.SizeTask
 	@see jagoclient.igs.PlayerSizeDistributor
 	*/
 	void receivesize (String s)
-	{	Dump.println("Sizer got: "+s);
+	{	LOG.log(Level.INFO, "Sizer got: {0}", s);
 		if (L==1) White=s;
 		else if (L==2) Black=s;
 		else
@@ -100,7 +102,7 @@ public class Player implements Distributor.SizeTask
 	 */
 	@Override
 	public void sizefinished ()
-	{	Dump.println("Sizer has size "+BS);
+	{	LOG.log(Level.INFO, "Sizer has size {0}", BS);
 		HaveSize=true;
 		GF.doboardsize(BS);
 		setinformation();
@@ -142,7 +144,7 @@ public class Player implements Distributor.SizeTask
 		// we have the board size, start parsing for moves
 		StringParser p;
 		int nu,i,j;
-		Dump.println("Player("+N+"): "+s);
+		LOG.log(Level.INFO, "Player({0}): {1}", new Object[]{N, s});
 		p=new StringParser(s);
 		p.skipblanks();
 		if (!p.isint()) // s does not start with a number
@@ -166,7 +168,7 @@ public class Player implements Distributor.SizeTask
 				{	j=-1;
 				}
 				if (i<0 || j<0) return;
-				Dump.println("Removing "+i+","+j);
+				LOG.log(Level.INFO, "Removing {0},{1}", new Object[]{i, j});
 				GF.remove(i,BS-1-j);
 			}
 			return;
@@ -176,7 +178,7 @@ public class Player implements Distributor.SizeTask
 		if (p.error()) return;
 		// test, if the move was expected
 		if (Expected<nu && Got==0)
-		{	Dump.println("Player denies number "+nu+" expecting "+Expected);
+		{	LOG.log(Level.INFO, "Player denies number {0} expecting {1}", new Object[]{nu, Expected});
 			Got=nu;
 			return;
 		}
@@ -220,13 +222,13 @@ public class Player implements Distributor.SizeTask
 		}
 		if (i<0 || j<0) return;
 		// send the move to the GoFrame
-		Dump.println("Player interpreted: "+c+" "+i+","+j);
+		LOG.log(Level.INFO, "Player interpreted: {0} {1},{2}", new Object[]{c, i, j});
 		if (c.equals("W")) GF.white(i,BS-1-j);
 		else GF.black(i,BS-1-j);
 	}
 
 	void remove ()
-	{	Dump.println("Player("+N+") has ended");
+	{	LOG.log(Level.INFO, "Player({0}) has ended", N);
 		if (PD!=null) PD.unchain();
 		PD=null;
 	}
@@ -252,7 +254,7 @@ public class Player implements Distributor.SizeTask
 		        s=s+" "+N+" "+sec; break;
 		}
 		Out.println(s);
-		Dump.println("***> Player sends "+s);
+		LOG.log(Level.INFO, "***> Player sends {0}", s);
 	}
 
 	/**
@@ -260,7 +262,7 @@ public class Player implements Distributor.SizeTask
 	*/
 	void pass ()
 	{	Out.println("pass");
-		Dump.println("***> Player passes");
+		LOG.info("***> Player passes");
 	}
 
 	/**

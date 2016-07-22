@@ -25,7 +25,7 @@ public class WoodPaint extends StopThread
 	{	EmptyPaint.createwood(this,F,
 						Global.getParameter("sboardwidth",0),
 						Global.getParameter("sboardheight",0),
-						Global.getColor("boardcolor",170,120,70),
+						Global.getColor("boardcolor",170,120,70,Color.RED),
 						Global.getParameter("shadows",true),
 						Global.getParameter("sboardox",5),
 						Global.getParameter("sboardoy",5),
