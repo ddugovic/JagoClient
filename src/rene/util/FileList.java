@@ -133,13 +133,13 @@ public class FileList
 	/**
 	Return an Enumeration with the files.
 	*/
-	public Enumeration files ()
+	public Enumeration<? extends File> files ()
 	{	return V.elements();
 	}
 	/**
 	Return an Enumeration with the directories.
 	*/
-	public Enumeration dirs ()
+	public Enumeration<? extends File> dirs ()
 	{	return Vdir.elements();
 	}
 	/**

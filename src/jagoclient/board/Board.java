@@ -222,11 +222,11 @@ public class Board extends Canvas implements MouseListener,
 	// The following is for the thread, which tries to draw the
 	// board on program start, to save time.
 
-	public static WoodPaint woodpaint = null;
+	public static Thread woodpaint = null;
 
 	// Now come the normal routine to draw a board.
 
-	EmptyPaint EPThread = null;
+	Thread EPThread = null;
 
 	/**
 	 * Try to paint the wooden board. If the size is correct, use the predraw
@@ -247,9 +247,11 @@ public class Board extends Canvas implements MouseListener,
 		}
 		else
 		{
-			if (EPThread != null && EPThread.isAlive()) EPThread.stopit();
-			EPThread = new EmptyPaint(this, w, w, GF.getColor("boardcolor",
-				170, 120, 70, Color.RED), true, OP + OP / 2, OP - OP / 2, D);
+			if (EPThread != null && EPThread.isAlive()) EPThread.interrupt();
+			EPThread = new Thread(new EmptyPaint(this, w, w, GF.getColor("boardcolor",
+				170, 120, 70, Color.RED), true, OP + OP / 2, OP - OP / 2, D));
+			EPThread.setPriority(EPThread.getPriority()-1);
+			EPThread.start();
 		}
 		return false;
 	}
@@ -331,7 +333,7 @@ public class Board extends Canvas implements MouseListener,
 	// Draw an empty board onto the graphics context g.
 	// Including lines, coordinates and markers.
 	{
-		if (woodpaint != null && woodpaint.isAlive()) woodpaint.stopit();
+		if (woodpaint != null && woodpaint.isAlive()) woodpaint.interrupt();
 		synchronized (this)
 		{
 			if (Empty == null || EmptyShadow == null) return;
@@ -2743,7 +2745,7 @@ public class Board extends Canvas implements MouseListener,
 	// print the board
 	{
 		Position p = new Position(P);
-		PrintBoard PB = new PrintBoard(p, Range, f);
+		new Thread(new PrintBoard(p, Range, f)).start();
 	}
 
 	public void lastrange (int n)

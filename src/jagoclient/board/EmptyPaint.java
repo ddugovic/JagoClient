@@ -1,7 +1,6 @@
 package jagoclient.board;
 
 import jagoclient.Global;
-import jagoclient.StopThread;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,7 +15,7 @@ a board is needed (request from Board via WoodPaint).
 @see jagoclient.board.WoodPaint
 */
 
-public class EmptyPaint extends StopThread
+public class EmptyPaint implements Runnable
 {	Board B;
 	static int W,H;
 	public static int Ox,Oy,D;
@@ -24,16 +23,13 @@ public class EmptyPaint extends StopThread
 	boolean Shadows;
 	EmptyPaint (Board b, int w, int h, Color c, boolean shadows, int ox, int oy, int d)
 	{	B=b; W=w; H=h; C=c; Shadows=shadows; Ox=ox; Oy=oy; D=d;
-		start();
 	}
 	public void run ()
 	{	try
-		{	setPriority(getPriority()-1);
-		}
-		catch (Exception e) { System.out.println(e); }
-		try { sleep(100); } catch (Exception e) {}
-		createwood(this,B,W,H,C,Shadows,Ox,Oy,D);
-		if (!stopped()) B.updateboard();
+		{	Thread.sleep(100);
+			createwood(B,W,H,C,Shadows,Ox,Oy,D);
+			if (!Thread.interrupted()) B.updateboard();
+		} catch (InterruptedException e) {}
 	}
 
 	public static Image StaticImage=null,StaticShadowImage=null;
@@ -42,7 +38,7 @@ public class EmptyPaint extends StopThread
 	Create an image of the wooden board. The component is used
 	to create the image.
 	*/
-	static public void createwood (StopThread EPT, 
+	public static void createwood (
 		Component comp, int w, int h, Color c, boolean shadows, int ox, int oy, int d)
 	{	if (w==0 || h==0) return;
 		StaticImage=StaticShadowImage=null;
@@ -91,7 +87,7 @@ public class EmptyPaint extends StopThread
 					if (dist<1.0) f=0.9*dist;
 					ps[w*i+j]=(255<<24)|((int)(r*f)<<16)|((int)(g*f)<<8)|(int)(b*f);
 				}
-				if (EPT.stopped()) return;
+				if (Thread.currentThread().isInterrupted()) return;
 			}
 		if (shadows)
 			StaticShadowImage=comp.createImage(

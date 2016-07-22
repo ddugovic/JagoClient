@@ -1,7 +1,5 @@
 package jagoclient.board;
 
-import jagoclient.StopThread;
-
 /**
  * A timer for the goboard. It will call the alarm method of the board in
  * regular time intervals. This is used to update the timer.
@@ -9,7 +7,7 @@ import jagoclient.StopThread;
  * @see jagoclient.board.TimedBoard
  */
 
-public class GoTimer extends StopThread
+public class GoTimer implements Runnable
 {
 	public long Interval;
 	TimedBoard B;
@@ -18,7 +16,6 @@ public class GoTimer extends StopThread
 	{
 		Interval = i;
 		B = b;
-		start();
 	}
 
 	@Override
@@ -26,9 +23,9 @@ public class GoTimer extends StopThread
 	{
 		try
 		{
-			while ( !stopped())
+			while ( !Thread.interrupted())
 			{
-				sleep(Interval);
+				Thread.sleep(Interval);
 				B.alarm();
 			}
 		}

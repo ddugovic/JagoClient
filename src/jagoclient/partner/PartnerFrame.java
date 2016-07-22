@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,11 +82,11 @@ public class PartnerFrame extends CloseFrame
 	Viewer Output;
 	HistoryTextField Input;
 	Socket Server;
-	PartnerThread PT;
+	Thread PartnerListenerThread;
 	public PartnerGoFrame PGF;
 	boolean Serving;
 	boolean Block;
-	ListClass<PartnerMove> Moves;
+	AbstractList<PartnerMove> Moves;
 	String Dir;
 
 	public PartnerFrame (String name, boolean serving)
@@ -125,12 +127,13 @@ public class PartnerFrame extends CloseFrame
 			In = new BufferedReader(new InputStreamReader(new DataInputStream(
 				Server.getInputStream())));
 		}
-		catch (Exception e)
+		catch (IOException ex)
 		{
+			LOG.log(Level.WARNING, null, ex);
 			return false;
 		}
-		PT = new PartnerThread(In, Out, Input, Output, this);
-		PT.start();
+		PartnerListenerThread = new Thread(new PartnerInputListener(In, Out, Input, Output, this));
+		PartnerListenerThread.start();
 		Out.println("@@name " + Global.getParameter("yourname", "No Name"));
 		setVisible(true);
 		return true;
@@ -153,8 +156,8 @@ public class PartnerFrame extends CloseFrame
 		}
 		Out.println(server);
 		Out.println("" + port);
-		PT = new PartnerThread(In, Out, Input, Output, this);
-		PT.start();
+		PartnerListenerThread = new Thread(new PartnerInputListener(In, Out, Input, Output, this));
+		PartnerListenerThread.start();
 		Out.println("@@name " + Global.getParameter("yourname", "No Name"));
 		setVisible(true);
 		return true;
@@ -177,8 +180,8 @@ public class PartnerFrame extends CloseFrame
 			new Message(this, Global.resourceString("Got_no_Connection_")).setVisible(true);
 			return;
 		}
-		PT = new PartnerThread(In, Out, Input, Output, this);
-		PT.start();
+		PartnerListenerThread = new Thread(new PartnerInputListener(In, Out, Input, Output, this));
+		PartnerListenerThread.start();
 	}
 
 	@Override
@@ -232,14 +235,14 @@ public class PartnerFrame extends CloseFrame
 		Global.notewindow(this, "partner");
 		Out.println("@@@@end");
 		Out.close();
-		new CloseConnection(Server, In);
+		new Thread(new CloseConnection(Server, In)).start();
 		super.doclose();
 	}
 
 	@Override
 	public boolean close ()
 	{
-		if (PT.isAlive())
+		if (PartnerListenerThread.isAlive())
 		{
 			new ClosePartnerQuestion(this);
 			return false;
@@ -296,8 +299,8 @@ public class PartnerFrame extends CloseFrame
 				ExtraTime * 60, ExtraMoves, Handicap);
 			Out.println("@@start");
 			Block = false;
-			Moves = new ListClass<PartnerMove>();
-			Moves.append(new PartnerMove("board", C, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
+			Moves = new ArrayList<PartnerMove>();
+			Moves.add(new PartnerMove("board", C, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
 		}
 		else if (s.startsWith("@@-board"))
 		{
@@ -330,13 +333,13 @@ public class PartnerFrame extends CloseFrame
 			{
 				if (PGF.maincolor() < 0) return;
 				PGF.black(i, j);
-				Moves.append(new PartnerMove("b", i, j, bt, bm, wt, wm));
+				Moves.add(new PartnerMove("b", i, j, bt, bm, wt, wm));
 			}
 			else
 			{
 				if (PGF.maincolor() > 0) return;
 				PGF.white(i, j);
-				Moves.append(new PartnerMove("w", i, j, bt, bm, wt, wm));
+				Moves.add(new PartnerMove("w", i, j, bt, bm, wt, wm));
 			}
 			PGF.settimes(bt, bm, wt, wm);
 			Out.println("@@!move " + color + " " + i + " " + j + " " + bt + " "
@@ -356,13 +359,13 @@ public class PartnerFrame extends CloseFrame
 			{
 				if (PGF.maincolor() < 0) return;
 				PGF.black(i, j);
-				Moves.append(new PartnerMove("b", i, j, bt, bm, wt, wm));
+				Moves.add(new PartnerMove("b", i, j, bt, bm, wt, wm));
 			}
 			else
 			{
 				if (PGF.maincolor() > 0) return;
 				PGF.white(i, j);
-				Moves.append(new PartnerMove("w", i, j, bt, bm, wt, wm));
+				Moves.add(new PartnerMove("w", i, j, bt, bm, wt, wm));
 			}
 			PGF.settimes(bt, bm, wt, wm);
 		}
@@ -376,7 +379,7 @@ public class PartnerFrame extends CloseFrame
 			LOG.info("Pass");
 			PGF.dopass();
 			PGF.settimes(bt, bm, wt, wm);
-			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
+			Moves.add(new PartnerMove("pass", bt, bm, wt, wm));
 			Out.println("@@!pass " + bt + " " + bm + " " + wt + " " + wm);
 		}
 		else if (s.startsWith("@@!pass"))
@@ -388,7 +391,7 @@ public class PartnerFrame extends CloseFrame
 			int wt = p.parseint(), wm = p.parseint();
 			LOG.info("Pass");
 			PGF.dopass();
-			Moves.append(new PartnerMove("pass", bt, bm, wt, wm));
+			Moves.add(new PartnerMove("pass", bt, bm, wt, wm));
 			PGF.settimes(bt, bm, wt, wm);
 		}
 		else if (s.startsWith("@@endgame"))
@@ -458,8 +461,8 @@ public class PartnerFrame extends CloseFrame
 		{
 			if (PGF == null) return;
 			PGF.undo(2);
-			Moves.removeLast();
-			Moves.removeLast();
+			Moves.remove(Moves.size()-1);
+			Moves.remove(Moves.size()-1);
 			PGF.addothertime(30);
 			Block = false;
 		}
@@ -564,8 +567,8 @@ public class PartnerFrame extends CloseFrame
 	{
 		Out.println("@@!undo");
 		PGF.undo(2);
-		Moves.removeLast();
-		Moves.removeLast();
+		Moves.remove(Moves.size()-1);
+		Moves.remove(Moves.size()-1);
 		Block = false;
 		PGF.addtime(30);
 	}
@@ -593,8 +596,8 @@ public class PartnerFrame extends CloseFrame
 				+ ExtraTime + " " + ExtraMoves + " " + Handicap);
 		else Out.println("@@!board w" + " " + Size + " " + TotalTime + " "
 			+ ExtraTime + " " + ExtraMoves + " " + Handicap);
-		Moves = new ListClass();
-		Moves.append(new PartnerMove("board", C.equals("b")? -1:1, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
+		Moves = new ArrayList<PartnerMove>();
+		Moves.add(new PartnerMove("board", C.equals("b")? -1:1, Size, TotalTime, ExtraTime, ExtraMoves, Handicap));
 	}
 
 	public void declineboard ()
@@ -645,12 +648,9 @@ public class PartnerFrame extends CloseFrame
 		try
 		// print out using the board class
 		{
-			PrintWriter fo = new PrintWriter(new FileOutputStream(fd
-				.getDirectory()
-				+ fn), true);
-			for (ListElement<PartnerMove> lm : Moves)
+			PrintWriter fo = new PrintWriter(new FileOutputStream(fd.getDirectory() + fn), true);
+			for (PartnerMove m : Moves)
 			{
-				PartnerMove m = lm.content();
 				fo.println(m.Type + " " + m.P1 + " " + m.P2 + " " + m.P3 + " "
 					+ m.P4 + " " + m.P5 + " " + m.P6);
 			}
@@ -739,6 +739,6 @@ public class PartnerFrame extends CloseFrame
 			PGF.pass();
 			PGF.settimes(p1, p2, p3, p4);
 		}
-		Moves.append(new PartnerMove(c, p1, p2, p3, p4, p5, p6));
+		Moves.add(new PartnerMove(c, p1, p2, p3, p4, p5, p6));
 	}
 }

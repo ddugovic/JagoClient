@@ -22,7 +22,7 @@ import rene.gui.Global;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 
-class ClipboardCopy extends Thread
+class ClipboardCopy implements Runnable
 {
 	String S;
 	ClipboardOwner C;
@@ -33,7 +33,6 @@ class ClipboardCopy extends Thread
 		S = s;
 		C = c;
 		Cv = cv;
-		start();
 	}
 
 	@Override
@@ -540,7 +539,7 @@ public class TextDisplay extends Canvas implements ClipboardOwner,
 			e = e.next();
 		}
 		if (e != null) s = s + e.content().getblock();
-		new ClipboardCopy(this, this, s);
+		new Thread(new ClipboardCopy(this, this, s)).start();
 	}
 
 	public void showFirst ()

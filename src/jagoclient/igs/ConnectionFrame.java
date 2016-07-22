@@ -755,7 +755,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		Out.println("quit");
 		Out.close();
 		LOG.info("doclose() called in connection");
-		new CloseConnection(Server, In.getInputStream());
+		new Thread(new CloseConnection(Server, In.getInputStream())).start();
 		inform();
 		super.doclose();
 	}

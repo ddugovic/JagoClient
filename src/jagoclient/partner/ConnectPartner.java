@@ -6,17 +6,17 @@ import jagoclient.partner.partner.Partner;
 
 /**
 A thread, which will try to connect to a go partner.
-If it is successfull, a Partner Frame will open.
+If it is successful, a Partner Frame will open.
 Otherwise, an error message will appear.
 */
 
-public class ConnectPartner extends Thread
+public class ConnectPartner implements Runnable
 {	Partner P;
 	PartnerFrame PF;
 	public ConnectPartner (Partner p, PartnerFrame pf)
 	{	P=p; PF=pf;
-		start();
 	}
+	@Override
 	public void run ()
 	{	P.Trying=true;
 		if (Global.getParameter("userelay",false))
@@ -27,7 +27,7 @@ public class ConnectPartner extends Thread
 				new Message(Global.frame(),
 					Global.resourceString("No_connection_to_")+P.Server).setVisible(true);
 				try
-				{	sleep(10000);
+				{	Thread.sleep(10000);
 				}
 				catch (Exception e)
 				{	P.Trying=false;
@@ -39,7 +39,7 @@ public class ConnectPartner extends Thread
 			new Message(Global.frame(),
 				Global.resourceString("No_connection_to_")+P.Server).setVisible(true);
 			try
-			{	sleep(10000);
+			{	Thread.sleep(10000);
 			}
 			catch (Exception e)
 			{	P.Trying=false;

@@ -1,20 +1,17 @@
 package jagoclient.gmp;
 
-import jagoclient.*;
-
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class GMPCloser extends Thread
+class GMPCloser implements Runnable
 {
 	GMPConnector C;
 
 	public GMPCloser (GMPConnector c)
 	{
 		C = c;
-		start();
 	}
 
 	@Override
@@ -377,7 +374,7 @@ public class GMPConnector implements Runnable
 
 	public void doclose ()
 	{
-		new GMPCloser(this);
+		new Thread(new GMPCloser(this)).start();
 	}
 
 	/**

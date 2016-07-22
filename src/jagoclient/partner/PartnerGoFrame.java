@@ -17,7 +17,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 {	String BlackName,WhiteName;
 	int BlackTime,WhiteTime,BlackMoves,WhiteMoves;
 	int BlackRun,WhiteRun;
-	GoTimer Timer;
+	Thread Timer;
 	long CurrentTime;
 	PartnerFrame PF;
 	int Col,TotalTime,ExtraTime,ExtraMoves;
@@ -194,7 +194,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 			}
 			else if (BlackMoves>0)
 			{	new Message(this,Global.resourceString("Black_looses_by_time_")).setVisible(true);
-				Timer.stopit();
+				Timer.interrupt();
 			}
 			else
 			{	BlackMoves=ExtraMoves;
@@ -210,7 +210,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 			}
 			else if (WhiteMoves>0)
 			{	new Message(this,Global.resourceString("White_looses_by_time_")).setVisible(true);
-				Timer.stopit();
+				Timer.interrupt();
 			}
 			else
 			{	WhiteMoves=ExtraMoves;
@@ -241,7 +241,8 @@ public class PartnerGoFrame extends ConnectedGoFrame
 		CurrentTime=System.currentTimeMillis();
 		BlackRun=0; WhiteRun=0;
 		BlackMoves=-1; WhiteMoves=-1;
-		Timer=new GoTimer(this,100);
+		Timer=new Thread(new GoTimer(this,100));
+		Timer.start();
 		if (Handicap>0) B.handicap(Handicap);
 	}
 	
@@ -252,7 +253,7 @@ public class PartnerGoFrame extends ConnectedGoFrame
 
 	void doscore ()
 	{	B.score();
-		Timer.stopit();
+		Timer.interrupt();
 		Ended=true;
 	}
 

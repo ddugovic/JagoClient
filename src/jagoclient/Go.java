@@ -346,10 +346,9 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					return;
 				}
 				// create a PartnerFrame and connect via ConnectPartner class
-				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_")
-					+ c.Name, false);
+				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_") + c.Name, false);
 				Global.setwindow(cf, "partner", 500, 400);
-				new ConnectPartner(c, cf);
+				new Thread(new ConnectPartner(c, cf)).start();
 			}
 		}
 		else if ("EditServer".equals(o))
@@ -517,7 +516,9 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		// start a board painter with the last known
 		// board dimensions
 		{
-			Board.woodpaint = new WoodPaint(F);
+			Board.woodpaint = new Thread(new WoodPaint(F));
+			Board.woodpaint.setPriority(Board.woodpaint.getPriority()-1);
+			Board.woodpaint.start();
 		}
 	}
 

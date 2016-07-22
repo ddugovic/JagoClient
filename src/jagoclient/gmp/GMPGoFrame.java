@@ -13,7 +13,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	boolean WantMove=true;
 	int BlackTime=0,WhiteTime=0;
 	long CurrentTime;
-	GoTimer Timer=null;
+	Thread Timer=null;
 	int MyColor;
 	
 	public GMPGoFrame (GMPConnection c, int size, int color)
@@ -22,7 +22,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 			false,false);
 		MyColor=color;
 		C=c;
-		Timer=new GoTimer(this,1000);
+		Timer=new Thread(new GoTimer(this,1000));
 		CurrentTime=System.currentTimeMillis();
 		setVisible(true);
 		repaint();
@@ -98,7 +98,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 
 	public void doclose ()
 	{	C.doclose();
-		if (Timer!=null && Timer.isAlive()) Timer.stopit();
+		if (Timer!=null && Timer.isAlive()) Timer.interrupt();
 		super.doclose();
 	}
 

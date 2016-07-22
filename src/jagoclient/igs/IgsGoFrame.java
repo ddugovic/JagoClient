@@ -37,7 +37,7 @@ public class IgsGoFrame extends ConnectedGoFrame implements TimedBoard,
 	int BlackTime = 0, WhiteTime = 0, BlackMoves, WhiteMoves;
 	int BlackRun = 0, WhiteRun = 0;
 	int GameNumber;
-	GoTimer Timer;
+	Thread Timer;
 	long CurrentTime;
 	public CheckboxMenuItem Playing, Terminal, ShortLines;
 	public ConnectionFrame CF;
@@ -50,7 +50,7 @@ public class IgsGoFrame extends ConnectedGoFrame implements TimedBoard,
 			.resourceString("Send_done"), true, true);
 		Dis = null;
 		CF = f;
-		Timer = new GoTimer(this, 1000);
+		Timer = new Thread(new GoTimer(this, 1000));
 		FileMenu.addSeparator();
 		FileMenu.add(Playing = new CheckboxMenuItemAction(this, Global
 			.resourceString("Play")));
@@ -225,7 +225,7 @@ public class IgsGoFrame extends ConnectedGoFrame implements TimedBoard,
 	{
 		if (Dis != null) Dis.remove();
 		CF.removeOutputListener(this);
-		if (Timer != null && Timer.isAlive()) Timer.stopit();
+		if (Timer != null && Timer.isAlive()) Timer.interrupt();
 		if (ExtraSendField) SendField.saveHistory("sendfield.history");
 		super.doclose();
 	}

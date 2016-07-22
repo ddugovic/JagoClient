@@ -26,15 +26,14 @@ class ObserveSizeDistributor extends Distributor
 Local class, which will remove the observer after a certain delay.
 */
 
-class ObserverCloser extends Thread
+class ObserverCloser implements Runnable
 {	GoObserver GO;
 	public ObserverCloser (GoObserver go)
 	{	GO=go;
-		start();
 	}
 	public void run ()
 	{	try
-		{	sleep(10000);
+		{	Thread.sleep(10000);
 		}
 		catch (InterruptedException e) {}
 		GO.finishremove();
@@ -215,7 +214,7 @@ public class GoObserver implements Distributor.SizeTask
 	{	LOG.log(Level.INFO, "GoObserver({0}) has ended, unobserving", N);
 		Closed=true;
 		Out.println("unobserve "+N);
-		new ObserverCloser(this);
+		new Thread(new ObserverCloser(this)).start();
 	}
 	
 	public void finishremove ()

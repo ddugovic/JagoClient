@@ -2,7 +2,6 @@ package jagoclient.partner;
 
 import jagoclient.Global;
 import jagoclient.Go;
-import jagoclient.StopThread;
 import jagoclient.gui.ButtonAction;
 import jagoclient.gui.MenuItemAction;
 import jagoclient.gui.MyLabel;
@@ -20,27 +19,28 @@ import rene.gui.CloseFrame;
 import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 
-class OpenPartnerFrameUpdate extends StopThread
+class OpenPartnerFrameUpdate implements Runnable
 {
 	OpenPartnerFrame OPF;
 
 	public OpenPartnerFrameUpdate (OpenPartnerFrame f)
 	{
 		OPF = f;
-		start();
 	}
 
 	@Override
 	public void run ()
 	{
-		while (stopped())
+		while (!Thread.interrupted())
 		{
 			try
 			{
-				sleep(30000);
+				Thread.sleep(30000);
 			}
 			catch (Exception e)
-			{}
+			{
+				break;
+			}
 			OPF.refresh();
 		}
 	}
@@ -56,7 +56,7 @@ public class OpenPartnerFrame extends CloseFrame
 {
 	Go G;
 	java.awt.List L;
-	OpenPartnerFrameUpdate OPFU;
+	Thread OPFU;
 
 	public OpenPartnerFrame (Go go)
 	{
@@ -81,7 +81,8 @@ public class OpenPartnerFrame extends CloseFrame
 		Global.setwindow(this, "openpartner", 300, 200);
 		seticon("ijago.gif");
 		setVisible(true);
-		OPFU = new OpenPartnerFrameUpdate(this);
+		OPFU = new Thread(new OpenPartnerFrameUpdate(this));
+		OPFU.start();
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class OpenPartnerFrame extends CloseFrame
 	public void doclose ()
 	{
 		G.OPF = null;
-		OPFU.stopit();
+		OPFU.interrupt();
 		Global.notewindow(this, "openpartner");
 		super.doclose();
 	}
@@ -130,11 +131,9 @@ public class OpenPartnerFrame extends CloseFrame
 			Partner p = le.content();
 			if (p.Name.equals(s))
 			{
-				PartnerFrame cf = new PartnerFrame(Global
-					.resourceString("Connection_to_")
-					+ p.Name, false);
+				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_") + p.Name, false);
 				Global.setwindow(cf, "partner", 500, 400);
-				new ConnectPartner(p, cf);
+				new Thread(new ConnectPartner(p, cf)).start();
 				return;
 			}
 		}

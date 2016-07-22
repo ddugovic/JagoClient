@@ -20,8 +20,7 @@ but do the printing in in a separate thread.
 As to Java 1.1 the printing is not very beautiful.
 */
 
-class PrintBoard extends Thread 
-	implements ImageObserver
+class PrintBoard implements Runnable, ImageObserver
 {   Graphics g;
     PrintJob job;
     int S,Range;
@@ -38,12 +37,12 @@ class PrintBoard extends Thread
         Range=Range1;
 		if (job!=null)
 		{   g=job.getGraphics();
-		    start();
 		}
     }
     
     public void run ()
-	{   int W=job.getPageDimension().width,H=job.getPageDimension().height;
+	{	if(job == null) return;
+		int W=job.getPageDimension().width,H=job.getPageDimension().height;
 	    int D=W*2/3/S,O=W/6;
 	    if (D%2!=0) D++;
 	    font=new Font("SansSerif",Font.BOLD,D/2);

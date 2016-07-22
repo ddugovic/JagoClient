@@ -13,20 +13,20 @@ import javax.swing.JTextField;
 import rene.viewer.Viewer;
 
 /**
- * A thrad to expect input from a partner. The input is checked here for
+ * A thread to expect input from a partner. The input is checked here for
  * commands (starting with @@).
  */
 
-public class PartnerThread extends Thread
+public class PartnerInputListener implements Runnable
 {
-	private static final Logger LOG = Logger.getLogger(PartnerThread.class.getName());
+	private static final Logger LOG = Logger.getLogger(PartnerInputListener.class.getName());
 	BufferedReader In;
 	PrintWriter Out;
 	Viewer T;
 	PartnerFrame PF;
 	JTextField Input;
 
-	public PartnerThread (BufferedReader in, PrintWriter out, JTextField input,
+	public PartnerInputListener (BufferedReader in, PrintWriter out, JTextField input,
 		Viewer t, PartnerFrame pf)
 	{
 		In = in;

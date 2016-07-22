@@ -16,31 +16,6 @@ import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-class ToFrontDelay extends Thread
-{
-	CloseFrame F;
-	final int Delay = 500;
-
-	public ToFrontDelay (CloseFrame f)
-	{
-		F = f;
-		start();
-	}
-
-	@Override
-	public void run ()
-	{
-		try
-		{
-			sleep(Delay);
-		}
-		catch (Exception e)
-		{}
-		F.toFront();
-		F.requestFocus();
-	}
-}
-
 /**
  * A Frame, which can be closed with the close button in the window frame.
  * <p>
@@ -245,11 +220,6 @@ public class CloseFrame extends Frame implements WindowListener,
 		if (y + h > dscreen.height) y = dscreen.height - h;
 		setLocation(x, y);
 		setSize(w, h);
-	}
-
-	public void front ()
-	{
-		new ToFrontDelay(this);
 	}
 
 	public void center ()

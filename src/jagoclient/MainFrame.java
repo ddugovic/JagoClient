@@ -17,7 +17,7 @@ import jagoclient.gui.MyLabel;
 import jagoclient.gui.MyMenu;
 import jagoclient.gui.MyPanel;
 import jagoclient.gui.Panel3D;
-import jagoclient.partner.Server;
+import jagoclient.partner.PartnerServerThread;
 import jagoclient.sound.JagoSound;
 
 import java.awt.BorderLayout;
@@ -325,7 +325,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 		ExtraInformation, ExtraSendField, DoSound, SimpleSound, BeepOnly,
 		Warning, RelayCheck, Automatic, EveryMove, FineBoard, Navigation;
 	MenuItem StartServer;
-	public Server S = null;
+	public PartnerServerThread S = null;
 
 	public MainFrame (String c)
 	{
@@ -633,7 +633,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 				{
 					LOG.log(Level.INFO, "Server started on {0}", Global.getParameter("serverport", 6970));
 					if (S == null)
-						S = new Server(Global.getParameter("serverport", 6970),
+						S = new PartnerServerThread(Global.getParameter("serverport", 6970),
 							Global.getParameter("publicserver", true));
 					S.open();
 					try

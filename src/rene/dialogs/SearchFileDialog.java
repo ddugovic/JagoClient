@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rene.gui.ButtonAction;
 import rene.gui.CheckboxAction;
@@ -40,15 +42,17 @@ class FileListFinder extends FileList
 	}
 }
 
-class SearchFileThread extends Thread
-{	SearchFileDialog D;	
+class SearchFileTask implements Runnable
+{	private static final Logger LOG = Logger.getLogger(SearchFileTask.class.getName());
+	SearchFileDialog D;	
 	MyList L;	
 	String Dir,Pattern;
 	boolean Recurse;
-	public SearchFileThread (SearchFileDialog dialog,
+	public SearchFileTask (SearchFileDialog dialog,
 		MyList l, String d, String p, boolean r)
 	{	D=dialog; L=l; Dir=d; Pattern=p; Recurse=r;
 	}
+	@Override
 	public void run ()
 	{	D.enableButtons(false);	
 		L.removeAll();
@@ -57,12 +61,14 @@ class SearchFileThread extends Thread
 		D.F=f;
 		f.search();
 		f.sort();
-		Enumeration e=f.files();
+		Enumeration<? extends File> e=f.files();
 		while (e.hasMoreElements())
 		{	try	
-			{	L.add(((File)e.nextElement()).getCanonicalPath());
+			{	L.add(e.nextElement().getCanonicalPath());
 			}
-			catch (Exception ex) {}
+			catch (Exception ex)
+			{	LOG.log(Level.WARNING, null, ex);
+			}
 		}
 		L.setEnabled(true);
 		D.enableButtons(true);
@@ -169,8 +175,7 @@ public class SearchFileDialog extends CloseDialog
 	public void search (boolean recurse)
 	{	saveHistory();
 		if (Run!=null && Run.isAlive()) return;
-		Run=new SearchFileThread(this,L,
-			Dir.getText(),Pattern.getText(),recurse);
+		Run=new Thread(new SearchFileTask(this,L,Dir.getText(),Pattern.getText(),recurse));
 		Run.start();
 	}
 	public void action ()
