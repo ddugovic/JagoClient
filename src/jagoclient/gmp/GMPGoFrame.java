@@ -6,8 +6,7 @@ import jagoclient.dialogs.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GMPGoFrame extends ConnectedGoFrame
-	implements TimedBoard
+public class GMPGoFrame extends ConnectedGoFrame implements TimedBoard
 {	private static final Logger LOG = Logger.getLogger(GMPGoFrame.class.getName());
 	GMPConnection C;
 	boolean WantMove=true;
@@ -18,8 +17,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	
 	public GMPGoFrame (GMPConnection c, int size, int color)
 	{	super(Global.resourceString("Play_Go"),size,
-			Global.resourceString("Remove_groups"),Global.resourceString(""),
-			false,false);
+			Global.resourceString("Remove_groups"),Global.resourceString(""),false,false);
 		MyColor=color;
 		C=c;
 		Timer=new Thread(new GoTimer(this,1000));
@@ -27,7 +25,8 @@ public class GMPGoFrame extends ConnectedGoFrame
 		setVisible(true);
 		repaint();
 	}
-	
+
+	@Override
 	public boolean wantsmove ()
 	{	return WantMove;
 	}
@@ -56,6 +55,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 		new Message(this,Global.resourceString("Pass")).setVisible(true);
 	}
 
+	@Override
 	public void notepass ()
 	{	if (B.maincolor()==MyColor) return;
 		updateTime();
@@ -64,6 +64,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 		B.setpass();
 	}
 
+	@Override
 	public boolean moveset (int i, int j)
 	{	if (B.maincolor()==MyColor) return false;
 		updateTime();
@@ -73,11 +74,13 @@ public class GMPGoFrame extends ConnectedGoFrame
 		return true;
 	}
 
+	@Override
 	public void color (int c)
 	{	if (c==GMPConnector.WHITE) super.color(-1);
 		else super.color(1);
 	}
 
+	@Override
 	public void undo ()
 	{	if (B.maincolor()==MyColor) return;
 		C.undo();
@@ -88,6 +91,7 @@ public class GMPGoFrame extends ConnectedGoFrame
 	{	B.undo(n);
 	}
 
+	@Override
 	public void doAction (String o)	
 	{	if (Global.resourceString("Remove_groups").equals(o))
 		{	WantMove=false;
@@ -96,12 +100,14 @@ public class GMPGoFrame extends ConnectedGoFrame
 		else super.doAction(o);
 	}
 
+	@Override
 	public void doclose ()
 	{	C.doclose();
 		if (Timer!=null && Timer.isAlive()) Timer.interrupt();
 		super.doclose();
 	}
 
+	@Override
 	public void alarm ()
 	{	long now=System.currentTimeMillis();
 		int BlackRun=BlackTime;

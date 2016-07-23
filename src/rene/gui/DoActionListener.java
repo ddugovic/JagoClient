@@ -4,5 +4,5 @@ package rene.gui;
  * An interface to delegate action handling.
  */
 public interface DoActionListener
-{   void doAction (String o);
+{   void doAction (String actionCommand);
 }

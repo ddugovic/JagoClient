@@ -28,13 +28,11 @@ class GMPWait extends CloseDialog
 	{
 		super(f, Global.resourceString("Play_Go"), true);
 		setLayout(new BorderLayout());
-		add("Center", new MyLabel(Global
-			.resourceString("Negotiating_with_Program")));
+		add("Center", new MyLabel(Global.resourceString("Negotiating_with_Program")));
 		JPanel p = new MyPanel();
 		p.add(new ButtonAction(this, Global.resourceString("Abort")));
 		add("South", p);
 		Global.setpacked(this, "gmpwait", 300, 150, f);
-		setVisible(true);
 	}
 
 	@Override
@@ -68,17 +66,13 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 	{
 		super(Global.resourceString("Play_Go"));
 		setLayout(new BorderLayout());
-		MyPanel center = new MyPanel();
-		center.setLayout(new GridLayout(0, 2));
+		MyPanel center = new MyPanel(new GridLayout(0, 2));
 		center.add(new MyLabel(Global.resourceString("Go_Protocol_Server")));
-		center.add(Program = new TextFieldAction(this, "", Global.getParameter(
-			"gmpserver", "gnugo.exe"), 16));
+		center.add(Program = new TextFieldAction(this, "", Global.getParameter("gmpserver", "gnugo.exe"), 16));
 		center.add(new MyLabel(Global.resourceString("Board_size")));
-		center.add(BoardSizeField = new IntField(this, "BoardSize", Global
-			.getParameter("gmpboardsize", 19)));
+		center.add(BoardSizeField = new IntField(this, "BoardSize", Global.getParameter("gmpboardsize", 19)));
 		center.add(new MyLabel(Global.resourceString("Handicap")));
-		center.add(HandicapField = new IntField(this, "Handicap", Global
-			.getParameter("gmphandicap", 9)));
+		center.add(HandicapField = new IntField(this, "Handicap", Global.getParameter("gmphandicap", 9)));
 		center.add(new MyLabel(Global.resourceString("Play_White")));
 		center.add(White = new CheckboxAction(null, ""));
 		White.setState(Global.getParameter("gmpwhite", true));
@@ -88,7 +82,6 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 		add("South", new Panel3D(south));
 		Global.setpacked(this, "gmpconnection", 300, 150, f);
 		seticon("iboard.gif");
-		setVisible(true);
 	}
 
 	GMPConnector C;
@@ -110,8 +103,7 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 			File f = new File(s);
 			if ( !f.exists())
 			{
-				rene.dialogs.Warning w = new rene.dialogs.Warning(this,
-					"Program not found!", "Warning", true);
+				rene.dialogs.Warning w = new rene.dialogs.Warning(this, "Program not found!", "Warning", true);
 				w.center(this);
 				w.setVisible(true);
 				return;
@@ -133,8 +125,7 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 					@Override
 					public void gotOk ()
 					{
-						F = new GMPGoFrame(Co, BoardSize, White.getState()?1
-							: -1);
+						F = new GMPGoFrame(Co, BoardSize, White.getState() ? 1 : -1);
 						F.setVisible(true);
 						Co.setVisible(false);
 						Co.dispose();
@@ -142,39 +133,43 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 					}
 				});
 				C.connect();
-				new GMPWait(this);
+				new GMPWait(this).setVisible(true);
 				Ok = null;
 			}
 			catch (Exception e)
 			{
-				rene.dialogs.Warning w = new rene.dialogs.Warning(this,
-					"Error : " + e.toString(), "Warning", true);
+				rene.dialogs.Warning w = new rene.dialogs.Warning(this, "Error : " + e.toString(), "Warning", true);
 				w.center(this);
 				w.setVisible(true);
 			}
 		}
 	}
 
+	@Override
 	public int getHandicap ()
 	{
 		return Handicap;
 	}
 
+	@Override
 	public int getColor ()
 	{
 		return MyColor;
 	}
 
+	@Override
 	public int getRules ()
 	{
 		return Rules;
 	}
 
+	@Override
 	public int getBoardSize ()
 	{
 		return BoardSize;
 	}
 
+	@Override
 	public void gotMove (int color, int pos)
 	{
 		pos--;
@@ -193,12 +188,14 @@ public class GMPConnection extends CloseFrame implements GMPInterface
 		Ok = ok;
 	}
 
+	@Override
 	public void gotOk ()
 	{
 		if (Ok != null) Ok.gotOk();
 		Ok = null;
 	}
 
+	@Override
 	public void gotAnswer (int a)
 	{}
 

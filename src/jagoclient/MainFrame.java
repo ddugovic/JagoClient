@@ -52,8 +52,7 @@ class GetPort extends GetParameter
 
 	public GetPort (MainFrame gcf, int port)
 	{
-		super(gcf, Global.resourceString("Server_Port"), Global
-			.resourceString("Port"), gcf, true, "port");
+		super(gcf, Global.resourceString("Server_Port"), Global.resourceString("Port"), gcf, true, "port");
 		set("" + port);
 		this.gcf = gcf;
 	}
@@ -61,10 +60,9 @@ class GetPort extends GetParameter
 	@Override
 	public boolean tell (Frame f, String s)
 	{
-		int port = 6970;
 		try
 		{
-			port = Integer.parseInt(s);
+			int port = Integer.parseInt(s);
 			Global.setParameter("serverport", port);
 		}
 		catch (NumberFormatException ex)
@@ -91,8 +89,7 @@ class AdvancedOptionsEdit extends CloseDialog
 	{
 		super(f, Global.resourceString("Advanced_Options"), true);
 		setLayout(new BorderLayout());
-		JPanel p = new MyPanel();
-		p.setLayout(new GridLayout(0, 1));
+		JPanel p = new MyPanel(new GridLayout(0, 1));
 		p.add(UseConfirmation = new Checkbox(Global.resourceString("Confirmations")));
 		UseConfirmation.setState(Global.getParameter("confirmations", true));
 		UseConfirmation.setFont(Global.SansSerif);
@@ -170,15 +167,14 @@ class YourNameQuestion extends GetParameter
 {
 	public YourNameQuestion (MainFrame gcf)
 	{
-		super(gcf, Global.resourceString("Name"), Global
-			.resourceString("Your_Name"), gcf, true, "yourname");
+		super(gcf, Global.resourceString("Name"), Global.resourceString("Your_Name"), gcf, true, "yourname");
 		set(Global.getParameter("yourname", "Your Name"));
 	}
 
 	@Override
 	public boolean tell (Frame f, String s)
 	{
-		if ( !s.equals("")) Global.setParameter("yourname", s);
+		if ( !s.isEmpty()) Global.setParameter("yourname", s);
 		return true;
 	}
 }
@@ -222,8 +218,7 @@ class GetRelayServer extends CloseDialog
 	public GetRelayServer (Frame F)
 	{
 		super(F, Global.resourceString("Relay_Server"), true);
-		JPanel p = new MyPanel();
-		p.setLayout(new GridLayout(0, 2));
+		JPanel p = new MyPanel(new GridLayout(0, 2));
 		p.add(new MyLabel(Global.resourceString("Server")));
 		p.add(Server = new GrayTextField());
 		Server.setText(Global.getParameter("relayserver", "localhost"));
@@ -331,8 +326,7 @@ public class MainFrame extends CloseFrame implements DoItemListener
 	{
 		super(c + " " + Global.resourceString("Version"));
 		seticon("ijago.gif");
-		boolean constrainedapplet = c.equals(Global
-			.resourceString("Jago_Applet"));
+		boolean constrainedapplet = c.equals(Global.resourceString("Jago_Applet"));
 		// Menu :
 		MenuBar menu = new MenuBar();
 		setMenuBar(menu);
@@ -348,128 +342,89 @@ public class MainFrame extends CloseFrame implements DoItemListener
 		Menu soptions = new MyMenu(Global.resourceString("Go_Server"));
 		if ( !Global.isApplet())
 		{
-			soptions.add(Automatic = new CheckboxMenuItemAction(this, Global
-				.resourceString("Automatic_Login")));
+			soptions.add(Automatic = new CheckboxMenuItemAction(this, Global.resourceString("Automatic_Login")));
 			Automatic.setState(Global.getParameter("automatic", true));
 			soptions.addSeparator();
 		}
 		soptions.add(new MenuItemAction(this, Global.resourceString("Filter")));
-		soptions.add(new MenuItemAction(this, Global
-			.resourceString("Function_Keys")));
+		soptions.add(new MenuItemAction(this, Global.resourceString("Function_Keys")));
 		menu.add(soptions);
 		// Partner Options
 		if ( !constrainedapplet)
 		{
 			Menu poptions = new MyMenu(Global.resourceString("Partner"));
-			poptions.add(StartServer = new MenuItemAction(this, Global
-				.resourceString("Start_Server")));
-			poptions.add(new MenuItemAction(this, Global
-				.resourceString("Server_Port")));
-			poptions.add(new MenuItemAction(this, Global
-				.resourceString("Your_Name")));
-			poptions.add(StartPublicServer = new CheckboxMenuItemAction(this,
-				Global.resourceString("Public")));
-			StartPublicServer.setState(Global
-				.getParameter("publicserver", true));
+			poptions.add(StartServer = new MenuItemAction(this, Global.resourceString("Start_Server")));
+			poptions.add(new MenuItemAction(this, Global.resourceString("Server_Port")));
+			poptions.add(new MenuItemAction(this, Global.resourceString("Your_Name")));
+			poptions.add(StartPublicServer = new CheckboxMenuItemAction(this, Global.resourceString("Public")));
+			StartPublicServer.setState(Global.getParameter("publicserver", true));
 			menu.add(poptions);
 		}
 		// Options
 		Menu options = new MyMenu(Global.resourceString("Options"));
 		Menu bo = new MyMenu(Global.resourceString("Board_Options"));
-		bo.add(Navigation = new CheckboxMenuItemAction(this, Global
-			.resourceString("Navigation_Tree")));
+		bo.add(Navigation = new CheckboxMenuItemAction(this, Global.resourceString("Navigation_Tree")));
 		Navigation.setState(Global.getParameter("shownavigationtree", true));
-		bo.add(TimerInTitle = new CheckboxMenuItemAction(this, Global
-			.resourceString("Timer_in_Title")));
+		bo.add(TimerInTitle = new CheckboxMenuItemAction(this, Global.resourceString("Timer_in_Title")));
 		TimerInTitle.setState(Global.getParameter("timerintitle", true));
-		bo.add(BigTimer = new CheckboxMenuItemAction(this, Global
-			.resourceString("Big_Timer")));
+		bo.add(BigTimer = new CheckboxMenuItemAction(this, Global.resourceString("Big_Timer")));
 		BigTimer.setState(Global.getParameter("bigtimer", true));
-		bo.add(ExtraInformation = new CheckboxMenuItemAction(this, Global
-			.resourceString("Extra_Information")));
-		ExtraInformation
-			.setState(Global.getParameter("extrainformation", true));
-		bo.add(ExtraSendField = new CheckboxMenuItemAction(this, Global
-			.resourceString("Extra_Send_Field")));
+		bo.add(ExtraInformation = new CheckboxMenuItemAction(this, Global.resourceString("Extra_Information")));
+		ExtraInformation.setState(Global.getParameter("extrainformation", true));
+		bo.add(ExtraSendField = new CheckboxMenuItemAction(this, Global.resourceString("Extra_Send_Field")));
 		ExtraSendField.setState(Global.getParameter("extrasendfield", true));
-		bo.add(FineBoard = new CheckboxMenuItemAction(this, Global
-			.resourceString("Fine_Board")));
+		bo.add(FineBoard = new CheckboxMenuItemAction(this, Global.resourceString("Fine_Board")));
 		FineBoard.setState(Global.getParameter("fineboard", true));
 		options.add(bo);
-		options.add(new MenuItemAction(this, Global
-			.resourceString("Advanced_Options")));
+		options.add(new MenuItemAction(this, Global.resourceString("Advanced_Options")));
 		options.addSeparator();
 		Menu fonts = new MyMenu(Global.resourceString("Fonts"));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
 		fonts.add(new MenuItemAction(this, Global.resourceString("Big_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
 		options.add(fonts);
-		options.add(new MenuItemAction(this, Global
-			.resourceString("Background_Color")));
+		options.add(new MenuItemAction(this, Global.resourceString("Background_Color")));
 		options.addSeparator();
-		options.add(DoSound = new CheckboxMenuItemAction(this, Global
-			.resourceString("Sound_on")));
+		options.add(DoSound = new CheckboxMenuItemAction(this, Global.resourceString("Sound_on")));
 		DoSound.setState( !Global.getParameter("nosound", true));
-		options.add(BeepOnly = new CheckboxMenuItemAction(this, Global
-			.resourceString("Beep_only")));
+		options.add(BeepOnly = new CheckboxMenuItemAction(this, Global.resourceString("Beep_only")));
 		BeepOnly.setState(Global.getParameter("beep", true));
 		Menu sound = new MyMenu(Global.resourceString("Sound_Options"));
-		sound.add(SimpleSound = new CheckboxMenuItemAction(this, Global
-			.resourceString("Simple_sound")));
+		sound.add(SimpleSound = new CheckboxMenuItemAction(this, Global.resourceString("Simple_sound")));
 		SimpleSound.setState(Global.getParameter("simplesound", true));
-		sound.add(EveryMove = new CheckboxMenuItemAction(this, Global
-			.resourceString("Every_move")));
+		sound.add(EveryMove = new CheckboxMenuItemAction(this, Global.resourceString("Every_move")));
 		EveryMove.setState(Global.getParameter("sound.everymove", true));
-		sound.add(Warning = new CheckboxMenuItemAction(this, Global
-			.resourceString("Timeout_warning")));
+		sound.add(Warning = new CheckboxMenuItemAction(this, Global.resourceString("Timeout_warning")));
 		Warning.setState(Global.getParameter("warning", true));
-		sound
-			.add(new MenuItemAction(this, Global.resourceString("Test_Sound")));
+		sound.add(new MenuItemAction(this, Global.resourceString("Test_Sound")));
 		options.add(sound);
 		options.addSeparator();
-		options.add(RelayCheck = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_Relay")));
+		options.add(RelayCheck = new CheckboxMenuItemAction(this, Global.resourceString("Use_Relay")));
 		RelayCheck.setState(Global.getParameter("userelay", false));
-		options.add(new MenuItemAction(this, Global
-			.resourceString("Relay_Server")));
+		options.add(new MenuItemAction(this, Global.resourceString("Relay_Server")));
 		options.addSeparator();
-		options.add(new MenuItemAction(this, Global
-			.resourceString("Set_Language")));
-		options.add(new MenuItemAction(this, "Close and Use English",
-			"CloseEnglish"));
+		options.add(new MenuItemAction(this, Global.resourceString("Set_Language")));
+		options.add(new MenuItemAction(this, "Close and Use English", "CloseEnglish"));
 		menu.add(options);
 		// Help
 		Menu help = new MyMenu(Global.resourceString("Help"));
 		help.add(new MenuItemAction(this, Global.resourceString("About_Jago")));
 		help.add(new MenuItemAction(this, Global.resourceString("Overview")));
 		help.addSeparator();
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Using_Windows")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Configuring_Connections")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Partner_Connections")));
-		help
-			.add(new MenuItemAction(this, Global.resourceString("About_Sounds")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("About_Smart_Go_Format_SGF")));
-		help
-			.add(new MenuItemAction(this, Global.resourceString("About_Filter")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("About_Function_Keys")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Overcoming_Firewalls")));
-		help
-			.add(new MenuItemAction(this, Global.resourceString("Play_Go_Help")));
+		help.add(new MenuItemAction(this, Global.resourceString("Using_Windows")));
+		help.add(new MenuItemAction(this, Global.resourceString("Configuring_Connections")));
+		help.add(new MenuItemAction(this, Global.resourceString("Partner_Connections")));
+		help.add(new MenuItemAction(this, Global.resourceString("About_Sounds")));
+		help.add(new MenuItemAction(this, Global.resourceString("About_Smart_Go_Format_SGF")));
+		help.add(new MenuItemAction(this, Global.resourceString("About_Filter")));
+		help.add(new MenuItemAction(this, Global.resourceString("About_Function_Keys")));
+		help.add(new MenuItemAction(this, Global.resourceString("Overcoming_Firewalls")));
+		help.add(new MenuItemAction(this, Global.resourceString("Play_Go_Help")));
 		help.addSeparator();
 		help.add(new MenuItemAction(this, Global.resourceString("About_Help")));
 		help.addSeparator();
-		help.add(new MenuItemAction(this, Global
-			.resourceString("On_line_Version_Information")));
+		help.add(new MenuItemAction(this, Global.resourceString("On_line_Version_Information")));
 		menu.setHelpMenu(help);
 		pack();
 		Global.setwindow(this, "mainframe", 300, 300);
@@ -640,9 +595,9 @@ public class MainFrame extends CloseFrame implements DoItemListener
 					{
 						StartServer.setLabel(Global.resourceString("Stop_Server"));
 					}
-					catch (Exception e)
+					catch (Exception ex)
 					{
-						System.err.println("Motif error with setLabel");
+						LOG.log(Level.WARNING, "Motif error with setLabel", ex);
 					}
 				}
 				else
@@ -673,61 +628,61 @@ public class MainFrame extends CloseFrame implements DoItemListener
 	}
 
 	@Override
-	public void itemAction (String o, boolean flag)
+	public void itemAction (String actionCommand, boolean flag)
 	{
-		if (Global.resourceString("Public").equals(o))
+		if (Global.resourceString("Public").equals(actionCommand))
 		{
 			Global.setParameter("publicserver", flag);
 		}
-		else if (Global.resourceString("Timer_in_Title").equals(o))
+		else if (Global.resourceString("Timer_in_Title").equals(actionCommand))
 		{
 			Global.setParameter("timerintitle", flag);
 		}
-		else if (Global.resourceString("Navigation_Tree").equals(o))
+		else if (Global.resourceString("Navigation_Tree").equals(actionCommand))
 		{
 			Global.setParameter("shownavigationtree", flag);
 		}
-		else if (Global.resourceString("Fine_Board").equals(o))
+		else if (Global.resourceString("Fine_Board").equals(actionCommand))
 		{
 			Global.setParameter("fineboard", flag);
 		}
-		else if (Global.resourceString("Big_Timer").equals(o))
+		else if (Global.resourceString("Big_Timer").equals(actionCommand))
 		{
 			Global.setParameter("bigtimer", flag);
 		}
-		else if (Global.resourceString("Extra_Information").equals(o))
+		else if (Global.resourceString("Extra_Information").equals(actionCommand))
 		{
 			Global.setParameter("extrainformation", flag);
 		}
-		else if (Global.resourceString("Extra_Send_Field").equals(o))
+		else if (Global.resourceString("Extra_Send_Field").equals(actionCommand))
 		{
 			Global.setParameter("extrasendfield", flag);
 		}
-		else if (Global.resourceString("Sound_on").equals(o))
+		else if (Global.resourceString("Sound_on").equals(actionCommand))
 		{
 			Global.setParameter("nosound", !flag);
 		}
-		else if (Global.resourceString("Simple_sound").equals(o))
+		else if (Global.resourceString("Simple_sound").equals(actionCommand))
 		{
 			Global.setParameter("simplesound", flag);
 		}
-		else if (Global.resourceString("Every_move").equals(o))
+		else if (Global.resourceString("Every_move").equals(actionCommand))
 		{
 			Global.setParameter("sound.everymove", flag);
 		}
-		else if (Global.resourceString("Beep_only").equals(o))
+		else if (Global.resourceString("Beep_only").equals(actionCommand))
 		{
 			Global.setParameter("beep", flag);
 		}
-		else if (Global.resourceString("Timeout_warning").equals(o))
+		else if (Global.resourceString("Timeout_warning").equals(actionCommand))
 		{
 			Global.setParameter("warning", flag);
 		}
-		else if (Global.resourceString("Automatic_Login").equals(o))
+		else if (Global.resourceString("Automatic_Login").equals(actionCommand))
 		{
 			Global.setParameter("automatic", flag);
 		}
-		else if (Global.resourceString("Use_Relay").equals(o))
+		else if (Global.resourceString("Use_Relay").equals(actionCommand))
 		{
 			Global.setParameter("userelay", flag);
 		}

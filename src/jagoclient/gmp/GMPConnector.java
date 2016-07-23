@@ -29,7 +29,7 @@ class GMPCloser implements Runnable
  * </P>
  * <P>
  * The communication handling is a bit difficult to understand, for it is done
- * asynchronically in a separate thread. The external program sends command,
+ * asynchronously in a separate thread. The external program sends command,
  * which are automatically handled or answered by this class. To be able to do
  * this, the class needs an GMPInterface object, which provides the necessary
  * informations to answer questions (such as the board size), and handles
@@ -37,7 +37,7 @@ class GMPCloser implements Runnable
  * </P>
  * <P>
  * Of course, commands to be sent to the external program can be sent via the
- * methods send(), move() etc. directly and asynchronically.
+ * methods send(), move() etc. directly and asynchronously.
  * </P>
  * <P>
  * The GMP protocol is a binary protocol, which is not human readable. Moreover,
@@ -47,7 +47,6 @@ class GMPCloser implements Runnable
  * fail in this case.
  * </P>
  */
-
 public class GMPConnector implements Runnable
 {
 	private static final Logger LOG = Logger.getLogger(GMPConnector.class.getName());
@@ -302,41 +301,42 @@ public class GMPConnector implements Runnable
 	public synchronized void answer () throws IOException
 	{
 		LOG.log(Level.INFO, "{0} {1}", new Object[]{Command, Argument});
-		if (Command == 3) // Questions
+		switch (Command)
 		{
+		// Questions
+		case 3:
 			switch (Argument)
 			{
-				case 7: // question for rule set
-					if (I != null)
-						send(4, I.getRules());
-					else send(4, 1);
-					break;
-				case 9: // question for board size
-					if (I != null)
-						send(4, I.getBoardSize());
-					else send(4, 19);
-					break;
-				case 8: // question for handicap
-					if (I != null)
-						send(4, I.getHandicap());
-					else send(4, 1);
-					break;
-				case 11: // question for board color of myself
-					if (I != null)
-						send(4, I.getColor());
-					else send(4, WHITE);
-					break;
-				default:
-					send(4, 0);
-					break;
+			case 7: // question for rule set
+				if (I != null)
+					send(4, I.getRules());
+				else send(4, 1);
+				break;
+			case 9: // question for board size
+				if (I != null)
+					send(4, I.getBoardSize());
+				else send(4, 19);
+				break;
+			case 8: // question for handicap
+				if (I != null)
+					send(4, I.getHandicap());
+				else send(4, 1);
+				break;
+			case 11: // question for board color of myself
+				if (I != null)
+					send(4, I.getColor());
+				else send(4, WHITE);
+				break;
+			default:
+				send(4, 0);
 			}
-		}
-		else if (Command == 4) // Other commands
-		{
+			break;
+		// Other commands
+		case 4:
 			if (I != null) I.gotAnswer(Argument);
-		}
-		else if (Command == 5) // Got move
-		{
+			break;
+		// Got move
+		case 5:
 			ok(); // acknowledge
 			if (I != null)
 			{
@@ -344,20 +344,22 @@ public class GMPConnector implements Runnable
 				if ((Argument & 0x0200) != 0)
 					I.gotMove(WHITE, pos);
 				else I.gotMove(BLACK, pos);
-			}
-		}
-		else if (Command == 0) // OK
-		{
+			}	break;
+		// OK
+		case 0:
 			if (I != null) I.gotOk();
 			LOG.info("Got OK");
+			break;
+		default:
+			ok();
 		}
-		else ok();
 	}
 
 	/**
 	 * Start the IO thread. I.e., continually get something from the program,
 	 * and auto treat it in the answer() function.
 	 */
+	@Override
 	public void run ()
 	{
 		try
@@ -390,7 +392,7 @@ public class GMPConnector implements Runnable
 			Out.close();
 			Err.close();
 		}
-		catch (Exception e)
+		catch (InterruptedException | IOException e)
 		{}
 	}
 
@@ -406,9 +408,9 @@ public class GMPConnector implements Runnable
 			c.connect();
 			c.P.waitFor();
 		}
-		catch (Exception e)
+		catch (IOException | InterruptedException ex)
 		{
-			System.out.println(e);
+			LOG.log(Level.WARNING, null, ex);
 		}
 	}
 }

@@ -43,26 +43,33 @@ public class CloseDialog extends Dialog implements WindowListener,
 		addFocusListener(this);
 	}
 
+	@Override
 	public void windowActivated (WindowEvent e)
 	{}
 
+	@Override
 	public void windowClosed (WindowEvent e)
 	{}
 
+	@Override
 	public void windowClosing (WindowEvent e)
 	{
 		if (close()) doclose();
 	}
 
+	@Override
 	public void windowDeactivated (WindowEvent e)
 	{}
 
+	@Override
 	public void windowDeiconified (WindowEvent e)
 	{}
 
+	@Override
 	public void windowIconified (WindowEvent e)
 	{}
 
+	@Override
 	public void windowOpened (WindowEvent e)
 	{}
 
@@ -86,20 +93,22 @@ public class CloseDialog extends Dialog implements WindowListener,
 
 	public ActionEvent E;
 
+	@Override
 	public void actionPerformed (ActionEvent e)
 	{
 		E = e;
 		doAction(e.getActionCommand());
 	}
 
-	public void doAction (String o)
+	@Override
+	public void doAction (String actionCommand)
 	{
-		if ("Close".equals(o) && close())
+		if ("Close".equals(actionCommand) && close())
 		{
 			Aborted = true;
 			doclose();
 		}
-		else if (o.equals("Help"))
+		else if ("Help".equals(actionCommand))
 		{
 			showHelp();
 		}
@@ -111,14 +120,17 @@ public class CloseDialog extends Dialog implements WindowListener,
 		new InfoDialog(F).setVisible(true);
 	}
 
+	@Override
 	public void keyPressed (KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE && escape()) doclose();
 	}
 
+	@Override
 	public void keyReleased (KeyEvent e)
 	{}
 
+	@Override
 	public void keyTyped (KeyEvent e)
 	{}
 
@@ -224,9 +236,11 @@ public class CloseDialog extends Dialog implements WindowListener,
 	/**
 	 * Override to set the focus somewhere.
 	 */
+	@Override
 	public void focusGained (FocusEvent e)
 	{}
 
+	@Override
 	public void focusLost (FocusEvent e)
 	{}
 
