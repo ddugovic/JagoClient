@@ -1,10 +1,10 @@
 package jagoclient.board;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 import rene.util.xml.XmlWriter;
 
@@ -14,14 +14,14 @@ Methods include the printing on a PrintWriter.
 */
 public class Action
 {	String Type; // the type
-	ListClass<String> Arguments; // the list of argument strings
+	List<String> Arguments; // the list of argument strings
 	
 	/**
 	Initialize with type only
 	*/
 	public Action (String s)
 	{	Type=s;
-		Arguments=new ListClass();
+		Arguments=new ArrayList<String>();
 	}
 
 	/**
@@ -29,49 +29,36 @@ public class Action
 	*/
 	public Action (String s, String arg)
 	{	Type=s;
-		Arguments=new ListClass();
+		Arguments=new ArrayList<String>();
 		addargument(arg);
 	}
 	
 	public void addargument (String s)
 	// add an argument ot the list (at end)
-	{	Arguments.append(s);
+	{	Arguments.add(s);
 	}
 	
 	public void toggleargument (String s)
 	// add an argument ot the list (at end)
 	{
-		for (ListElement<String> ap : Arguments)
-		{	String t=ap.content();
-			if (t.equals(s))
-			{	Arguments.remove(ap);
-				return;
-			}
-		}
-		Arguments.append(s);
+		Arguments.remove(s);
+		Arguments.add(s);
 	}
 
 	/** Find an argument */	
 	public boolean contains (String s)
 	{
-		for (ListElement<String> ap : Arguments)
-		{	String t=ap.content();
-			if (t.equals(s)) return true;
-		}
-		return false;
+		return Arguments.contains(s);
 	}
 	
 	public void print (PrintWriter o)
 	// print the action
-	{	if (Arguments.first()==null ||
-			(Arguments.first()==Arguments.last() &&
-			Arguments.first().content().equals("")))
+	{	if (Arguments.isEmpty() || (Arguments.size()==1 && Arguments.get(0).isEmpty()))
 			return;
 		o.println();
 		o.print(Type);
-		for (ListElement<String> ap : Arguments)
+		for (String s : Arguments)
 		{	o.print("[");
-			String s=ap.content();
 			StringParser p=new StringParser(s);
 			Vector v=p.wrapwords(60);
 			for (int i=0; i<v.size(); i++)
@@ -168,15 +155,14 @@ public class Action
 		}
 		else
 		{	xml.startTag("SGF","type",Type);
-			for (ListElement<String> ap : Arguments)
+			for (String argument : Arguments)
 			{	xml.startTag("Arg");
-				String s=ap.content();
-				StringParser p=new StringParser(s);
-				Vector v=p.wrapwords(60);
+				StringParser p=new StringParser(argument);
+				Vector<String> v=p.wrapwords(60);
 				for (int i=0; i<v.size(); i++)
-				{	s=(String)v.elementAt(i);
+				{	argument=v.elementAt(i);
 					if (i>0) xml.println();
-					xml.print(s);
+					xml.print(argument);
 				}
 				xml.endTag("Arg");
 			}
@@ -238,10 +224,9 @@ public class Action
 	*/
 	public void printAllFields (XmlWriter xml, int size, String tag)
 	{
-		for (ListElement<String> ap : Arguments)
-		{	String s=ap.content();
-			xml.startTagStart(tag);
-			xml.printArg("at",getXMLMove(ap,size));
+		for (String s : Arguments)
+		{	xml.startTagStart(tag);
+			xml.printArg("at",getXMLMove(s,size));
 			xml.finishTagNewLine();
 		}
 	}
@@ -249,11 +234,10 @@ public class Action
 	public void printAllFields (XmlWriter xml, int size, String tag,
 		String argument, String value)
 	{
-		for (ListElement<String> ap : Arguments)
-		{	String s=ap.content();
-			xml.startTagStart(tag);
+		for (String s : Arguments)
+		{	xml.startTagStart(tag);
 			xml.printArg(argument,value);
-			xml.printArg("at",getXMLMove(ap,size));
+			xml.printArg("at",getXMLMove(s,size));
 			xml.finishTagNewLine();
 		}
 	}
@@ -261,15 +245,14 @@ public class Action
 	public void printAllSpecialFields (XmlWriter xml, int size, String tag,
 		String argument)
 	{
-		for (ListElement<String> ap : Arguments)
-		{	String s=ap.content();
-			StringParser p=new StringParser(s);
+		for (String s : Arguments)
+		{	StringParser p=new StringParser(s);
 			s=p.parseword(':');
 			p.skip(":");
 			String value=p.parseword();
 			xml.startTagStart(tag);
 			xml.printArg(argument,value);
-			xml.printArg("at",getXMLMove(ap,size));
+			xml.printArg("at",getXMLMove(s,size));
 			xml.finishTagNewLine();
 		}
 	}
@@ -278,24 +261,20 @@ public class Action
 	@return The readable coordinate version (Q16) of a move,
 	stored in first argument.
 	*/
-	public String getXMLMove (ListElement ap, int size)
-	{	if (ap==null) return "";
-		String s=(String)ap.content();
-		if (s==null) return "";
+	public String getXMLMove (String s, int size)
+	{	if (s==null) return "";
 		int i=Field.i(s),j=Field.j(s);
 		if (i<0 || i>=size || j<0 || j>=size) return "";
 		return Field.coordinate(Field.i(s),Field.j(s),size);
 	}
 	
 	public String getXMLMove (int size)
-	{	ListElement ap=Arguments.first();
-		return getXMLMove(ap,size);
+	{	return getXMLMove(Arguments.get(0),size);
 	}
 
 	public void printTextArgument (XmlWriter xml)
-	{	ListElement ap=Arguments.first();
-		if (ap==null) return;
-		xml.printParagraphs((String)ap.content(),60);
+	{	if (Arguments.isEmpty()) return;
+		xml.printParagraphs(Arguments.get(0),60);
 	}
 
 	// modifiers
@@ -303,9 +282,9 @@ public class Action
 
 	// access methods:
 	public String type () { return Type; }
-	public ListClass<String> arguments () { return Arguments; }
+	public List<String> arguments () { return Arguments; }
 	public String argument ()
 	{	if (arguments()==null) return "";
-		else return arguments().first().content();
+		return arguments().get(0);
 	}
 }

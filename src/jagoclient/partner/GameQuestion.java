@@ -54,7 +54,6 @@ public class GameQuestion extends CloseDialog
 		add("South", new Panel3D(pb));
 		Global.setpacked(this, "gamequestion", 300, 400, pf);
 		validate();
-		setVisible(true);
 	}
 
 	@Override

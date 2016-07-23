@@ -26,8 +26,8 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 import javax.swing.JTextField;
@@ -36,7 +36,6 @@ import rene.gui.CloseDialog;
 import rene.gui.CloseFrame;
 import rene.gui.CloseListener;
 import rene.gui.DoItemListener;
-import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 import rene.viewer.Lister;
 import rene.viewer.SystemLister;
@@ -105,7 +104,7 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 	Lister T;
 	ConnectionFrame CF;
 	WhoDistributor GD;
-	AbstractList<String> L;
+	List<String> L;
 	boolean SortName;
 	boolean Closed = false;
 	String Range;

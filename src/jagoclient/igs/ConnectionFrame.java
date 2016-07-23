@@ -36,6 +36,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,8 +46,6 @@ import javax.swing.JTextField;
 import rene.dialogs.Question;
 import rene.gui.CloseFrame;
 import rene.gui.DoItemListener;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
 
@@ -54,7 +54,7 @@ class CloseConnectionQuestion extends Question
 	public CloseConnectionQuestion (ConnectionFrame g)
 	{
 		super(g, Global.resourceString("This_will_close_your_connection_"),
-			Global.resourceString("Close"), g, true);
+			Global.resourceString("Close"), true);
 		setVisible(true);
 	}
 }
@@ -204,7 +204,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 	public int MoveStyle = Connection.MOVE;
 	JTextField WhoRange; // Kyu/Dan range for the who command.
 	String Waitfor; // Pop a a message, when this player connects.
-	ListClass<OutputListener> OL; // List of Output-Listeners
+	List<OutputListener> OL; // List of Output-Listeners
 	String Reply;
 
 	public boolean hasClosed = false; // note that the user closed the window
@@ -214,7 +214,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 		super(Name);
 		Encoding = encoding;
 		Waitfor = "";
-		OL = new ListClass();
+		OL = new ArrayList<OutputListener>();
 		setLayout(new BorderLayout());
 		// Menu
 		MenuBar M = new MenuBar();
@@ -779,29 +779,20 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 	public void append (String s, Color c)
 	{
 		Output.append(s + "\n", c);
-		for (ListElement<OutputListener> e : OL)
+		for (OutputListener ol : OL)
 		{
-			OutputListener ol = e.content();
 			ol.append(s, c);
 		}
 	}
 
 	public void addOutputListener (OutputListener l)
 	{
-		OL.append(l);
+		OL.add(l);
 	}
 
 	public void removeOutputListener (OutputListener l)
 	{
-		for (ListElement<OutputListener> e : OL)
-		{
-			OutputListener ol = e.content();
-			if (ol == l)
-			{
-				OL.remove(e);
-				return;
-			}
-		}
+		OL.remove(l);
 	}
 
 	public boolean wantsinformation ()

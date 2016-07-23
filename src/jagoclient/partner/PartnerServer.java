@@ -5,11 +5,9 @@ import jagoclient.datagram.DatagramMessage;
 import jagoclient.partner.partner.Partner;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Logger;
-
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 /**
 The PartnerServerThread handles datagrams from other servers. It
@@ -22,7 +20,7 @@ class PartnerServer implements Runnable
 	int Port;
 	
 	public PartnerServer (int port)
-	{	Port=port; Global.OpenPartnerList=new ListClass();
+	{	Port=port; Global.OpenPartnerList=new ArrayList<Partner>();
 	}
 	
 	public void run ()
@@ -82,10 +80,9 @@ class PartnerServer implements Runnable
 	to be opened.
 	*/
 	void open (String name, String address, int port, int state)
-	{	ListElement e=find(name,address);
-		if (e!=null) return; // we got that already
+	{	if (find(name,address)!=null) return; // we got that already
 		// append to my list of open servers
-		Global.OpenPartnerList.append(new Partner(name,address,port,state));
+		Global.OpenPartnerList.add(new Partner(name,address,port,state));
 		// return, if the server is private
 		if (state<Partner.PRIVATE) return;
 		// spread to all other open servers
@@ -95,9 +92,8 @@ class PartnerServer implements Runnable
 		d.add(address);
 		d.add(""+port);
 		d.add(""+(state<Partner.PUBLIC?Partner.PRIVATE:Partner.PUBLIC));
-		for (ListElement<Partner> pe : Global.PartnerList)
-		{	Partner p=pe.content();
-			if (!p.Name.equals(name)) d.send(p.Server,p.Port+2);
+		for (Partner partner : Global.PartnerList)
+		{	if (!partner.Name.equals(name)) d.send(partner.Server,partner.Port+2);
 		}
 	}
 	
@@ -107,18 +103,17 @@ class PartnerServer implements Runnable
 	*/
 	void close (String name, String address)
 	{	// find the server in my list of open servers
-		ListElement e=find(name,address);
-		if (e!=null) // only, if the server was open before
+		Partner p=find(name,address);
+		if (p!=null) // only, if the server was open before
 		{	// remove the server from the list
-			Global.OpenPartnerList.remove(e);
+			Global.OpenPartnerList.remove(p);
 			// spread the closing to all partners
 			DatagramMessage d=new DatagramMessage();
 			d.add("spreadclose");
 			d.add(name);
 			d.add(address);
-			for (ListElement<Partner> pe : Global.PartnerList)
-			{	Partner p=pe.content();
-				if (!p.Name.equals(name)) d.send(p.Server,p.Port+2);
+			for (Partner partner : Global.PartnerList)
+			{	if (!partner.Name.equals(name)) d.send(partner.Server,partner.Port+2);
 			}
 		}
 	}
@@ -143,17 +138,16 @@ class PartnerServer implements Runnable
 		d.add(""+Global.getParameter("serverport",6970));
 		d.add(""+Partner.PRIVATE);
 		count++;
-		for (ListElement<Partner> e : Global.OpenPartnerList)
+		for (Partner partner : Global.OpenPartnerList)
 		{	if (count==0)
 			{	d=new DatagramMessage();
 			}
-			Partner p=e.content();
-			if (p.State>Partner.PRIVATE)
+			if (partner.State>Partner.PRIVATE)
 			{	d.add("openinfo");
-				d.add(p.Name);
-				d.add(p.Server);
-				d.add(""+p.Port);
-				d.add(""+p.State);
+				d.add(partner.Name);
+				d.add(partner.Server);
+				d.add(""+partner.Port);
+				d.add(""+partner.State);
 			}
 			count++;
 			if (count>=10)
@@ -169,30 +163,29 @@ class PartnerServer implements Runnable
 	from any other server. It will add all the noted servers
 	to my open server list.
 	*/
-	void openinfo (Vector v)
+	void openinfo (Vector<String> v)
 	{	int i=0;
 		String name,server;
 		int port,state;
 		try
-		{	if (!((String)v.elementAt(i)).equals("openinfo")) return;
+		{	if (!v.elementAt(i).equals("openinfo")) return;
 			i++;
-			name=(String)v.elementAt(i); i++;
-			server=(String)v.elementAt(i); i++;
-			port=Integer.parseInt((String)v.elementAt(i)); i++;
-			state=Integer.parseInt((String)v.elementAt(i)); i++;
-			ListElement<Partner> le=find(name,server);
-			if (le==null)
-			{	Global.OpenPartnerList.append(new Partner(name,server,port,state));
+			name=v.elementAt(i); i++;
+			server=v.elementAt(i); i++;
+			port=Integer.parseInt(v.elementAt(i)); i++;
+			state=Integer.parseInt(v.elementAt(i)); i++;
+			Partner partner=find(name,server);
+			if (partner==null)
+			{	Global.OpenPartnerList.add(new Partner(name,server,port,state));
 			}
 		}
 		catch (Exception e) {}
 	}
 
-	ListElement<Partner> find (String name, String server)
+	Partner find (String name, String server)
 	{	String address=name+server;
-		for (ListElement<Partner> e : Global.OpenPartnerList)
-		{	Partner p=e.content();
-			if ((p.Name+p.Server).equals(address)) return e;
+		for (Partner partner : Global.OpenPartnerList)
+		{	if ((partner.Name+partner.Server).equals(address)) return partner;
 		}
 		return null;
 	}

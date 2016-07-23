@@ -2,12 +2,14 @@ package jagoclient.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 import jagoclient.Global;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import rene.gui.DoActionListener;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 /**
 A TextField, which display the old input, when cursor up is
@@ -18,18 +20,18 @@ from TextFieldAction.
 
 public class HistoryTextField extends TextFieldAction
     implements KeyListener,DoActionListener
-{	ListClass<String> H;
+{	LinkedList<String> H;
 	PopupMenu M=null;
 	public HistoryTextField (DoActionListener l, String name)
 	{	super(l,name);
-	    H=new ListClass<String>();
-		H.append("");
+	    H=new LinkedList<String>();
+		H.add("");
 		addKeyListener(this);
 	}
 	public HistoryTextField (DoActionListener l, String name, int s)
 	{	super(l,name,s);
-	    H=new ListClass<String>();
-		H.append("");
+	    H=new LinkedList<String>();
+		H.add("");
 		addKeyListener(this);
 	}
 	@Override
@@ -39,9 +41,8 @@ public class HistoryTextField extends TextFieldAction
 			case KeyEvent.VK_DOWN : 
 				if (M==null)
 				{	M=new PopupMenu();
-					for (ListElement<String> e : H)
-					{	String t=e.content();
-						if (!t.equals(""))
+					for (String t : H)
+					{	if (!t.equals(""))
 						{	MenuItem item=new MenuItemAction(this,t,t);
 							M.add(item);
 						}
@@ -62,25 +63,25 @@ public class HistoryTextField extends TextFieldAction
 	{	if (s.equals(Last)) return;
 		deleteFromHistory(s);
 		Last=s;
-		H.last().content(s);
-		H.append("");
+		H.set(H.size()-1, s);
+		H.add("");
 		M=null;
 	}
 	public void deleteFromHistory (String s)
 	{
-		H.removeIf((ListElement<String> t) -> t.content().equals(s));
+		H.remove(s);
 	}
 	public void remember ()
 	{	remember(getText());
 	}
 	public void saveHistory (String name)
-	{	int i,n=Global.getParameter("history.length",10);
+	{	int n=Global.getParameter("history.length",10);
 		Global.removeAllParameters("history."+name);
-		ListElement e=H.last();
-		if (e==null) return;
-		for (i=0; i<n && e!=null; e=e.previous())
-		{	String s=(String)e.content();
-			if (!s.equals(""))
+		if (H.isEmpty()) return;
+		Iterator<String> it = H.descendingIterator();
+		for (int i=0; i<n && it.hasNext(); )
+		{	String s=it.next();
+			if (!s.isEmpty())
 			{	i++;
 				Global.setParameter("history."+name+"."+i,s);
 			}
@@ -90,7 +91,7 @@ public class HistoryTextField extends TextFieldAction
 	{	int i=1;
 		while (Global.haveParameter("history."+name+"."+i))
 		{	String s=Global.getParameter("history."+name+"."+i,"");
-			if (!s.equals("")) H.prepend(s);
+			if (!s.equals("")) H.addFirst(s);
 			i++;
 		}
 	}

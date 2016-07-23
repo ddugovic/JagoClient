@@ -108,9 +108,7 @@ public class Node
 					return;
 				}
 				else
-				{	ListElement<String> la=a.arguments().first();
-					if (la!=null) la.content(arg);
-					else a.addargument(arg);
+				{	a.arguments().set(0, arg);
 				}
 				return;
 			}
@@ -130,8 +128,7 @@ public class Node
 		for (ListElement<Action> l : Actions)
 		{	Action a=l.content();
 			if (a.type().equals(type))
-			{	ListElement la=a.arguments().first();
-				if (la!=null) return (String)la.content();
+			{	if (!a.arguments().isEmpty()) return a.arguments().get(0);
 				else return "";
 			}
 		}

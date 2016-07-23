@@ -24,8 +24,8 @@ public class MarkAction extends Action
 	public void print (PrintWriter o)
 	{	if (GF.getParameter("puresgf",false))
 		{	o.println(); o.print("MA");
-			for (ListElement<String> p : Arguments)
-			{	o.print("["+p.content()+"]");
+			for (String argument : Arguments)
+			{	o.print("["+argument+"]");
 			}
 		}
 		else super.print(o);

@@ -231,12 +231,12 @@ class CloseQuestion extends Question
 	public CloseQuestion (GoFrame g)
 	{
 		super(g, Global.resourceString("Really_trash_this_board_"), Global
-			.resourceString("Close_Board"), g, true);
+			.resourceString("Close_Board"), true);
 		gf = g;
 	}
 
 	@Override
-	public void tell (Question q, Object o, boolean f)
+	public void tell (Question q, boolean f)
 	{
 		q.setVisible(false);
 		q.dispose();
@@ -499,11 +499,11 @@ class AskUndoQuestion extends Question
 	public AskUndoQuestion (Frame f)
 	{
 		super(f, Global.resourceString("Delete_all_subsequent_moves_"), Global
-			.resourceString("Delete_Tree"), f, true);
+			.resourceString("Delete_Tree"), true);
 	}
 
 	@Override
-	public void tell (Question q, Object o, boolean f)
+	public void tell (Question q, boolean f)
 	{
 		q.setVisible(false);
 		q.dispose();
@@ -523,11 +523,11 @@ class AskInsertQuestion extends Question
 	public AskInsertQuestion (Frame f)
 	{
 		super(f, Global.resourceString("Change_Game_Tree_"), Global
-			.resourceString("Change_Game_Tree"), f, true);
+			.resourceString("Change_Game_Tree"), true);
 	}
 
 	@Override
-	public void tell (Question q, Object o, boolean f)
+	public void tell (Question q, boolean f)
 	{
 		q.setVisible(false);
 		q.dispose();

@@ -20,9 +20,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
-
-import rene.util.list.ListClass;
 
 
 /**
@@ -48,8 +47,8 @@ public abstract class Global extends rene.gui.Global
 	public static Component C;
 	public static String Dir, Home;
 	public static MessageFilter MF = null;
-	public static ListClass<Partner> PartnerList = null;
-	public static ListClass<Partner> OpenPartnerList = null;
+	public static List<Partner> PartnerList = null;
+	public static List<Partner> OpenPartnerList = null;
 	public static boolean UseUrl = false;
 	public static boolean IsApplet = false;
 	public static URL Url;

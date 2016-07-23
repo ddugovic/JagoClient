@@ -911,7 +911,7 @@ public class Board extends Canvas implements MouseListener,
 				if (a.type().equals("B") || a.type().equals("W"))
 				{
 					undonode();
-					a.arguments().first().content(Field.string(i, j));
+					a.arguments().set(0, Field.string(i, j));
 					act(Pos.content());
 					break;
 				}
@@ -1308,22 +1308,19 @@ public class Board extends Canvas implements MouseListener,
 					update(i, j);
 				}
 			}
-		Action a;
-		String s;
 		String sc = "";
 		int let = 1;
 		for (ListElement<Action> la : Pos.content().actions()) // setup the marks and letters
 		{
-			a = la.content();
+			Action a = la.content();
 			if (a.type().equals("C"))
 			{
 				sc = a.argument();
 			}
 			else if (a.type().equals("SQ") || a.type().equals("SL"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1336,9 +1333,8 @@ public class Board extends Canvas implements MouseListener,
 			else if (a.type().equals("MA") || a.type().equals("M")
 				|| a.type().equals("TW") || a.type().equals("TB"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1350,9 +1346,8 @@ public class Board extends Canvas implements MouseListener,
 			}
 			else if (a.type().equals("TR"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1364,9 +1359,8 @@ public class Board extends Canvas implements MouseListener,
 			}
 			else if (a.type().equals("CR"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1378,9 +1372,8 @@ public class Board extends Canvas implements MouseListener,
 			}
 			else if (a.type().equals("L"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j))
@@ -1393,9 +1386,8 @@ public class Board extends Canvas implements MouseListener,
 			}
 			else if (a.type().equals("LB"))
 			{
-				for (ListElement<String> larg : a.arguments())
+				for (String s : a.arguments())
 				{
-					s = larg.content();
 					i = Field.i(s);
 					j = Field.j(s);
 					if (valid(i, j) && s.length() >= 4 && s.charAt(2) == ':')
@@ -1421,10 +1413,10 @@ public class Board extends Canvas implements MouseListener,
 			{
 				for (ListElement<Action> la : p.content().actions())
 				{
-					a = la.content();
+					Action a = la.content();
 					if (a.type().equals("W") || a.type().equals("B"))
 					{
-						s = a.argument();
+						String s = a.argument();
 						i = Field.i(s);
 						j = Field.j(s);
 						if (valid(i, j))
@@ -1476,7 +1468,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				if (GF.getComment().equals("")) {
 					Pos.content().actions().remove(la);
-				} else a.arguments().first().content(GF.getComment());
+				} else a.arguments().set(0, GF.getComment());
 				return;
 			}
 		}
@@ -1758,9 +1750,8 @@ public class Board extends Canvas implements MouseListener,
 	// c being the color of the move.
 	{
 		int i, j;
-		for (ListElement<String> larg : a.arguments())
+		for (String s : a.arguments())
 		{
-			String s = larg.content();
 			i = Field.i(s);
 			j = Field.j(s);
 			if (valid(i, j))
@@ -1776,9 +1767,8 @@ public class Board extends Canvas implements MouseListener,
 	// interpret a remove stone action
 	{
 		int i, j, r = 1;
-		for (ListElement<String> larg : a.arguments())
+		for (String s : a.arguments())
 		{
-			String s = larg.content();
 			i = Field.i(s);
 			j = Field.j(s);
 			if (valid(i, j))
@@ -2769,7 +2759,6 @@ public class Board extends Canvas implements MouseListener,
 		if (Pos == p) getinformation();
 		Action a;
 		String Added = "";
-		ListElement larg;
 		outer: while (true)
 		{
 			for (ListElement<Action> la : p.content().actions())
@@ -2777,15 +2766,15 @@ public class Board extends Canvas implements MouseListener,
 				a = la.content();
 				if (a.type().equals("C"))
 				{
-					larg = a.arguments().first();
-					if (((String)larg.content()).equals(""))
+					String larg = a.arguments().get(0);
+					if (larg.isEmpty())
 					{
-						larg.content(s);
+						a.arguments().set(0, s);
 						Added = s;
 					}
 					else
 					{
-						larg.content((String)larg.content() + "\n" + s);
+						a.arguments().set(0, larg + "\n" + s);
 						Added = "\n" + s;
 					}
 					break outer;

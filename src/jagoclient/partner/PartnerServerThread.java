@@ -69,9 +69,8 @@ public class PartnerServerThread extends Thread
 	public void open ()
 	{	if (Public)
 		{	
-			for (ListElement<Partner> pe : Global.PartnerList)
-			{	Partner p=pe.content();
-				if (p.State>0)
+			for (Partner partner : Global.PartnerList)
+			{	if (partner.State>0)
 				{	DatagramMessage d=new DatagramMessage();
 					d.add("open");
 					d.add(Global.getParameter("yourname","Unknown"));
@@ -81,8 +80,8 @@ public class PartnerServerThread extends Thread
 					}
 					catch (Exception e) { d.add("Unknown Host"); }
 					d.add(""+Global.getParameter("serverport",6970));
-					d.add(""+p.State);
-					d.send(p.Server,p.Port+2);
+					d.add(""+partner.State);
+					d.send(partner.Server,partner.Port+2);
 				}
 			}
 		}
@@ -102,9 +101,8 @@ public class PartnerServerThread extends Thread
 			d.add(s.substring(s.lastIndexOf('/')+1));
 		}
 		catch (Exception e) { d.add("Unknown Host"); }
-		for (ListElement<Partner> pe : Global.PartnerList)
-		{	Partner p=pe.content();
-			if (p.State>0) d.send(p.Server,p.Port+2);
+		for (Partner partner : Global.PartnerList)
+		{	if (partner.State>0) d.send(partner.Server,partner.Port+2);
 		}
 		Global.Busy=true;
 	}

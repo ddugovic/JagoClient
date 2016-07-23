@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +34,6 @@ import javax.swing.JPanel;
 
 import rene.dialogs.Question;
 import rene.gui.CloseFrame;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 import rene.viewer.SystemViewer;
 import rene.viewer.Viewer;
@@ -86,21 +84,19 @@ public class PartnerFrame extends CloseFrame
 	public PartnerGoFrame PGF;
 	boolean Serving;
 	boolean Block;
-	AbstractList<PartnerMove> Moves;
+	List<PartnerMove> Moves;
 	String Dir;
 
 	public PartnerFrame (String name, boolean serving)
 	{
 		super(name);
-		JPanel p = new MyPanel();
+		JPanel p = new MyPanel(new BorderLayout());
 		Serving = serving;
 		MenuBar menu = new MenuBar();
 		setMenuBar(menu);
 		Menu help = new MyMenu(Global.resourceString("Help"));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Partner_Connection")));
+		help.add(new MenuItemAction(this, Global.resourceString("Partner_Connection")));
 		menu.setHelpMenu(help);
-		p.setLayout(new BorderLayout());
 		p.add("Center", Output = Global.getParameter("systemviewer", false) ? new SystemViewer() : new Viewer());
 		Output.setFont(Global.Monospaced);
 		p.add("South", Input = new HistoryTextField(this, "Input"));
@@ -112,7 +108,7 @@ public class PartnerFrame extends CloseFrame
 		PGF = null;
 		Block = false;
 		Dir = "";
-		Moves = new ListClass();
+		Moves = new ArrayList<PartnerMove>();
 		seticon("iconn.gif");
 	}
 
@@ -139,8 +135,7 @@ public class PartnerFrame extends CloseFrame
 		return true;
 	}
 
-	public boolean connectvia (String server, int port, String relayserver,
-		int relayport)
+	public boolean connectvia (String server, int port, String relayserver, int relayport)
 	{
 		try
 		{
@@ -196,7 +191,7 @@ public class PartnerFrame extends CloseFrame
 		}
 		else if (Global.resourceString("Game").equals(o))
 		{
-			new GameQuestion(this);
+			new GameQuestion(this).setVisible(true);
 		}
 		else if (Global.resourceString("Restore_Game").equals(o))
 		{
@@ -209,8 +204,7 @@ public class PartnerFrame extends CloseFrame
 				}
 				else
 				{
-					new Message(this, Global
-						.resourceString("You_have_already_a_game_")).setVisible(true);
+					new Message(this, Global.resourceString("You_have_already_a_game_")).setVisible(true);
 				}
 			}
 
@@ -244,10 +238,10 @@ public class PartnerFrame extends CloseFrame
 	{
 		if (PartnerListenerThread.isAlive())
 		{
-			new ClosePartnerQuestion(this);
+			new ClosePartnerQuestion(this).setVisible(true);
 			return false;
 		}
-		else return true;
+		return true;
 	}
 
 	/**
@@ -474,7 +468,7 @@ public class PartnerFrame extends CloseFrame
 		{
 			Question Q = new Question(this, Global
 				.resourceString("Your_partner_wants_to_restore_a_game_"),
-				Global.resourceString("Accept"), null, true);
+				Global.resourceString("Accept"), true);
 			Q.setVisible(true);
 			if (Q.result())
 				acceptrestore();
@@ -626,7 +620,7 @@ public class PartnerFrame extends CloseFrame
 	{
 		Question Q = new Question(this, Global
 			.resourceString("Save_this_game_for_reload_"), Global
-			.resourceString("Yes"), null, true);
+			.resourceString("Yes"), true);
 		Q.setVisible(true);
 		if (Q.result()) dosave();
 	}
@@ -691,7 +685,7 @@ public class PartnerFrame extends CloseFrame
 			BufferedReader fi = new BufferedReader(
 				new InputStreamReader(new DataInputStream(new FileInputStream(
 					fd.getDirectory() + fn))));
-			Moves = new ListClass();
+			Moves = new ArrayList<PartnerMove>();
 			while (true)
 			{
 				String s = fi.readLine();

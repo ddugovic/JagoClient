@@ -14,6 +14,7 @@ import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -21,18 +22,17 @@ import javax.swing.JTextField;
 
 import rene.gui.CloseDialog;
 import rene.gui.CloseFrame;
-import rene.util.list.ListClass;
 
 public class EditConnection extends CloseDialog
 {
-	ListClass<Connection> CList;
+	List<Connection> CList;
 	Connection C;
 	JTextField Name, Server, Port, User, Password, Encoding;
 	Go G;
 	Choice MChoice;
 	Frame F;
 
-	public EditConnection (CloseFrame f, ListClass<Connection> clist, Connection c, Go go)
+	public EditConnection (CloseFrame f, List<Connection> clist, Connection c, Go go)
 	{
 		super(f, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -84,7 +84,7 @@ public class EditConnection extends CloseDialog
 		Name.requestFocus();
 	}
 
-	public EditConnection (CloseFrame F, ListClass clist, Go go)
+	public EditConnection (CloseFrame F, List clist, Go go)
 	{
 		super(F, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -201,7 +201,7 @@ public class EditConnection extends CloseDialog
 				{
 					C.Name = C.Name + " DUP";
 				}
-				CList.append(C);
+				CList.add(C);
 				G.updatelist();
 				setVisible(false);
 				dispose();

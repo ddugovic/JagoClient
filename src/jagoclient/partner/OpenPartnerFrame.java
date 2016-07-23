@@ -12,12 +12,11 @@ import jagoclient.partner.partner.Partner;
 import java.awt.BorderLayout;
 import java.awt.Menu;
 import java.awt.MenuBar;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import rene.gui.CloseFrame;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 class OpenPartnerFrameUpdate implements Runnable
 {
@@ -105,12 +104,12 @@ public class OpenPartnerFrame extends CloseFrame
 
 	public void refresh ()
 	{
-		ListClass<Partner> PL = Global.OpenPartnerList;
+		List<Partner> PL = Global.OpenPartnerList;
 		L.removeAll();
 		if (PL == null) return;
-		for (ListElement<Partner> le : PL)
+		for (Partner partner : PL)
 		{
-			L.add(le.content().Name);
+			L.add(partner.Name);
 		}
 	}
 
@@ -126,14 +125,13 @@ public class OpenPartnerFrame extends CloseFrame
 	public void connect ()
 	{
 		String s = L.getSelectedItem();
-		for (ListElement<Partner> le : Global.OpenPartnerList)
+		for (Partner partner : Global.OpenPartnerList)
 		{
-			Partner p = le.content();
-			if (p.Name.equals(s))
+			if (partner.Name.equals(s))
 			{
-				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_") + p.Name, false);
+				PartnerFrame cf = new PartnerFrame(Global.resourceString("Connection_to_") + partner.Name, false);
 				Global.setwindow(cf, "partner", 500, 400);
-				new Thread(new ConnectPartner(p, cf)).start();
+				new Thread(new ConnectPartner(partner, cf)).start();
 				return;
 			}
 		}

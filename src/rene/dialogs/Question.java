@@ -19,19 +19,16 @@ import rene.gui.CloseDialog;
  * subclassed and the tell method needs to be redefined to do something useful.
  */
 
-public class Question extends CloseDialog implements ActionListener
+public class Question<F extends Frame> extends CloseDialog implements ActionListener
 {
-	Object O;
-	Frame F;
+	protected final F F;
 	public boolean Result = false;
 
 	/**
-	 * @param o
-	 *            an object to be passed to the tell method (may be null)
 	 * @param flag
 	 *            determines, if the dialog is modal or not
 	 */
-	public Question (Frame f, String c, String title, Object o, boolean flag)
+	public Question (F f, String c, String title, boolean flag)
 	{
 		super(f, title, flag);
 		F = f;
@@ -45,7 +42,6 @@ public class Question extends CloseDialog implements ActionListener
 		p.add(new ButtonAction(this, Global.resourceString("Yes")));
 		p.add(new ButtonAction(this, Global.resourceString("No")));
 		add("South", p);
-		O = o;
 		if (flag)
 			Global.setpacked(this, "question", 300, 150, f);
 		else Global.setpacked(this, "question", 300, 150);
@@ -53,24 +49,24 @@ public class Question extends CloseDialog implements ActionListener
 	}
 
 	@Override
-	public void doAction (String o)
+	public void doAction (String actionCommand)
 	{
 		Global.notewindow(this, "question");
-		if (Global.resourceString("Yes").equals(o))
+		if (Global.resourceString("Yes").equals(actionCommand))
 		{
-			tell(this, O, true);
+			tell(this, true);
 			Result = true;
 		}
-		else if (Global.resourceString("No").equals(o))
+		else if (Global.resourceString("No").equals(actionCommand))
 		{
-			tell(this, O, false);
+			tell(this, false);
 		}
 		setVisible(false);
 		dispose();
 	}
 
 	/** callback for non-modal dialogs */
-	public void tell (Question q, Object o, boolean f)
+	public void tell (Question q, boolean answer)
 	{}
 
 	/** to get the result of the question */

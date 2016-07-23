@@ -32,6 +32,8 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -40,8 +42,6 @@ import javax.swing.UIManager;
 
 import rene.gui.CloseFrame;
 import rene.gui.DoActionListener;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 /**
  * To get the password, when there is none (but a user name) and a server
@@ -93,8 +93,8 @@ public class Go extends Applet implements DoActionListener, ActionListener
 {
 	int Test = 0;
 	java.awt.List L, PL;
-	ListClass<Connection> ConnectionList;
-	ListClass<Partner> PartnerList;
+	List<Connection> ConnectionList;
+	List<Partner> PartnerList;
 	JButton CConnect, CEdit, CAdd, CDelete, PConnect, PEdit, PAdd, PDelete,
 		POpen;
 	static Go go;
@@ -178,7 +178,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			// L.setBackground(Global.gray);
 			Connection c;
 			String l;
-			ConnectionList = new ListClass();
+			ConnectionList = new ArrayList<Connection>();
 			try
 			// read servers from server.cfg
 			{
@@ -191,7 +191,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					if (c.valid())
 					{
 						L.add(c.Name);
-						ConnectionList.append(c);
+						ConnectionList.add(c);
 					}
 					else break;
 				}
@@ -215,7 +215,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			// PL.setFont(Global.Monospaced);
 			// PL.setBackground(Global.gray);
 			Partner cp;
-			PartnerList = new ListClass();
+			PartnerList = new ArrayList<Partner>();
 			try
 			// read connections from partner.cfg
 			{
@@ -228,7 +228,7 @@ public class Go extends Applet implements DoActionListener, ActionListener
 					if (cp.valid())
 					{
 						PL.add(cp.Name);
-						PartnerList.append(cp);
+						PartnerList.add(cp);
 					}
 					else break;
 				}
@@ -276,8 +276,8 @@ public class Go extends Applet implements DoActionListener, ActionListener
 			L.addActionListener(this);
 			Connection c;
 			String l;
-			ConnectionList = new ListClass();
-			ConnectionList.append(new Connection("[" + Server + "] [" + Server +
+			ConnectionList = new ArrayList<Connection>();
+			ConnectionList.add(new Connection("[" + Server + "] [" + Server +
 				"] [" + Port + "] [" + "] [" + "] [" + MoveStyle + "] [" + Encoding + "]"));
 			L.add(Server);
 			if (L.getItemCount() > 0) L.select(0);
@@ -381,12 +381,11 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		}
 		else if ("DeleteServer".equals(o) && L.getSelectedItem() != null)
 		{
-			for (ListElement<Connection> lc : ConnectionList)
+			for (Connection connection : ConnectionList)
 			{
-				Connection co = lc.content();
-				if (co.Name.equals(L.getSelectedItem()))
+				if (connection.Name.equals(L.getSelectedItem()))
 				{
-					ConnectionList.remove(lc);
+					ConnectionList.remove(connection);
 					break;
 				}
 			}
@@ -394,12 +393,11 @@ public class Go extends Applet implements DoActionListener, ActionListener
 		}
 		else if ("DeletePartner".equals(o) && PL.getSelectedItem() != null)
 		{
-			for (ListElement<Partner> lc : PartnerList)
+			for (Partner partner : PartnerList)
 			{
-				Partner co = lc.content();
-				if (co.Name.equals(PL.getSelectedItem()))
+				if (partner.Name.equals(PL.getSelectedItem()))
 				{
-					PartnerList.remove(lc);
+					PartnerList.remove(partner);
 					break;
 				}
 			}
@@ -419,10 +417,9 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	/** search a specific connection by name */
 	public Connection find (String s)
 	{
-		for (ListElement<Connection> lc : ConnectionList)
+		for (Connection connection : ConnectionList)
 		{
-			Connection c = lc.content();
-			if (c.Name.equals(s)) return c;
+			if (connection.Name.equals(s)) return connection;
 		}
 		return null;
 	}
@@ -430,10 +427,9 @@ public class Go extends Applet implements DoActionListener, ActionListener
 	/** find a specific partner server by name */
 	public Partner pfind (String s)
 	{
-		for (ListElement<Partner> lc : PartnerList)
+		for (Partner partner : PartnerList)
 		{
-			Partner c = lc.content();
-			if (c.Name.equals(s)) return c;
+			if (partner.Name.equals(s)) return partner;
 		}
 		return null;
 	}
@@ -532,11 +528,10 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				.home()
 				+ ".server.cfg"));
 			L.removeAll();
-			for (ListElement<Connection> lc : ConnectionList)
+			for (Connection connection : ConnectionList)
 			{
-				Connection c = lc.content();
-				L.add(c.Name);
-				c.write(out);
+				L.add(connection.Name);
+				connection.write(out);
 			}
 			out.close();
 		}
@@ -558,11 +553,10 @@ public class Go extends Applet implements DoActionListener, ActionListener
 				.home()
 				+ ".partner.cfg"));
 			PL.removeAll();
-			for (ListElement<Partner> lc : PartnerList)
+			for (Partner partner : PartnerList)
 			{
-				Partner c = lc.content();
-				PL.add(c.Name);
-				c.write(out);
+				PL.add(partner.Name);
+				partner.write(out);
 			}
 			out.close();
 		}

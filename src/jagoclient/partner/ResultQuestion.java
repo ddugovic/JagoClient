@@ -8,23 +8,21 @@ import rene.dialogs.Question;
 Question to accept a result or decline it.
 */
 
-public class ResultQuestion extends Question
+public class ResultQuestion extends Question<PartnerFrame>
 {	int B,W;
-	PartnerFrame G;
 	/**
 	@param b,w Black and White results
 	*/
 	public ResultQuestion (PartnerFrame g, String m, int b, int w)
-	{	super(g,m,Global.resourceString("Result"),g,true); B=b; W=w; G=g;
+	{	super(g,m,Global.resourceString("Result"),true); B=b; W=w;
 		setVisible(true);
 	}
-	public void tell (Question q, Object o, boolean f)
-	{	q.setVisible(false); q.dispose();
-	    if (f) G.doresult(B,W);
-		else G.declineresult();
+	public void tell (Question q, boolean f)
+	{	if (f) F.doresult(B,W);
+		else F.declineresult();
 	}
 	public boolean close ()
-	{	G.declineresult();
+	{	F.declineresult();
 		return true;
 	}	
 }

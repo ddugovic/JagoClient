@@ -17,14 +17,14 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import rene.gui.CloseDialog;
 import rene.gui.CloseFrame;
-import rene.util.list.ListClass;
-import rene.util.list.ListElement;
 
 class SingleMessageFilter
 {
@@ -72,21 +72,20 @@ class SingleMessageFilter
 
 public class MessageFilter
 {
-	ListClass<SingleMessageFilter> F;
+	List<SingleMessageFilter> F;
 	public static final int BLOCK_COMPLETE = 2;
 	public static final int BLOCK_POPUP = 1;
 
 	public MessageFilter ()
 	{
-		F = new ListClass<SingleMessageFilter>();
+		F = new ArrayList<SingleMessageFilter>();
 		load();
 	}
 
 	public int blocks (String s)
 	{
-		for (ListElement<SingleMessageFilter> e : F)
+		for (SingleMessageFilter f : F)
 		{
-			SingleMessageFilter f = e.content();
 			if ( !f.positive() && f.matches(s))
 			{
 				if (f.BlockComplete)
@@ -99,9 +98,8 @@ public class MessageFilter
 
 	public boolean posfilter (String s)
 	{
-		for (ListElement<SingleMessageFilter> e : F)
+		for (SingleMessageFilter f : F)
 		{
-			SingleMessageFilter f = e.content();
 			if (f.positive() && f.matches(s)) { return true; }
 		}
 		return false;
@@ -134,7 +132,7 @@ public class MessageFilter
 				if (contains == null) break;
 				String blockcomplete = in.readLine();
 				if (blockcomplete == null) break;
-				F.append(new SingleMessageFilter(name, start, end, contains,
+				F.add(new SingleMessageFilter(name, start, end, contains,
 					blockcomplete.equals("true"), pos));
 			}
 			in.close();
@@ -153,10 +151,8 @@ public class MessageFilter
 			PrintWriter out = new PrintWriter(new FileOutputStream(Global
 				.home()
 				+ ".filter.cfg"));
-			ListElement l = F.first();
-			while (l != null)
+			for (SingleMessageFilter p : F)
 			{
-				SingleMessageFilter p = (SingleMessageFilter)l.content();
 				if (p.positive())
 					out.println("+++++" + p.Name);
 				else out.println(p.Name);
@@ -164,7 +160,6 @@ public class MessageFilter
 				out.println(p.End);
 				out.println(p.Contains);
 				out.println(p.BlockComplete);
-				l = l.next();
 			}
 			out.close();
 		}
@@ -183,10 +178,10 @@ public class MessageFilter
 
 class MessageFilterEdit extends CloseFrame
 {
-	ListClass<SingleMessageFilter> F;
+	List<SingleMessageFilter> F;
 	java.awt.List L;
 
-	public MessageFilterEdit (ListClass f)
+	public MessageFilterEdit (List f)
 	{
 		super(Global.resourceString("Message_Filter"));
 		MenuBar mb = new MenuBar();
@@ -198,11 +193,9 @@ class MessageFilterEdit extends CloseFrame
 		L = new java.awt.List();
 		L.setFont(Global.SansSerif);
 		add("Center", new Panel3D(L));
-		ListElement e = F.first();
-		while (e != null)
+		for (SingleMessageFilter filter : F)
 		{
-			L.add(((SingleMessageFilter)e.content()).Name);
-			e = e.next();
+			L.add(filter.Name);
 		}
 		JPanel p = new MyPanel();
 		p.add(new ButtonAction(this, Global.resourceString("Edit")));
@@ -251,12 +244,9 @@ class MessageFilterEdit extends CloseFrame
 	{
 		String s = L.getSelectedItem();
 		if (s == null) return null;
-		ListElement e = F.first();
-		while (e != null)
+		for (SingleMessageFilter f : F)
 		{
-			SingleMessageFilter f = (SingleMessageFilter)e.content();
 			if (f.Name.equals(s)) return f;
-			e = e.next();
 		}
 		return null;
 	}
@@ -265,18 +255,16 @@ class MessageFilterEdit extends CloseFrame
 	{
 		String s = L.getSelectedItem();
 		if (s == null) return;
-		if (F.removeIf((ListElement<SingleMessageFilter> e) -> e.content().Name.equals(s)))
+		if (F.removeIf((SingleMessageFilter f) -> f.Name.equals(s)))
 			updatelist();
 	}
 
 	void updatelist ()
 	{
 		L.removeAll();
-		ListElement e = F.first();
-		while (e != null)
+		for (SingleMessageFilter f : F)
 		{
-			L.add(((SingleMessageFilter)e.content()).Name);
-			e = e.next();
+			L.add(f.Name);
 		}
 	}
 }
@@ -285,15 +273,14 @@ class MessageFilterEdit extends CloseFrame
 class SingleFilterEdit extends CloseDialog
 {
 	SingleMessageFilter MF;
-	ListClass F;
+	List<SingleMessageFilter> F;
 	JTextField N, S, E, C;
 	Checkbox BC;
 	MessageFilterEdit MFE;
 	boolean isnew;
 	Checkbox CB;
 
-	public SingleFilterEdit (MessageFilterEdit fr, ListClass f,
-		SingleMessageFilter mf)
+	public SingleFilterEdit (MessageFilterEdit fr, List<SingleMessageFilter> f, SingleMessageFilter mf)
 	{
 		super(fr, Global.resourceString("Edit_Filter"), false);
 		F = f;
@@ -349,7 +336,7 @@ class SingleFilterEdit extends CloseDialog
 			MF.Positive = CB.getState();
 			if (isnew)
 			{
-				F.append(MF);
+				F.add(MF);
 			}
 			MFE.updatelist();
 		}

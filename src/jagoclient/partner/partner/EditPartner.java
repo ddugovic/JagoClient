@@ -14,24 +14,24 @@ import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import rene.gui.CloseDialog;
 import rene.gui.CloseFrame;
-import rene.util.list.ListClass;
 
 public class EditPartner extends CloseDialog
 {
-	ListClass<Partner> PList;
+	List<Partner> PList;
 	Partner C;
 	JTextField Name, Server, Port;
 	Go G;
 	Choice State;
 	Frame F;
 
-	public EditPartner (CloseFrame f, ListClass<Partner> plist, Partner c, Go go)
+	public EditPartner (CloseFrame f, List<Partner> plist, Partner c, Go go)
 	{
 		super(f, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -68,7 +68,7 @@ public class EditPartner extends CloseDialog
 		Name.requestFocus();
 	}
 
-	public EditPartner (CloseFrame f, ListClass plist, Go go)
+	public EditPartner (CloseFrame f, List plist, Go go)
 	{
 		super(f, Global.resourceString("Edit_Connection"), true);
 		G = go;
@@ -147,7 +147,7 @@ public class EditPartner extends CloseDialog
 				{
 					C.Name = C.Name + " DUP";
 				}
-				PList.append(C);
+				PList.add(C);
 				G.updateplist();
 				setVisible(false);
 				dispose();

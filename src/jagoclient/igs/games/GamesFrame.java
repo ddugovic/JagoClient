@@ -21,11 +21,13 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import rene.gui.CloseFrame;
 import rene.gui.CloseListener;
-import rene.util.list.ListClass;
 import rene.util.list.ListElement;
 import rene.util.parser.StringParser;
 import rene.viewer.Lister;
@@ -47,7 +49,7 @@ public class GamesFrame extends CloseFrame implements CloseListener, Distributor
 	Lister T;
 	ConnectionFrame CF;
 	GamesDistributor GD;
-	ListClass<String> L;
+	List<String> L;
 	boolean Closed = false;
 	int LNumber;
 
@@ -166,7 +168,7 @@ public class GamesFrame extends CloseFrame implements CloseListener, Distributor
 	 */
 	public synchronized void refresh ()
 	{
-		L = new ListClass();
+		L = new ArrayList<String>();
 		LNumber = 0;
 		T.setText(Global.resourceString("Loading"));
 		if (GD != null) GD.unchain();
@@ -177,7 +179,7 @@ public class GamesFrame extends CloseFrame implements CloseListener, Distributor
 	public synchronized void receive (String s)
 	{
 		if (Closed) return;
-		L.append(s);
+		L.add(s);
 		LNumber++;
 		if (LNumber == 1) T.setText(Global.resourceString("Receiving"));
 	}
@@ -190,39 +192,31 @@ public class GamesFrame extends CloseFrame implements CloseListener, Distributor
 	{
 		if (GD != null) GD.unchain();
 		if (Closed) return;
-		ListElement p = L.first();
-		int i, n = 0;
-		while (p != null)
-		{
-			n++;
-			p = p.next();
-		}
+		int i, n = L.size();
 		if (n > 3)
 		{
-			GamesObject v[] = new GamesObject[n - 1];
-			p = L.first().next();
+			GamesObject[] go = new GamesObject[n - 1];
+			Iterator<String> p = L.iterator();
+			p.next(); // skip first element for some reason
 			for (i = 0; i < n - 1; i++)
 			{
-				v[i] = new GamesObject((String)p.content());
-				p = p.next();
+				go[i] = new GamesObject(p.next());
 			}
-			Arrays.sort(v);
+			Arrays.sort(go);
 			T.setText("");
-			T.appendLine0(" " + L.first().content());
+			T.appendLine0(" " + L.get(0));
 			Color FC = Color.green.darker().darker();
 			for (i = 0; i < n - 1; i++)
 			{
-				T.appendLine0(v[i].game(), v[i].friend()?FC:Color.black);
+				T.appendLine0(go[i].game(), go[i].friend()?FC:Color.black);
 			}
 			T.doUpdate(false);
 		}
 		else
 		{
-			p = L.first();
-			while (p != null)
+			for (String s : L)
 			{
-				T.appendLine((String)p.content());
-				p = p.next();
+				T.appendLine(s);
 			}
 			T.doUpdate(false);
 		}

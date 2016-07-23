@@ -8,19 +8,18 @@ import rene.dialogs.Question;
 Question to end the game, or decline that.
 */
 
-public class EndGameQuestion extends Question
-{	PartnerFrame G;
+public class EndGameQuestion extends Question<PartnerFrame>
+{
 	public EndGameQuestion (PartnerFrame g)
-	{	super(g,Global.resourceString("End_the_game_"),Global.resourceString("End"),g,true); G=g;
+	{	super(g,Global.resourceString("End_the_game_"),Global.resourceString("End"),true);
 		setVisible(true);
 	}
-	public void tell (Question q, Object o, boolean f)
-	{	q.setVisible(false); q.dispose();
-	    if (f) G.doendgame();
-		else G.declineendgame();
+	public void tell (Question q, boolean f)
+	{	if (f) F.doendgame();
+		else F.declineendgame();
 	}
 	public boolean close ()
-	{	G.declineendgame();
+	{	F.declineendgame();
 		return true;
 	}
 }
