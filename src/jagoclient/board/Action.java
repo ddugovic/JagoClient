@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rene.util.parser.StringParser;
 import rene.util.xml.XmlWriter;
@@ -242,18 +244,18 @@ public class Action
 		}
 	}
 
-	public void printAllSpecialFields (XmlWriter xml, int size, String tag,
-		String argument)
+	public void printAllSpecialFields (XmlWriter xml, int size, String tag, String argument)
 	{
+		Pattern pattern = Pattern.compile("[^:]*:(\\w+).*");
 		for (String s : Arguments)
-		{	StringParser p=new StringParser(s);
-			s=p.parseword(':');
-			p.skip(":");
-			String value=p.parseword();
-			xml.startTagStart(tag);
-			xml.printArg(argument,value);
-			xml.printArg("at",getXMLMove(s,size));
-			xml.finishTagNewLine();
+		{	Matcher matcher = pattern.matcher(s);
+			if (matcher.matches())
+			{
+				xml.startTagStart(tag);
+				xml.printArg(argument,matcher.group(1));
+				xml.printArg("at",getXMLMove(s,size));
+				xml.finishTagNewLine();
+			}
 		}
 	}
 

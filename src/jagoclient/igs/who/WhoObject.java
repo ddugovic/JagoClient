@@ -1,6 +1,8 @@
 package jagoclient.igs.who;
 
 import jagoclient.Global;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import rene.util.parser.StringParser;
 
 /**
@@ -9,7 +11,8 @@ This is needed for the Sorter class.
 */
 
 public class WhoObject implements Comparable<WhoObject>
-{	String S,Name,Stat;
+{	protected static final Pattern WORD_PATTERN = Pattern.compile("\\w+");
+	String S,Name,Stat;
 	public int V;
 	boolean SortName;
 	public WhoObject (String s, boolean sortname)
@@ -18,9 +21,9 @@ public class WhoObject implements Comparable<WhoObject>
 		{	V=-50; Name=""; Stat=""; return;
 		}
 		Stat=s.substring(0,5);
-		StringParser p=new StringParser(s.substring(30));
-		String h=p.parseword();
-		p=new StringParser(h);
+		Matcher matcher = WORD_PATTERN.matcher(s);
+		String h = matcher.find(30) ? matcher.group() : null;
+		StringParser p=new StringParser(h);
 		if (p.isint())
 		{	V=p.parseint();
 			if (p.skip("k")) V=100-V;
@@ -31,8 +34,8 @@ public class WhoObject implements Comparable<WhoObject>
 		else V=-50;
 		if (s.length()<14) Name="";
 		else
-		{	p=new StringParser(s.substring(12));
-			Name=p.parseword();
+		{	matcher = WORD_PATTERN.matcher(s);
+			Name = matcher.find() ? matcher.group(12) : null;
 		}
 	}
 	String who () { return S; }

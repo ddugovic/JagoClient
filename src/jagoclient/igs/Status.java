@@ -2,6 +2,8 @@ package jagoclient.igs;
 
 import java.io.PrintWriter;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rene.util.parser.StringParser;
 
@@ -11,6 +13,7 @@ import rene.util.parser.StringParser;
  */
 public class Status implements Distributor.Task
 {	private static final Logger LOG = Logger.getLogger(Status.class.getName());
+	protected static final Pattern WORD_PATTERN = Pattern.compile("\\w+");
 	IgsGoFrame GF;
 	IgsStream In;
 	StatusDistributor PD;
@@ -41,8 +44,13 @@ public class Status implements Distributor.Task
 	}
 	
 	private String getname (String s)
-	{	StringParser p=new StringParser(s);
-		return p.parseword()+" ("+p.parseword()+")";
+	{	Matcher matcher = WORD_PATTERN.matcher(s);
+		String name = null, title = null;
+		if (matcher.find())
+			name = matcher.group();
+		if (matcher.find())
+			title = matcher.group();
+		return name+" ("+title+")";
 	}
 
 	/** 

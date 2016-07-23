@@ -29,6 +29,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextField;
 
@@ -98,7 +100,7 @@ class EditButtons extends CloseDialog
  */
 
 public class WhoFrame extends CloseFrame implements CloseListener, DoItemListener, Distributor.Task
-{
+{	protected static final Pattern WORD_PATTERN = Pattern.compile("\\w+");
 	IgsStream In;
 	PrintWriter Out;
 	Lister T;
@@ -398,8 +400,9 @@ public class WhoFrame extends CloseFrame implements CloseListener, DoItemListene
 	{
 		String s = T.getSelectedItem();
 		if (s == null || s.length() < 14) return "";
-		StringParser p = new StringParser(s.substring(12));
-		return p.parseword();
+		Matcher matcher = WORD_PATTERN.matcher(s);
+		matcher.find(12);
+		return matcher.group();
 	}
 
 	/**
