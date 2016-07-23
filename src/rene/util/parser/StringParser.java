@@ -25,14 +25,14 @@ public class StringParser
 	@return next character is white?
 	*/
 	public boolean blank ()
-	{	return (C[N]==' ' || C[N]=='\t' || C[N]=='\n' || C[N]=='\r');
+	{	return Character.isWhitespace(C[N]);
 	}
 
 	/** 
 	@return next character is white or c?
 	*/
 	public boolean blank (char c)
-	{	return (C[N]==' ' || C[N]=='\t' || C[N]=='\n' || C[N]=='\r' || C[N]==c);
+	{	return (Character.isWhitespace(C[N]) || C[N]==c);
 	}
 
 	/** 
@@ -52,7 +52,7 @@ public class StringParser
 	Advance one character.
 	@return String is not empty.
 	*/
-	public boolean advance ()
+	protected boolean advance ()
 	{	if (N<L) N++;
 		if (N>=L) Error=true;
 		return !Error;
@@ -81,7 +81,7 @@ public class StringParser
 		}
 		int n=N;
 		while (!Error && !blank())
-		{	if (N>L || C[N]<'0' || C[N]>'9' || C[N]==c) break;
+		{	if (N>L || !Character.isDigit(C[N]) || C[N]==c) break;
 			advance();
 		}
 		return new String(C,n,N-n);
@@ -97,7 +97,7 @@ public class StringParser
 		}
 		int n=N;
 		while (!Error && !blank())
-		{	if (N>L || C[N]<'0' || C[N]>'9') break;
+		{	if (N>L || !Character.isDigit(C[N])) break;
 			advance();
 		}
 		return new String(C,n,N-n);
@@ -121,7 +121,7 @@ public class StringParser
 	*/
 	public boolean isint ()
 	{	if (Error) return false;
-		return (C[N]>='0' && C[N]<='9');
+		return Character.isDigit(C[N]);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class StringParser
 	@return a Vector with lines
 	*/
 	public Vector<String> wraplines (int columns)
-	{	Vector v=new Vector(10,10);
+	{	Vector<String> v=new Vector<String>(10,10);
 		String s;
 		while (!Error)
 		{	s=wrapline(columns);
@@ -272,8 +272,8 @@ public class StringParser
 		return s;
 	}
 
-	public Vector wrapwords (int columns)
-	{	Vector v=new Vector(10,10);
+	public Vector<String> wrapwords (int columns)
+	{	Vector<String> v=new Vector<String>(10,10);
 		String s;
 		while (!Error)
 		{	s=wraplineword(columns);
@@ -291,7 +291,7 @@ public class StringParser
 	}
 
 	/**
-	@return if an error has occured during the parsing.
+	@return if an error has occurred during the parsing.
 	*/
 	public boolean error () { return Error; }
 }
