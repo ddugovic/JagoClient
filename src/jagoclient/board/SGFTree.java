@@ -165,9 +165,9 @@ public class SGFTree
 	// single points
 	boolean expand (Action a, String s)
 	{	String t=a.type();
-		if (!(t.equals("MA") || t.equals("SQ") || t.equals("TR") ||
-			 t.equals("CR") || t.equals("AW") || t.equals("AB") ||
-			  t.equals("AE") || t.equals("SL"))) return false;
+		if (!(t.equals(Field.Marker.CROSS.value) || t.equals(Field.Marker.SQUARE.value) ||
+			 t.equals(Field.Marker.TRIANGLE.value) || t.equals(Field.Marker.CIRCLE.value) ||
+			 t.equals("AW") || t.equals("AB") || t.equals("AE") || t.equals("SL"))) return false;
 		if (s.length()!=5 || s.charAt(2)!=':') return false;
 		String s0=s.substring(0,2),s1=s.substring(3);
 		int i0=Field.i(s0),j0=Field.j(s0);
@@ -488,21 +488,22 @@ public class SGFTree
 			}
 			else if (tag.name().equals("Mark"))
 			{	if (tag.hasParam("type"))
-				{	String s=tag.getValue("type");
-					if (s.equals("triangle"))
-					{	n.expandaction(new Action("TR",xmlToSgf(t)));
-					}
-					else if (s.equals("square"))
-					{	n.expandaction(new Action("SQ",xmlToSgf(t)));
-					}
-					else if (s.equals("circle"))
-					{	n.expandaction(new Action("CR",xmlToSgf(t)));
+				{	switch(tag.getValue("type"))
+					{
+					case "triangle":
+						n.expandaction(new Action(Field.Marker.TRIANGLE.value,xmlToSgf(t)));
+						break;
+					case "square":
+						n.expandaction(new Action(Field.Marker.SQUARE.value,xmlToSgf(t)));
+						break;
+					case "circle":
+						n.expandaction(new Action(Field.Marker.CIRCLE.value,xmlToSgf(t)));
+						break;
 					}
 				}
 				else if (tag.hasParam("label"))
 				{	String s=tag.getValue("label");
-					n.expandaction(new Action("LB",
-						xmlToSgf(t)+":"+s));
+					n.expandaction(new Action("LB",xmlToSgf(t)+":"+s));
 				}
 				else if (tag.hasParam("territory"))
 				{	String s=tag.getValue("territory");

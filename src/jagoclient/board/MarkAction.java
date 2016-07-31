@@ -2,8 +2,6 @@ package jagoclient.board;
 
 import java.io.PrintWriter;
 
-import rene.util.list.ListElement;
-
 /**
 This is a special action for marks. It will print it content
 depending on the "puresgf" parameter. This is because the
@@ -23,7 +21,7 @@ public class MarkAction extends Action
 	}
 	public void print (PrintWriter o)
 	{	if (GF.getParameter("puresgf",false))
-		{	o.println(); o.print("MA");
+		{	o.println(); o.print(Field.Marker.CROSS);
 			for (String argument : Arguments)
 			{	o.print("["+argument+"]");
 			}

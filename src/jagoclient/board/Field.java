@@ -24,12 +24,17 @@ public class Field
 	String LabelLetter; // Strings from the LB tag.
 	boolean HaveLabel; // flag to indicate there is a label
 	int Territory; // For Territory counting
-	int Marker; // emphasized field
-	static final int NONE=0;
-	static final int CROSS=1;
-	static final int SQUARE=2;
-	static final int TRIANGLE=3;
-	static final int CIRCLE=4;
+	public static enum Marker
+	{
+	NONE(null),
+	CROSS("MA"),
+	SQUARE("SQ"),
+	TRIANGLE("TR"),
+	CIRCLE("CR");
+	final String value;
+	Marker(String value) { this.value = value; }
+	};
+	Marker marker; // emphasized field
 	int Number;
 
 	//** set the field to 0 initially */
@@ -94,7 +99,7 @@ public class Field
 	// modifiers:
 	void mark (boolean f) { Mark=f; } // set Mark
 	void tree (Tree<Node> t) { T=t; } // set Tree
-	void marker (int f) { Marker=f; }
+	void marker (Marker f) { marker=f; }
 	void letter (int l) { Letter=l; }
 	void territory (int c) { Territory=c; }
 	void setlabel (String s) { HaveLabel=true; LabelLetter=s; }
@@ -103,7 +108,7 @@ public class Field
 
 	// access functions:
 	boolean mark () { return Mark; } // ask Mark
-	int marker () { return Marker; }
+	Marker marker () { return marker; }
 	Tree<Node> tree () { return T; }
 	int letter () { return Letter; }
 	int territory () { return Territory; }

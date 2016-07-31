@@ -136,19 +136,19 @@ class PrintBoard implements Runnable, ImageObserver
 			g.setColor(Color.black);
 			g.drawOval(x+1,y+1,D-3,D-3);
 		}
-		if (P.marker(i,j)!=Field.NONE)
+		if (P.marker(i,j)!=Field.Marker.NONE)
 		{	if (P.color(i,j)>0) g.setColor(Color.white);
 		    else g.setColor(Color.black);
 			int h=D/4;
 			switch (P.marker(i,j))
-			{	case Field.CIRCLE :
+			{	case CIRCLE :
 					g.drawOval(x+D/2-h,y+D/2-h,2*h,2*h);
 					break;
-				case Field.CROSS :
+				case CROSS :
 					g.drawLine(x+D/2-h,y+D/2-h,x+D/2+h,y+D/2+h);
 					g.drawLine(x+D/2+h,y+D/2-h,x+D/2-h,y+D/2+h);
 					break;
-				case Field.TRIANGLE :
+				case TRIANGLE :
 					g.drawLine(x+D/2,y+D/2-h,x+D/2-h,y+D/2+h);
 					g.drawLine(x+D/2,y+D/2-h,x+D/2+h,y+D/2+h);
 					g.drawLine(x+D/2-h,y+D/2+h,x+D/2+h,y+D/2+h);

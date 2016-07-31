@@ -76,7 +76,7 @@ public class Board extends Canvas implements MouseListener,
 	int sendi = -1, sendj;
 	// board position which has been sended to server
 	Dimension Dim; // Note size to check for resizeing at paint
-	int SpecialMarker = Field.SQUARE;
+	Field.Marker SpecialMarker = Field.Marker.SQUARE;
 	String TextMarker = "A";
 	public int Pw, Pb; // Prisoners (white and black)
 	BufferedReader LaterLoad = null; // File to be loaded at repaint
@@ -728,15 +728,15 @@ public class Board extends Canvas implements MouseListener,
 					break;
 				case 'c':
 				case 'C':
-					specialmark(Field.CIRCLE);
+					specialmark(Field.Marker.CIRCLE);
 					break;
 				case 's':
 				case 'S':
-					specialmark(Field.SQUARE);
+					specialmark(Field.Marker.SQUARE);
 					break;
 				case 't':
 				case 'T':
-					specialmark(Field.TRIANGLE);
+					specialmark(Field.Marker.TRIANGLE);
 					break;
 				case 'l':
 				case 'L':
@@ -744,7 +744,7 @@ public class Board extends Canvas implements MouseListener,
 					break;
 				case 'r':
 				case 'R':
-					specialmark(Field.CROSS);
+					specialmark(Field.Marker.CROSS);
 					break;
 				case 'w':
 					setwhite();
@@ -971,22 +971,7 @@ public class Board extends Canvas implements MouseListener,
 	// Emphasize with the SpecialMarker
 	{
 		Node n = Pos.content();
-		String s;
-		switch (SpecialMarker)
-		{
-			case Field.SQUARE:
-				s = "SQ";
-				break;
-			case Field.CIRCLE:
-				s = "CR";
-				break;
-			case Field.TRIANGLE:
-				s = "TR";
-				break;
-			default:
-				s = "MA";
-				break;
-		}
+		String s = SpecialMarker.value;
 		Action a = new Action(s, Field.string(i, j));
 		n.toggleaction(a);
 		update(i, j);
@@ -1292,9 +1277,9 @@ public class Board extends Canvas implements MouseListener,
 					P.tree(i, j, null);
 					update(i, j);
 				}
-				if (P.marker(i, j) != Field.NONE)
+				if (P.marker(i, j) != Field.Marker.NONE)
 				{
-					P.marker(i, j, Field.NONE);
+					P.marker(i, j, Field.Marker.NONE);
 					update(i, j);
 				}
 				if (P.letter(i, j) != 0)
@@ -1317,7 +1302,7 @@ public class Board extends Canvas implements MouseListener,
 			{
 				sc = a.argument();
 			}
-			else if (a.type().equals("SQ") || a.type().equals("SL"))
+			else if (a.type().equals(Field.Marker.SQUARE.value) || a.type().equals("SL"))
 			{
 				for (String s : a.arguments())
 				{
@@ -1325,12 +1310,12 @@ public class Board extends Canvas implements MouseListener,
 					j = Field.j(s);
 					if (valid(i, j))
 					{
-						P.marker(i, j, Field.SQUARE);
+						P.marker(i, j, Field.Marker.SQUARE);
 						update(i, j);
 					}
 				}
 			}
-			else if (a.type().equals("MA") || a.type().equals("M")
+			else if (a.type().equals(Field.Marker.CROSS.value) || a.type().equals("M")
 				|| a.type().equals("TW") || a.type().equals("TB"))
 			{
 				for (String s : a.arguments())
@@ -1339,12 +1324,12 @@ public class Board extends Canvas implements MouseListener,
 					j = Field.j(s);
 					if (valid(i, j))
 					{
-						P.marker(i, j, Field.CROSS);
+						P.marker(i, j, Field.Marker.CROSS);
 						update(i, j);
 					}
 				}
 			}
-			else if (a.type().equals("TR"))
+			else if (a.type().equals(Field.Marker.TRIANGLE.value))
 			{
 				for (String s : a.arguments())
 				{
@@ -1352,12 +1337,12 @@ public class Board extends Canvas implements MouseListener,
 					j = Field.j(s);
 					if (valid(i, j))
 					{
-						P.marker(i, j, Field.TRIANGLE);
+						P.marker(i, j, Field.Marker.TRIANGLE);
 						update(i, j);
 					}
 				}
 			}
-			else if (a.type().equals("CR"))
+			else if (a.type().equals(Field.Marker.CIRCLE.value))
 			{
 				for (String s : a.arguments())
 				{
@@ -1365,7 +1350,7 @@ public class Board extends Canvas implements MouseListener,
 					j = Field.j(s);
 					if (valid(i, j))
 					{
-						P.marker(i, j, Field.CIRCLE);
+						P.marker(i, j, Field.Marker.CIRCLE);
 						update(i, j);
 					}
 				}
@@ -1566,7 +1551,7 @@ public class Board extends Canvas implements MouseListener,
 				g.drawArc(xi + D / 2, xj + D / 4, D / 4, D / 4, 40, 50);
 			}
 		}
-		if (P.marker(i, j) != Field.NONE)
+		if (P.marker(i, j) != Field.Marker.NONE)
 		{
 			if (GF.bwColor())
 			{
@@ -1578,25 +1563,20 @@ public class Board extends Canvas implements MouseListener,
 			int h = D / 4;
 			switch (P.marker(i, j))
 			{
-				case Field.CIRCLE:
-					g.drawOval(xi + D / 2 - h, xj + D / 2 - h, 2 * h, 2 * h);
-					break;
-				case Field.CROSS:
-					g.drawLine(xi + D / 2 - h, xj + D / 2 - h, xi + D / 2 + h,
-						xj + D / 2 + h);
-					g.drawLine(xi + D / 2 + h, xj + D / 2 - h, xi + D / 2 - h,
-						xj + D / 2 + h);
-					break;
-				case Field.TRIANGLE:
-					g.drawLine(xi + D / 2, xj + D / 2 - h, xi + D / 2 - h, xj
-						+ D / 2 + h);
-					g.drawLine(xi + D / 2, xj + D / 2 - h, xi + D / 2 + h, xj
-						+ D / 2 + h);
-					g.drawLine(xi + D / 2 - h, xj + D / 2 + h, xi + D / 2 + h,
-						xj + D / 2 + h);
-					break;
-				default:
-					g.drawRect(xi + D / 2 - h, xj + D / 2 - h, 2 * h, 2 * h);
+			case CIRCLE:
+				g.drawOval(xi + D/2 - h, xj + D/2 - h, 2*h, 2*h);
+				break;
+			case CROSS:
+				g.drawLine(xi + D/2 - h, xj + D/2 - h, xi + D/2 + h, xj + D/2 + h);
+				g.drawLine(xi + D/2 + h, xj + D/2 - h, xi + D/2 - h, xj + D/2 + h);
+				break;
+			case TRIANGLE:
+				g.drawLine(xi + D/2, xj + D/2 - h, xi + D/2 - h, xj + D/2 + h);
+				g.drawLine(xi + D/2, xj + D/2 - h, xi + D/2 + h, xj + D/2 + h);
+				g.drawLine(xi + D/2 - h, xj + D/2 + h, xi + D/2 + h, xj + D/2 + h);
+				break;
+			default:
+				g.drawRect(xi + D/2 - h, xj + D/2 - h, 2*h, 2*h);
 			}
 		}
 		if (P.letter(i, j) != 0)
@@ -2488,9 +2468,9 @@ public class Board extends Canvas implements MouseListener,
 		Pos.content().actions().removeIf((ListElement<Action> t) -> {
 			Action a = t.content();
 			return (a.type().equals("M") || a.type().equals("L")
-				|| a.type().equals("MA") || a.type().equals("SQ")
-				|| a.type().equals("SL") || a.type().equals("CR")
-				|| a.type().equals("TR") || a.type().equals("LB"));
+				|| a.type().equals(Field.Marker.CROSS.value) || a.type().equals(Field.Marker.SQUARE.value)
+				|| a.type().equals("SL") || a.type().equals(Field.Marker.CIRCLE.value)
+				|| a.type().equals(Field.Marker.TRIANGLE.value) || a.type().equals("LB"));
 		});
 		act(Pos.content());
 		showinformation();
@@ -2603,7 +2583,7 @@ public class Board extends Canvas implements MouseListener,
 		showinformation();
 	}
 
-	public void specialmark (int i)
+	public void specialmark (Field.Marker i)
 	// marking
 	{
 		getinformation();
@@ -3017,7 +2997,7 @@ public class Board extends Canvas implements MouseListener,
 							o.print(" " + P.label(j, i));
 						else if (P.letter(j, i) > 0)
 							o.print(" " + (char)(P.letter(j, i) + 'a' - 1));
-						else if (P.marker(j, i) > 0)
+						else if (P.marker(j, i) != Field.Marker.NONE)
 							o.print(" X");
 						else if (ishand(i) && ishand(j))
 							o.print(" ,");
@@ -3078,30 +3058,27 @@ public class Board extends Canvas implements MouseListener,
 						n.expandaction(new Action("AW", field));
 						break;
 				}
-				if (P.marker(i, j) > 0)
+				if (P.marker(i, j) != Field.Marker.NONE)
 				{
 					switch (P.marker(i, j))
 					{
-						case Field.SQUARE:
-							n.expandaction(new Action("SQ", field));
-							break;
-						case Field.TRIANGLE:
-							n.expandaction(new Action("TR", field));
-							break;
-						case Field.CIRCLE:
-							n.expandaction(new Action("CR", field));
-							break;
-						default:
-							n.expandaction(new MarkAction(field, GF));
+					case SQUARE:
+						n.expandaction(new Action(Field.Marker.SQUARE.value, field));
+						break;
+					case TRIANGLE:
+						n.expandaction(new Action(Field.Marker.TRIANGLE.value, field));
+						break;
+					case CIRCLE:
+						n.expandaction(new Action(Field.Marker.CIRCLE.value, field));
+						break;
+					default:
+						n.expandaction(new MarkAction(field, GF));
 					}
 				}
 				else if (P.haslabel(i, j))
-					n
-						.expandaction(new Action("LB", field + ":"
-							+ P.label(i, j)));
+					n.expandaction(new Action("LB", field + ":" + P.label(i, j)));
 				else if (P.letter(i, j) > 0)
-					n.expandaction(new Action("LB", field + ":"
-						+ P.letter(i, j)));
+					n.expandaction(new Action("LB", field + ":" + P.letter(i, j)));
 			}
 		}
 	}

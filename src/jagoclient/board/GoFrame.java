@@ -86,8 +86,7 @@ class EditInformation extends CloseDialog
 		super(f, Global.resourceString("Game_Information"), false);
 		N = n;
 		F = f;
-		JPanel p = new MyPanel();
-		p.setLayout(new GridLayout(0, 2));
+		JPanel p = new MyPanel(new GridLayout(0, 2));
 		p.add(new MyLabel(Global.resourceString("Game_Name")));
 		p.add(GameName = new FormTextField(n.getaction("GN")));
 		p.add(new MyLabel(Global.resourceString("Date")));
@@ -288,8 +287,7 @@ class TextMarkQuestion extends CloseDialog implements DoItemListener
 		super(g, Global.resourceString("Text_Mark"), false);
 		G = g;
 		setLayout(new BorderLayout());
-		add("Center", new SimplePanel(new MyLabel(Global
-			.resourceString("String")), 1, T = new TextFieldAction(this, t), 2));
+		add("Center", new SimplePanel(new MyLabel(Global.resourceString("String")), 1, T = new TextFieldAction(this, t), 2));
 		T.setText(t);
 		JPanel ps = new MyPanel();
 		ps.add(C = new CheckboxAction(this, Global.resourceString("Auto_Advance")));
@@ -637,231 +635,159 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		file.add(new MenuItemAction(this, Global.resourceString("New")));
 		file.add(new MenuItemAction(this, Global.resourceString("Load")));
 		file.add(new MenuItemAction(this, Global.resourceString("Save")));
-		file.add(new MenuItemAction(this, Global
-			.resourceString("Save_Position")));
+		file.add(new MenuItemAction(this, Global.resourceString("Save_Position")));
 		file.addSeparator();
-		file.add(UseXML = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_XML")));
+		file.add(UseXML = new CheckboxMenuItemAction(this, Global.resourceString("Use_XML")));
 		UseXML.setState(Global.getParameter("xml", false));
-		file.add(UseSGF = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_SGF")));
+		file.add(UseSGF = new CheckboxMenuItemAction(this, Global.resourceString("Use_SGF")));
 		UseSGF.setState( !Global.getParameter("xml", false));
 		file.addSeparator();
-		file.add(new MenuItemAction(this, Global
-			.resourceString("Load_from_Clipboard")));
-		file.add(new MenuItemAction(this, Global
-			.resourceString("Copy_to_Clipboard")));
+		file.add(new MenuItemAction(this, Global.resourceString("Load_from_Clipboard")));
+		file.add(new MenuItemAction(this, Global.resourceString("Copy_to_Clipboard")));
 		file.addSeparator();
 		file.add(new MenuItemAction(this, Global.resourceString("Mail")));
 		file.add(new MenuItemAction(this, Global.resourceString("Ascii_Mail")));
 		file.add(new MenuItemAction(this, Global.resourceString("Print")));
-		file
-			.add(new MenuItemAction(this, Global.resourceString("Save_Bitmap")));
+		file.add(new MenuItemAction(this, Global.resourceString("Save_Bitmap")));
 		file.addSeparator();
 		file.add(new MenuItemAction(this, Global.resourceString("Board_size")));
 		file.addSeparator();
 		file.add(new MenuItemAction(this, Global.resourceString("Add_Game")));
-		file
-			.add(new MenuItemAction(this, Global.resourceString("Remove_Game")));
+		file.add(new MenuItemAction(this, Global.resourceString("Remove_Game")));
 		file.addSeparator();
 		file.add(new MenuItemAction(this, Global.resourceString("Close")));
 		Menu set = new MyMenu(Global.resourceString("Set"));
 		M.add(set);
-		set.add(Mark = new CheckboxMenuItemAction(this, Global
-			.resourceString("Mark")));
-		set.add(Letter = new CheckboxMenuItemAction(this, Global
-			.resourceString("Letter")));
-		set.add(Hide = new CheckboxMenuItemAction(this, Global
-			.resourceString("Delete")));
+		set.add(Mark = new CheckboxMenuItemAction(this, Global.resourceString("Mark")));
+		set.add(Letter = new CheckboxMenuItemAction(this, Global.resourceString("Letter")));
+		set.add(Hide = new CheckboxMenuItemAction(this, Global.resourceString("Delete")));
 		Menu mark = new MyMenu(Global.resourceString("Special_Mark"));
-		mark.add(Square = new CheckboxMenuItemAction(this, Global
-			.resourceString("Square")));
-		mark.add(Circle = new CheckboxMenuItemAction(this, Global
-			.resourceString("Circle")));
-		mark.add(Triangle = new CheckboxMenuItemAction(this, Global
-			.resourceString("Triangle")));
-		mark.add(Cross = new CheckboxMenuItemAction(this, Global
-			.resourceString("Cross")));
+		mark.add(Square = new CheckboxMenuItemAction(this, Global.resourceString("Square")));
+		mark.add(Circle = new CheckboxMenuItemAction(this, Global.resourceString("Circle")));
+		mark.add(Triangle = new CheckboxMenuItemAction(this, Global.resourceString("Triangle")));
+		mark.add(Cross = new CheckboxMenuItemAction(this, Global.resourceString("Cross")));
 		mark.addSeparator();
-		mark.add(TextMark = new CheckboxMenuItemAction(this, Global
-			.resourceString("Text")));
+		mark.add(TextMark = new CheckboxMenuItemAction(this, Global.resourceString("Text")));
 		set.add(mark);
 		set.addSeparator();
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Resume_playing")));
+		set.add(new MenuItemAction(this, Global.resourceString("Resume_playing")));
 		set.addSeparator();
 		set.add(new MenuItemAction(this, Global.resourceString("Pass")));
 		set.addSeparator();
-		set.add(SetBlack = new CheckboxMenuItemAction(this, Global
-			.resourceString("Set_Black")));
-		set.add(SetWhite = new CheckboxMenuItemAction(this, Global
-			.resourceString("Set_White")));
+		set.add(SetBlack = new CheckboxMenuItemAction(this, Global.resourceString("Set_Black")));
+		set.add(SetWhite = new CheckboxMenuItemAction(this, Global.resourceString("Set_White")));
 		set.addSeparator();
-		set.add(Black = new CheckboxMenuItemAction(this, Global
-			.resourceString("Black_to_play")));
-		set.add(White = new CheckboxMenuItemAction(this, Global
-			.resourceString("White_to_play")));
+		set.add(Black = new CheckboxMenuItemAction(this, Global.resourceString("Black_to_play")));
+		set.add(White = new CheckboxMenuItemAction(this, Global.resourceString("White_to_play")));
 		set.addSeparator();
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Undo_Adding_Removing")));
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Clear_all_marks")));
+		set.add(new MenuItemAction(this, Global.resourceString("Undo_Adding_Removing")));
+		set.add(new MenuItemAction(this, Global.resourceString("Clear_all_marks")));
 		Menu var = new MyMenu(Global.resourceString("Nodes"));
 		var.add(new MenuItemAction(this, Global.resourceString("Insert_Node")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Insert_Variation")));
+		var.add(new MenuItemAction(this, Global.resourceString("Insert_Variation")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Next_Game")));
-		var
-			.add(new MenuItemAction(this, Global
-				.resourceString("Previous_Game")));
+		var.add(new MenuItemAction(this, Global.resourceString("Previous_Game")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Search")));
-		var
-			.add(new MenuItemAction(this, Global.resourceString("Search_Again")));
+		var.add(new MenuItemAction(this, Global.resourceString("Search_Again")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Node_Name")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Goto_Next_Name")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Goto_Previous_Name")));
+		var.add(new MenuItemAction(this, Global.resourceString("Goto_Next_Name")));
+		var.add(new MenuItemAction(this, Global.resourceString("Goto_Previous_Name")));
 		M.add(var);
 		Menu score = new MyMenu(Global.resourceString("Finish_Game"));
 		M.add(score);
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Remove_groups")));
+		score.add(new MenuItemAction(this, Global.resourceString("Remove_groups")));
 		score.add(new MenuItemAction(this, Global.resourceString("Score")));
 		score.addSeparator();
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Game_Information")));
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Game_Copyright")));
+		score.add(new MenuItemAction(this, Global.resourceString("Game_Information")));
+		score.add(new MenuItemAction(this, Global.resourceString("Game_Copyright")));
 		score.addSeparator();
-		score.add(new MenuItemAction(this, Global
-			.resourceString("Prisoner_Count")));
+		score.add(new MenuItemAction(this, Global.resourceString("Prisoner_Count")));
 		Menu options = new MyMenu(Global.resourceString("Options"));
 		Menu mc = new MyMenu(Global.resourceString("Coordinates"));
-		mc.add(Coordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("On")));
+		mc.add(Coordinates = new CheckboxMenuItemAction(this, Global.resourceString("On")));
 		Coordinates.setState(Global.getParameter("coordinates", true));
-		mc.add(UpperLeftCoordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("Upper_Left")));
-		UpperLeftCoordinates.setState(Global.getParameter(
-			"upperleftcoordinates", true));
-		mc.add(LowerRightCoordinates = new CheckboxMenuItemAction(this, Global
-			.resourceString("Lower_Right")));
-		LowerRightCoordinates.setState(Global.getParameter(
-			"lowerrightcoordinates", true));
+		mc.add(UpperLeftCoordinates = new CheckboxMenuItemAction(this, Global.resourceString("Upper_Left")));
+		UpperLeftCoordinates.setState(Global.getParameter("upperleftcoordinates", true));
+		mc.add(LowerRightCoordinates = new CheckboxMenuItemAction(this, Global.resourceString("Lower_Right")));
+		LowerRightCoordinates.setState(Global.getParameter("lowerrightcoordinates", true));
 		options.add(mc);
 		options.addSeparator();
 		Menu colors = new MyMenu(Global.resourceString("Colors"));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Board_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Black_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Black_Sparkle_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("White_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("White_Sparkle_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Label_Color")));
-		colors.add(new MenuItemAction(this, Global
-			.resourceString("Marker_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Board_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Black_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Black_Sparkle_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("White_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("White_Sparkle_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Label_Color")));
+		colors.add(new MenuItemAction(this, Global.resourceString("Marker_Color")));
 		options.add(colors);
-		options.add(MenuBWColor = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_B_W_marks")));
+		options.add(MenuBWColor = new CheckboxMenuItemAction(this, Global.resourceString("Use_B_W_marks")));
 		MenuBWColor.setState(Global.getParameter("bwcolor", false));
 		BWColor = MenuBWColor.getState();
-		options.add(PureSGF = new CheckboxMenuItemAction(this, Global
-			.resourceString("Save_pure_SGF")));
+		options.add(PureSGF = new CheckboxMenuItemAction(this, Global.resourceString("Save_pure_SGF")));
 		PureSGF.setState(Global.getParameter("puresgf", false));
-		options.add(CommentSGF = new CheckboxMenuItemAction(this, Global
-			.resourceString("Use_SGF_Comments")));
+		options.add(CommentSGF = new CheckboxMenuItemAction(this, Global.resourceString("Use_SGF_Comments")));
 		CommentSGF.setState(Global.getParameter("sgfcomments", false));
 		options.addSeparator();
 		Menu fonts = new MyMenu(Global.resourceString("Fonts"));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
-		fonts
-			.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Board_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Fixed_Font")));
+		fonts.add(new MenuItemAction(this, Global.resourceString("Normal_Font")));
 		options.add(fonts);
 		Menu variations = new MyMenu(Global.resourceString("Variation_Display"));
-		variations.add(VCurrent = new CheckboxMenuItemAction(this, Global
-			.resourceString("To_Current")));
+		variations.add(VCurrent = new CheckboxMenuItemAction(this, Global.resourceString("To_Current")));
 		VCurrent.setState(Global.getParameter("vcurrent", true));
-		variations.add(VChild = new CheckboxMenuItemAction(this, Global
-			.resourceString("To_Child")));
+		variations.add(VChild = new CheckboxMenuItemAction(this, Global.resourceString("To_Child")));
 		VChild.setState( !Global.getParameter("vcurrent", true));
-		variations.add(VHide = new CheckboxMenuItemAction(this, Global
-			.resourceString("Hide")));
+		variations.add(VHide = new CheckboxMenuItemAction(this, Global.resourceString("Hide")));
 		VHide.setState(Global.getParameter("vhide", false));
 		variations.addSeparator();
-		variations.add(VNumbers = new CheckboxMenuItemAction(this, Global
-			.resourceString("Continue_Numbers")));
+		variations.add(VNumbers = new CheckboxMenuItemAction(this, Global.resourceString("Continue_Numbers")));
 		VNumbers.setState(Global.getParameter("variationnumbers", false));
 		options.add(variations);
 		options.addSeparator();
-		options.add(MenuTarget = new CheckboxMenuItemAction(this, Global
-			.resourceString("Show_Target")));
+		options.add(MenuTarget = new CheckboxMenuItemAction(this, Global.resourceString("Show_Target")));
 		MenuTarget.setState(Global.getParameter("showtarget", true));
 		ShowTarget = MenuTarget.getState();
-		options.add(MenuLastNumber = new CheckboxMenuItemAction(this, Global
-			.resourceString("Last_Number")));
+		options.add(MenuLastNumber = new CheckboxMenuItemAction(this, Global.resourceString("Last_Number")));
 		MenuLastNumber.setState(Global.getParameter("lastnumber", false));
 		LastNumber = MenuLastNumber.getState();
 		options.add(new MenuItemAction(this, Global.resourceString("Last_50")));
-		options
-			.add(new MenuItemAction(this, Global.resourceString("Last_100")));
+		options.add(new MenuItemAction(this, Global.resourceString("Last_100")));
 		options.addSeparator();
-		options.add(TrueColor = new CheckboxMenuItemAction(this, Global
-			.resourceString("True_Color_Board")));
+		options.add(TrueColor = new CheckboxMenuItemAction(this, Global.resourceString("True_Color_Board")));
 		TrueColor.setState(Global.getParameter("beauty", true));
-		options.add(TrueColorStones = new CheckboxMenuItemAction(this, Global
-			.resourceString("True_Color_Stones")));
+		options.add(TrueColorStones = new CheckboxMenuItemAction(this, Global.resourceString("True_Color_Stones")));
 		TrueColorStones.setState(Global.getParameter("beautystones", true));
-		options.add(Alias = new CheckboxMenuItemAction(this, Global
-			.resourceString("Anti_alias_Stones")));
+		options.add(Alias = new CheckboxMenuItemAction(this, Global.resourceString("Anti_alias_Stones")));
 		Alias.setState(Global.getParameter("alias", true));
-		options.add(Shadows = new CheckboxMenuItemAction(this, Global
-			.resourceString("Shadows")));
+		options.add(Shadows = new CheckboxMenuItemAction(this, Global.resourceString("Shadows")));
 		Shadows.setState(Global.getParameter("shadows", true));
-		options.add(SmallerStones = new CheckboxMenuItemAction(this, Global
-			.resourceString("Smaller_Stones")));
+		options.add(SmallerStones = new CheckboxMenuItemAction(this, Global.resourceString("Smaller_Stones")));
 		SmallerStones.setState(Global.getParameter("smallerstones", false));
-		options.add(BlackOnly = new CheckboxMenuItemAction(this, Global
-			.resourceString("Black_Only")));
+		options.add(BlackOnly = new CheckboxMenuItemAction(this, Global.resourceString("Black_Only")));
 		BlackOnly.setState(Global.getParameter("blackonly", false));
 		options.addSeparator();
-		options.add(new MenuItemAction(this, Global
-			.resourceString("Set_Encoding")));
-		options.add(ShowButtons = new CheckboxMenuItemAction(this, Global
-			.resourceString("Show_Buttons")));
+		options.add(new MenuItemAction(this, Global.resourceString("Set_Encoding")));
+		options.add(ShowButtons = new CheckboxMenuItemAction(this, Global.resourceString("Show_Buttons")));
 		ShowButtons.setState(Global.getParameter("showbuttons", true));
 		Menu help = new MyMenu(Global.resourceString("Help"));
-		help
-			.add(new MenuItemAction(this, Global.resourceString("Board_Window")));
-		help
-			.add(new MenuItemAction(this, Global.resourceString("Making_Moves")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Keyboard_Shortcuts")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("About_Variations")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Playing_Games")));
-		help.add(new MenuItemAction(this, Global
-			.resourceString("Mailing_Games")));
+		help.add(new MenuItemAction(this, Global.resourceString("Board_Window")));
+		help.add(new MenuItemAction(this, Global.resourceString("Making_Moves")));
+		help.add(new MenuItemAction(this, Global.resourceString("Keyboard_Shortcuts")));
+		help.add(new MenuItemAction(this, Global.resourceString("About_Variations")));
+		help.add(new MenuItemAction(this, Global.resourceString("Playing_Games")));
+		help.add(new MenuItemAction(this, Global.resourceString("Mailing_Games")));
 		M.add(options);
 		M.setHelpMenu(help);
 		// Board
 		L = new OutputLabel(Global.resourceString("New_Game"));
 		Lm = new OutputLabel("--");
 		B = new Board(19, this);
-		MyPanel BP = new MyPanel();
-		BP.setLayout(new BorderLayout());
+		MyPanel BP = new MyPanel(new BorderLayout());
 		BP.add("Center", B);
 		// Add the label
 		SimplePanel sp = new SimplePanel(L, 80, Lm, 20);
@@ -963,11 +889,11 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		else if (s.equals("mark"))
 			B.mark();
 		else if (s.equals("square"))
-			B.specialmark(Field.SQUARE);
+			B.specialmark(Field.Marker.SQUARE);
 		else if (s.equals("triangle"))
-			B.specialmark(Field.TRIANGLE);
+			B.specialmark(Field.Marker.TRIANGLE);
 		else if (s.equals("circle"))
-			B.specialmark(Field.CIRCLE);
+			B.specialmark(Field.Marker.CIRCLE);
 		else if (s.equals("letter"))
 			B.letter();
 		else if (s.equals("text"))
@@ -1660,19 +1586,19 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 		}
 		else if (Global.resourceString("Square").equals(o))
 		{
-			B.specialmark(Field.SQUARE);
+			B.specialmark(Field.Marker.SQUARE);
 		}
 		else if (Global.resourceString("Triangle").equals(o))
 		{
-			B.specialmark(Field.TRIANGLE);
+			B.specialmark(Field.Marker.TRIANGLE);
 		}
 		else if (Global.resourceString("Cross").equals(o))
 		{
-			B.specialmark(Field.CROSS);
+			B.specialmark(Field.Marker.CROSS);
 		}
 		else if (Global.resourceString("Circle").equals(o))
 		{
-			B.specialmark(Field.CIRCLE);
+			B.specialmark(Field.Marker.CIRCLE);
 		}
 		else if (Global.resourceString("Letter").equals(o))
 		{
@@ -1900,38 +1826,39 @@ public class GoFrame extends CloseFrame implements DoItemListener, FilenameFilte
 	 * Called from board to check the proper menu for markers.
 	 * 
 	 * @param i
-	 *            the number of the marker type.
+	 *            the marker type.
 	 */
-	public void setMarkState (int i)
+	@Override
+	public void setMarkState (Field.Marker i)
 	{
 		setState(0);
 		switch (i)
 		{
-			case Field.SQUARE:
+			case SQUARE:
 				Square.setState(true);
 				break;
-			case Field.TRIANGLE:
+			case TRIANGLE:
 				Triangle.setState(true);
 				break;
-			case Field.CROSS:
+			case CROSS:
 				Cross.setState(true);
 				break;
-			case Field.CIRCLE:
+			case CIRCLE:
 				Circle.setState(true);
 				break;
 		}
 		switch (i)
 		{
-			case Field.SQUARE:
+			case SQUARE:
 				IB.setState("square", true);
 				break;
-			case Field.TRIANGLE:
+			case TRIANGLE:
 				IB.setState("triangle", true);
 				break;
-			case Field.CROSS:
+			case CROSS:
 				IB.setState("mark", true);
 				break;
-			case Field.CIRCLE:
+			case CIRCLE:
 				IB.setState("circle", true);
 				break;
 		}

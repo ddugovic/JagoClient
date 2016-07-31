@@ -62,7 +62,7 @@ public interface BoardInterface
 	// 1=black, 2=white, 3=setblack, 4=setwhite,
 	// 5=mark, 6=letter, 7=hide, 10=textmark
 
-	public void setMarkState (int marker);
+	public void setMarkState (Field.Marker marker);
 
 	// enable the correct marker item
 	// marker is from FIELD.SQUARE etc.

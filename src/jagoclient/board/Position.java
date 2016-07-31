@@ -181,8 +181,8 @@ public class Position
 
 	// Interface to determine field marks.
 	boolean marked (int i, int j) { return F[i][j].mark(); }
-	int marker (int i, int j) { return F[i][j].marker(); }
-	void marker (int i, int j, int f) { F[i][j].marker(f); }
+	Field.Marker marker (int i, int j) { return F[i][j].marker(); }
+	void marker (int i, int j, Field.Marker f) { F[i][j].marker(f); }
 	void letter (int i, int j, int l) { F[i][j].letter(l); }
 	int letter (int i, int j) { return F[i][j].letter(); }
 	int territory (int i, int j) { return F[i][j].territory(); }

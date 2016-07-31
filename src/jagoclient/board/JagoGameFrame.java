@@ -35,60 +35,42 @@ public class JagoGameFrame extends GoFrame
 		MenuBar M = new MenuBar();
 		setMenuBar(M);
 		Menu file = new MyMenu(Global.resourceString("File"));
-		file.add(new MenuItemAction(this, Global
-			.resourceString("Prisoner_Count")));
+		file.add(new MenuItemAction(this, Global.resourceString("Prisoner_Count")));
 		file.addSeparator();
-		file.add(ShowButtons = new CheckboxMenuItemAction(this, Global
-			.resourceString("Show_Buttons")));
+		file.add(ShowButtons = new CheckboxMenuItemAction(this, Global.resourceString("Show_Buttons")));
 		ShowButtons.setState(Global.getParameter("showbuttons", true));
 		file.addSeparator();
 		file.add(new MenuItemAction(this, Global.resourceString("Close")));
 		M.add(file);
 		Menu set = new MyMenu(Global.resourceString("Set"));
 		M.add(set);
-		set.add(Mark = new CheckboxMenuItemAction(this, Global
-			.resourceString("Mark")));
-		set.add(Letter = new CheckboxMenuItemAction(this, Global
-			.resourceString("Letter")));
-		set.add(Hide = new CheckboxMenuItemAction(this, Global
-			.resourceString("Delete")));
+		set.add(Mark = new CheckboxMenuItemAction(this, Global.resourceString("Mark")));
+		set.add(Letter = new CheckboxMenuItemAction(this, Global.resourceString("Letter")));
+		set.add(Hide = new CheckboxMenuItemAction(this, Global.resourceString("Delete")));
 		Menu mark = new MyMenu(Global.resourceString("Special_Mark"));
-		mark.add(Square = new CheckboxMenuItemAction(this, Global
-			.resourceString("Square")));
-		mark.add(Circle = new CheckboxMenuItemAction(this, Global
-			.resourceString("Circle")));
-		mark.add(Triangle = new CheckboxMenuItemAction(this, Global
-			.resourceString("Triangle")));
-		mark.add(Cross = new CheckboxMenuItemAction(this, Global
-			.resourceString("Cross")));
+		mark.add(Square = new CheckboxMenuItemAction(this, Global.resourceString("Square")));
+		mark.add(Circle = new CheckboxMenuItemAction(this, Global.resourceString("Circle")));
+		mark.add(Triangle = new CheckboxMenuItemAction(this, Global.resourceString("Triangle")));
+		mark.add(Cross = new CheckboxMenuItemAction(this, Global.resourceString("Cross")));
 		mark.addSeparator();
-		mark.add(TextMark = new CheckboxMenuItemAction(this, Global
-			.resourceString("Text")));
+		mark.add(TextMark = new CheckboxMenuItemAction(this, Global.resourceString("Text")));
 		set.add(mark);
 		set.addSeparator();
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Resume_playing")));
+		set.add(new MenuItemAction(this, Global.resourceString("Resume_playing")));
 		set.addSeparator();
 		set.add(new MenuItemAction(this, Global.resourceString("Pass")));
 		set.addSeparator();
-		set.add(SetBlack = new CheckboxMenuItemAction(this, Global
-			.resourceString("Set_Black")));
-		set.add(SetWhite = new CheckboxMenuItemAction(this, Global
-			.resourceString("Set_White")));
+		set.add(SetBlack = new CheckboxMenuItemAction(this, Global.resourceString("Set_Black")));
+		set.add(SetWhite = new CheckboxMenuItemAction(this, Global.resourceString("Set_White")));
 		set.addSeparator();
-		set.add(Black = new CheckboxMenuItemAction(this, Global
-			.resourceString("Black_to_play")));
-		set.add(White = new CheckboxMenuItemAction(this, Global
-			.resourceString("White_to_play")));
+		set.add(Black = new CheckboxMenuItemAction(this, Global.resourceString("Black_to_play")));
+		set.add(White = new CheckboxMenuItemAction(this, Global.resourceString("White_to_play")));
 		set.addSeparator();
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Undo_Adding_Removing")));
-		set.add(new MenuItemAction(this, Global
-			.resourceString("Clear_all_marks")));
+		set.add(new MenuItemAction(this, Global.resourceString("Undo_Adding_Removing")));
+		set.add(new MenuItemAction(this, Global.resourceString("Clear_all_marks")));
 		Menu var = new MyMenu(Global.resourceString("Nodes"));
 		var.add(new MenuItemAction(this, Global.resourceString("Insert_Node")));
-		var.add(new MenuItemAction(this, Global
-			.resourceString("Insert_Variation")));
+		var.add(new MenuItemAction(this, Global.resourceString("Insert_Variation")));
 		var.addSeparator();
 		var.add(new MenuItemAction(this, Global.resourceString("Search")));
 		var.add(new MenuItemAction(this, Global.resourceString("Search_Again")));
@@ -165,8 +147,7 @@ public class JagoGameFrame extends GoFrame
 		L = new OutputLabel(Global.resourceString("New_Game"));
 		Lm = new OutputLabel("--");
 		B = new Board(19, this);
-		JPanel BP = new MyPanel();
-		BP.setLayout(new BorderLayout());
+		JPanel BP = new MyPanel(new BorderLayout());
 		BP.add("Center", B);
 		// Add the label
 		SimplePanel sp = new SimplePanel(L, 80, Lm, 20);

@@ -131,19 +131,19 @@ public class Action
 		else if (Type.equals("AE"))
 		{	printAllFields(xml,size,"Delete");
 		}
-		else if (Type.equals("MA"))
+		else if (Type.equals(Field.Marker.CROSS.value))
 		{	printAllFields(xml,size,"Mark");
 		}
 		else if (Type.equals("M"))
 		{	printAllFields(xml,size,"Mark");
 		}
-		else if (Type.equals("SQ"))
+		else if (Type.equals(Field.Marker.SQUARE.value))
 		{	printAllFields(xml,size,"Mark","type","square");
 		}
-		else if (Type.equals("CR"))
+		else if (Type.equals(Field.Marker.CIRCLE.value))
 		{	printAllFields(xml,size,"Mark","type","circle");
 		}
-		else if (Type.equals("TR"))
+		else if (Type.equals(Field.Marker.TRIANGLE.value))
 		{	printAllFields(xml,size,"Mark","type","triangle");
 		}
 		else if (Type.equals("TB"))
