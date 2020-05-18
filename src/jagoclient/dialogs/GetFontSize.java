@@ -20,6 +20,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JTextField;
 
+import rene.dialogs.Question;
 import rene.gui.CloseDialog;
 import rene.gui.DoItemListener;
 

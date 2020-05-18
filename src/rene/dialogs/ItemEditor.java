@@ -136,9 +136,6 @@ public class ItemEditor extends CloseDialog
 		pack();
 	}
 	
-	/**
-	@param v A vector of item editor elements.
-	*/
 	public void init ()
 	{	for (int i=0; i<V.size(); i++)
 		{	ItemEditorElement e=(ItemEditorElement)V.elementAt(i);

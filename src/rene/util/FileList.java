@@ -162,7 +162,7 @@ public class FileList
 		SortFile.SortBy=SortFile.NAME;
 	}
 	/**
-	@param file The directory that has been found.
+	@param dir The directory that has been found.
 	@return false if recursion should stop here.
 	(i.e. that directory needs not be parsed).
 	*/
@@ -177,7 +177,7 @@ public class FileList
 	{	return true;
 	}
 	/**
-	@param parsed The directory that has been parsed.
+	@param dir The directory that has been parsed.
 	*/
 	protected void parsed (File dir)
 	{

@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 /**
 This distributor receives and handles error messages from the server.
 It will always open a new dialog box (a Message) to display the error.
-@see jagoclient.igs.Message
 */
 
 public class ErrorDistributor extends Distributor

@@ -7,7 +7,6 @@ import rene.util.parser.StringParser;
 
 /**
 This is needed for the Sorter class.
-@see rene.util.sort.Sorter
 */
 
 public class WhoObject implements Comparable<WhoObject>

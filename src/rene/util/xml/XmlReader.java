@@ -173,7 +173,7 @@ public class XmlReader
 	}
 
 	/**
-	Scan an xml file. This function reads, until <?xml is found.
+	Scan an xml file. This function reads, until &lt;?xml is found.
 	then it skips this declaration and scans the rest of the
 	items.
 	*/

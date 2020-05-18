@@ -206,7 +206,7 @@ public class Node
 	public void main (boolean m) { Main=m; }
 	/** 
 	Set the Main flag
-	@param Tree is the tree, which contains this node on root.
+	@param p Tree is the tree, which contains this node on root.
 	*/
 	public void main (Tree p)
 	{   Main=false;

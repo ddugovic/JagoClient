@@ -19,8 +19,8 @@ public class Lister
 	
 	/**
 	 * Initialize the display and the two optional scrollbars
-	 * @param verticalscrollbar
-	 * @param horizontal scrollbar
+	 * @param vs vertical scroll bar
+	 * @param hs horizontal scrollbar
 	 */
 	public Lister (boolean vs, boolean hs)
 	{	L=new ListerPanel(this);

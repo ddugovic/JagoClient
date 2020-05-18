@@ -5,7 +5,6 @@ import java.util.LinkedList;
 /**
  * A linked list of ListElements.
  *
- * @see rene.list.ListElement
  * @deprecated Use LinkedList instead
  */
 public class ListClass<E> extends LinkedList<ListElement<E>>

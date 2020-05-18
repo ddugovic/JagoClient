@@ -10,7 +10,6 @@ import java.awt.TextArea;
  * <p>
  * The class works much like TextArea, but takes care of its length.
  * 
- * @see jagoclient.viewer.Viewer
  * @deprecated
  */
 public class MyTextArea extends TextArea

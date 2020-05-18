@@ -17,9 +17,9 @@ import rene.util.xml.XmlTree;
 import rene.util.xml.XmlWriter;
 
 /**
-This is a class wich contains a Tree<Node>. It used to store complete
+This is a class wich contains a Tree&lt;Node&gt;. It used to store complete
 game trees.
-@see jagoclient.board.Tree<Node>
+@see rene.util.list.Tree
 */
 
 public class SGFTree

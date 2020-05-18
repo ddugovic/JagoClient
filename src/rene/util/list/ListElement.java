@@ -2,7 +2,6 @@ package rene.util.list;
 
 /**
 The nodes of a list.
-@see rene.list.ListClass
 */
 
 public class ListElement<C>

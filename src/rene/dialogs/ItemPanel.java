@@ -42,7 +42,7 @@ public class ItemPanel extends Panel
 	
 	/**
 	Called, when the extra Button was pressed.
-	@v The vector of KeyboardItem.
+	@param v The vector of KeyboardItem.
 	@return If the panel should be closed immediately.
 	*/
 	public boolean extra (Vector v)

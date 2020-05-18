@@ -70,10 +70,9 @@ public class FontEditor extends CloseDialog implements DoItemListener
 	Checkbox Smooth;
 
 	/**
-	 * @param fonttag
-	 *            ,fontdef the font name resource tag and its default value
-	 * @param sizetag
-	 *            ,sizedef the font size resource tag and its default value
+	 * @param fonttag the font name resource tag
+	 * @param fontdef the font name default value
+	 * @param sizedef the font size default value
 	 */
 	public FontEditor (Frame f, String fonttag, String fontdef, int sizedef)
 	{

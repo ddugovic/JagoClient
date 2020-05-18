@@ -272,8 +272,6 @@ public class IgsStream
 	 * The protocol is not very logic, nor is the structure of this method. It
 	 * has cases for several distributors. Probably, this code should be a
 	 * static method of the distributor.
-	 * 
-	 * @see jagoclient.igs.InputThread
 	 */
 	public boolean readline () throws IOException
 	{

@@ -6,7 +6,6 @@ import rene.util.parser.StringParser;
 
 /**
 This is a SortObject for sorting games by W player rank.
-@see jagoclient.sort.Sorter
 */
 
 public class GamesObject implements Comparable<GamesObject>

@@ -30,8 +30,7 @@ public class SendMail implements Runnable
 	delivered, or if they are problems.
 	@param subject The message subject.
 	@param message The message body.
-	@param Anthing, that implements the MailCallback interface.
-	@see rene.mail.MailCallback
+	@param cb Anthing, that implements the MailCallback interface.
 	*/ 
 	public void send (String subject, String message, MailCallback cb) 
 	{	Subject=subject; Message=message; CB=cb;

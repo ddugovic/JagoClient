@@ -305,7 +305,7 @@ public class ConnectionFrame extends CloseFrame implements DoItemListener, KeyLi
 	 * <P>
 	 * Then it starts some default distributors, shows itself and returns true.
 	 * 
-	 * @returns success of failure
+	 * @return success of failure
 	 * @see jagoclient.igs.IgsStream
 	 * @see jagoclient.igs.ReceiveThread
 	 */

@@ -46,8 +46,6 @@ import rene.viewer.ExtendedViewer;
  * 
  * This class is used in CloseDialog to provide help in dialogs. It is a
  * CloseDialog itself.
- * 
- * @see: rene.gui.CloseDialog
  */
 
 public class InfoDialog extends CloseDialog implements ItemListener

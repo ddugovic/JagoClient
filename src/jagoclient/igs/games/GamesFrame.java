@@ -38,8 +38,6 @@ import rene.viewer.SystemLister;
  * GamesDistributor. To sort the games it uses the GamesObject class, which is a
  * SortObject implementation and can be sorted via the Sorter quicksort
  * algorithm.
- * 
- * @see jagoclient.sort.Sorter
  */
 
 public class GamesFrame extends CloseFrame implements CloseListener, Distributor.Task
